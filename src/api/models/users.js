@@ -10,8 +10,8 @@ const userSchema = new mongoose.Schema({
      email: { type: String, required: false, trim: true },
      roll: { type: String, enum: ["user", "administrator"], default: "user", trim: true },
      avatar: {
-          type: String, default: "https://res.cloudinary.com/dn6utw1rl/image/upload/v1735935945/default/icon-perfil_fwo69s.webp"},
-     events: [{ type: mongoose.Types.ObjectId, ref: 'event', required: false }]
+          type: String, default: "https://res.cloudinary.com/dn6utw1rl/image/upload/v1736008037/default/default-person-EDIT_vonfhq.jpg"},
+     eventsIds: [{ type: mongoose.Types.ObjectId, ref: 'events', required: false }]
 
 },
      {

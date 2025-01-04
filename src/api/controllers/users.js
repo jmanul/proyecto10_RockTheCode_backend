@@ -4,12 +4,14 @@ const deleteCloudinaryImage = require('../../utils/cloudinary/deleteCloudinaryIm
 const User = require("../models/users");
 const Event = require("../models/events");
 
+const bcrypt = require('bcrypt');
+
 const getUsers = async (req, res, next) => {
 
      try {
 
           const users = await User.find().populate({
-               path: 'events',
+               path: 'eventsIds',
                select: 'name startDate'
           });
 
@@ -33,7 +35,7 @@ const getUserById = async (req, res, next) => {
 
           const { id } = req.params;
           const user = await User.findById(id).populate({
-               path: 'events',
+               path: 'eventsIds',
                select: 'name startDate'
           });
 
@@ -124,27 +126,25 @@ const putPasswordById = async (req, res, next) => {
           const { id } = req.params;
           const { password } = req.body;
 
-          const updateData = { password };
-
-          const user = await User.findOne({ id });
+          const user = await User.findById(id);
 
           if (!user) {
                return res.status(404).json({ message: 'Usuario no encontrado' });
           }
-
+     
           if (password) {
 
                const hashedPassword = await bcrypt.hash(password, 10);
-               updateData.password = hashedPassword;
+               req.body.password = hashedPassword;
           }
-
-          const userUpdate = await User.findByIdAndUpdate(id, updateData, { new: true });
+         
+          const userUpdate = await User.findByIdAndUpdate(id, req.body, { new: true });
 
           return res.status(200).json(userUpdate);
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({ error: error.message });
      }
 }
 
@@ -154,22 +154,24 @@ const putUser = async (req, res, next) => {
      try {
 
           const { id } = req.params;
-          const { password, events, email, userName, ...rest } = req.body;
+          const { password, eventsIds, email, userName, ...rest } = req.body;
 
           const updateData = { ...rest }
 
-          const existingUser = await User.findOne({
-               $or: [{ email }, { userName }],
-               _id: { $ne: id }, // Excluir el usuario actual
-          });
+          const existingUserName = await User.findOne({userName, _id: { $ne: id }
+});
+          const existingUserEmail = await User.findOne({email, _id: { $ne: id }
+});
 
-          if (existingUser) {
-               if (existingUser.email === email) {
+          if (existingUserEmail) {
+           
                     return res.status(400).json({ message: 'La dirección de correo electrónico ya está en uso.' });
-               }
-               if (existingUser.userName === userName) {
-                    return res.status(400).json({ message: 'El nombre de usuario ya está en uso.' });
-               }
+          }
+
+
+          if (existingUserName) {
+
+               return res.status(400).json({ message: 'El nombre de usuario ya está en uso.' });
           }
 
           if (req.file) {
@@ -192,7 +194,7 @@ const putUser = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({error: error.message});
      }
 };
 
@@ -201,7 +203,7 @@ const addEventsFromUser = async (req, res, next) => {
      try {
 
           const { id } = req.params;
-          const { events: newEvents } = req.body;
+          const { eventsIds: newEvents } = req.body;
 
           let validEventsIds = [];
 
@@ -219,9 +221,9 @@ const addEventsFromUser = async (req, res, next) => {
           if (validEventsIds.length > 0) {
 
                updatedUser = await User.findByIdAndUpdate(id, {
-                    $addToSet: { events: { $each: validEventsIds } },
+                    $addToSet: { eventsIds: { $each: validEventsIds } },
                }, { new: true }).populate({
-                    path: 'events',
+                    path: 'eventsIds',
                     select: 'name type startDate endDate',
                });
 
@@ -235,7 +237,7 @@ const addEventsFromUser = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({error : error.message});
 
      }
 }
@@ -247,7 +249,7 @@ const removeEventFromUser = async (req, res, next) => {
 
           const userUpdate = await User.findByIdAndUpdate(
                idUser,
-               { $pull: { events: idEvent } },
+               { $pull: { eventsIds: idEvent } },
                { new: true }
           );
 
@@ -263,7 +265,7 @@ const removeEventFromUser = async (req, res, next) => {
 
           return res.status(200).json({
                message: 'El Evento fue eliminado',
-               events: idEvent,
+               eventsIds: idEvent,
                user: userUpdate
           });
 
@@ -315,3 +317,5 @@ module.exports = {
      removeEventFromUser,
      deleteUser
 };
+
+
