@@ -5,7 +5,7 @@ const cloudinary = require('cloudinary').v2;
 const deleteCloudinaryImage = async (image) => {
 
      try {
-          if (!image) {
+          if (!image || image.includes('default')) {
                console.log('No hay imagen para eliminar');
                return;
           }
@@ -23,3 +23,4 @@ const deleteCloudinaryImage = async (image) => {
 };
 
 module.exports = deleteCloudinaryImage;
+

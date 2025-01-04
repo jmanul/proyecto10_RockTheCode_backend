@@ -1,10 +1,11 @@
 
-const User = require('../api/models/users');
-const { verifyToken } = require('../utils/jwt/jwt');
+const User = require('../../api/models/users');
+const {verifyToken} = require('../../utils/jwt/jwt')
 
 
 const isAuth = async (req, res, next) => {
-
+      
+     
      try {
 
           const [, token] = req.headers.authorization.split(" ");

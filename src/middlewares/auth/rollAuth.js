@@ -1,5 +1,5 @@
 
-const rolAuth = (...alloAuthRoles) => {
+const rollAuth = (...alloAuthRoles) => {
 
      return (req, res, next) => {
 
@@ -13,4 +13,4 @@ const rolAuth = (...alloAuthRoles) => {
      };
 };
 
-module.exports = { rolAuth };
+module.exports = { rollAuth };

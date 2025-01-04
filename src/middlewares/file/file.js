@@ -8,12 +8,11 @@ const storage = new CloudinaryStorage({
      cloudinary: cloudinary,
      params: async (req, file) => {
 
-          // asignamos ala carpeta en funcion de la coleccion
           const defaultFolder = nameFolder(req);
 
           return {
                folder: defaultFolder,
-               allowedFormats: ['jpg', 'png', 'jpeg', 'gif', 'webp']
+               allowedFormats: ['jpg', 'png', 'jpeg', 'gif', 'webp', 'svg']
           };
      }
     
@@ -29,5 +28,5 @@ const nameFolder = (req) => {
 
      if (route.includes('users')) return 'users-events';
      if (route.includes('events')) return 'events';
-     return 'users-events'; 
+     return 'default'; 
 };

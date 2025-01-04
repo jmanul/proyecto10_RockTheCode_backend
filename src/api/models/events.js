@@ -14,12 +14,14 @@ const eventSchema = new mongoose.Schema({
           required: true
      },
      location: { type: String, required: true, unique: true, trim: true },
+     adress: { type: String, required: true, unique: true, trim: true },
+     city: { type: String, required: true, unique: true, trim: true },
      description: { type: String, required: true, unique: true, trim: true },
      startDate: { type: Date, required: true },
      endDate: { type: String, default: "actuality" },
-     roll: { type: String, required: true, enum: ["user", "administrator"], default: "user", trim: true },
-     image: { type: String, required: true, trim: true },
-     attendees: [{ type: mongoose.Types.ObjectId, ref: 'users', required: false }]
+     image: { type: String, default: "https://res.cloudinary.com/dn6utw1rl/image/upload/v1735935920/default/default-img_h3kfa1.webp"},
+     attendees: [{ type: mongoose.Types.ObjectId, ref: 'users', required: false }],
+     createdBy: { type: mongoose.Types.ObjectId, ref: 'users', required: true }
 
 },
      {
@@ -31,6 +33,6 @@ const eventSchema = new mongoose.Schema({
 eventSchema.path('endDate').get((value) => value === "actuality" ? new Date() : value)
 
 
-const Event = mongoose.model('events', userSchema, 'events');
+const Event = mongoose.model('events', eventSchema, 'events');
 
 module.exports = Event;

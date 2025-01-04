@@ -1,23 +1,25 @@
 
 
-// const { idAuth } = require("../../middleware/idAuth");
-// const { isAuth } = require("../../middleware/isAuth");
-// const { rolAuth } = require("../../middleware/rolAuth");
-// const { getUsers, getUserById, getUserByVehicle, postUser, putRollUser, putPasswordByUserName, putUser, addVehicleFromUser, removeVehicleFromUser, deleteUser } = require("../controllers/users");
+const { idAuth } = require("../../middlewares/auth/idAuth");
+const { isAuth
+ } = require("../../middlewares/auth/isAuth");
+const { rollAuth } = require("../../middlewares/auth/rollAuth");
+
+const upload = require('../../middlewares/file/file');
+const { getUsers, getUserById, postUser, putRollUser, putPasswordById, putUser, addEventsFromUser, removeEventFromUser, deleteUser } = require("../controllers/users");
 
 
-// const usersRouter = require('express').Router();
+const usersRouter = require('express').Router();
 
-// usersRouter.get('/:id', isAuth, idAuth, getUserById);
-// usersRouter.get('/vehicles/:plate', isAuth, rolAuth('administrator'), getUserByVehicle);
-// usersRouter.get('/', isAuth, rolAuth('administrator'), getUsers);
-// usersRouter.post('/', isAuth, rolAuth('administrator'), postUser);
-// usersRouter.put('/roll/:id', isAuth, rolAuth('administrator'), putRollUser);
-// usersRouter.put('/password/:userName', isAuth, idAuth, putPasswordByUserName);
-// usersRouter.put('/:id', isAuth, idAuth, putUser);
-// usersRouter.put('/:id/vehicles', isAuth, rolAuth('administrator'), addVehicleFromUser);
-// usersRouter.delete('/:idUser/vehicles/:idVehicle', isAuth, rolAuth('administrator'), removeVehicleFromUser,);
-// usersRouter.delete('/:id', isAuth, idAuth, deleteUser);
+usersRouter.get('/:id', isAuth, idAuth, getUserById);
+usersRouter.get('/', isAuth, rollAuth('administrator'), getUsers);
+usersRouter.post('/', isAuth, rollAuth('administrator'), upload.single('image'), postUser);
+usersRouter.put('/roll/:id', isAuth, rollAuth('administrator'), putRollUser);
+usersRouter.put('/password/:id', isAuth, idAuth, putPasswordById);
+usersRouter.put('/:id', isAuth, idAuth, upload.single('image'), putUser);
+usersRouter.put('/:id/events', isAuth, idAuth, addEventsFromUser);
+usersRouter.delete('/:idUser/events/:idEvents', isAuth, idAuth, removeEventFromUser,);
+usersRouter.delete('/:id', isAuth, idAuth, deleteUser);
 
 
-// module.exports = usersRouter;
+module.exports = usersRouter;

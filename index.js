@@ -4,10 +4,8 @@ const { conectDDBB } = require('./src/config/ddbb');
 const cloudinary = require('cloudinary').v2;
 
 const registerRouter = require('./src/api/routes/register');
-// const bandsRouter = require('./src/api/routes/bands');
-// const leadersRouter = require('./src/api/routes/leaders');
-// const stylesRouter = require('./src/api/routes/styles');
-
+const usersRouter = require('./src/api/routes/users');
+ const eventsRouter = require('./src/api/routes/events');
 
 
 const app = express();
@@ -24,9 +22,9 @@ cloudinary.config({
 });
 
 app.use('/api/v1/register', registerRouter);
-// app.use('/api/v1/bands', bandsRouter);
-// app.use('/api/v1/leaders', leadersRouter);
-// app.use('/api/v1/styles', stylesRouter);
+app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/events', eventsRouter);
+
 
 
 app.use('*', (req, res, next) => {
