@@ -10,7 +10,7 @@ const deleteCloudinaryImage = async (image) => {
                return;
           }
           // extrae el public_id de la URL de la imagen
-          const public_id = image.url.split('/').slice(-2).join('/').split('.')[0];
+          const public_id = image.split('/').slice(-2).join('/').split('.')[0];
 
           await cloudinary.uploader.destroy(public_id);
           console.log('Imagen eliminada de Cloudinary');

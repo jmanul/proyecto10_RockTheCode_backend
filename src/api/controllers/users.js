@@ -57,7 +57,7 @@ const postUser = async (req, res, next) => {
 
      try {
 
-          const { userName, email,...rest } = req.body;
+          const { userName, email, eventsIds, ...rest } = req.body;
           let avatar;
 
           const existUser = await User.findOne({ userName });
@@ -70,23 +70,23 @@ const postUser = async (req, res, next) => {
                return res.status(400).json({ message: 'la dirección de correo electronico existe o no es valida' });
           }
 
-               if (req.file) {
+          if (req.file) {
 
-                    avatar = req.file.path;
-               }
+               avatar = req.file.path;
+          }
 
           const newUser = await User.create({
-                    userName,
-                    email,
-                    avatar,
-                    ...rest
-               });
+               userName,
+               email,
+               avatar,
+               ...rest
+          });
 
-              
-               return res.status(201).json({
-                    message: 'usuario creado correctamente',
-                    user: newUser
-               });
+
+          return res.status(201).json({
+               message: 'usuario creado correctamente',
+               user: newUser
+          });
 
 
      } catch (error) {
@@ -131,13 +131,13 @@ const putPasswordById = async (req, res, next) => {
           if (!user) {
                return res.status(404).json({ message: 'Usuario no encontrado' });
           }
-     
+
           if (password) {
 
                const hashedPassword = await bcrypt.hash(password, 10);
                req.body.password = hashedPassword;
           }
-         
+
           const userUpdate = await User.findByIdAndUpdate(id, req.body, { new: true });
 
           return res.status(200).json(userUpdate);
@@ -154,18 +154,25 @@ const putUser = async (req, res, next) => {
      try {
 
           const { id } = req.params;
-          const { password, eventsIds, email, userName, ...rest } = req.body;
+          const { email, userName, eventsIds, ...rest } = req.body;
 
           const updateData = { ...rest }
 
-          const existingUserName = await User.findOne({userName, _id: { $ne: id }
-});
-          const existingUserEmail = await User.findOne({email, _id: { $ne: id }
-});
+          const user = await User.findById(id);
+          if (!user) {
+               return res.status(404).json({ message: 'Usuario no encontrado' });
+          }
+
+          const existingUserName = await User.findOne({
+               userName, _id: { $ne: id }
+          });
+          const existingUserEmail = await User.findOne({
+               email, _id: { $ne: id }
+          });
 
           if (existingUserEmail) {
-           
-                    return res.status(400).json({ message: 'La dirección de correo electrónico ya está en uso.' });
+
+               return res.status(400).json({ message: 'La dirección de correo electrónico ya está en uso.' });
           }
 
 
@@ -176,7 +183,7 @@ const putUser = async (req, res, next) => {
 
           if (req.file) {
 
-               await deleteCloudinaryImage(updateData.avatar);
+               await deleteCloudinaryImage(user.avatar);
 
                updateData.avatar = req.file.path;
           }
@@ -194,83 +201,93 @@ const putUser = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json({error: error.message});
+          return res.status(404).json({ error: error.message });
      }
 };
 
 const addEventsFromUser = async (req, res, next) => {
 
      try {
-
           const { id } = req.params;
-          const { eventsIds: newEvents } = req.body;
+          const { idEvent } = req.body;
 
-          let validEventsIds = [];
-
-          if (newEvents) {
-
-               const validEvents = await Event.find({ _id: { $in: newEvents } });
-
-               validEventsIds = validEvents.map(event => event._id.toString());
-          }
-
-          // añadimos los nuevos eventos si los hay y actualizamos
-
-          let updatedUser;
-
-          if (validEventsIds.length > 0) {
-
-               updatedUser = await User.findByIdAndUpdate(id, {
-                    $addToSet: { eventsIds: { $each: validEventsIds } },
-               }, { new: true }).populate({
-                    path: 'eventsIds',
-                    select: 'name type startDate endDate',
-               });
-
-
-               if (!updatedUser) {
-                    return res.status(404).json({ message: 'Usuario no encontrado' });
-               }
-          }
-
-          return res.status(200).json({ message: 'Eventos añadidos con éxito', updatedUser });
-
-     } catch (error) {
-
-          return res.status(404).json({error : error.message});
-
-     }
-}
-
-const removeEventFromUser = async (req, res, next) => {
-     try {
-          const { idUser, idEvent } = req.params;
-
-
-          const userUpdate = await User.findByIdAndUpdate(
-               idUser,
-               { $pull: { eventsIds: idEvent } },
-               { new: true }
-          );
-
-          await Event.findByIdAndUpdate(
-               idEvent,
-               { $pull: { attendees: idUser } },
-               { new: true }
-          );
-
-          if (!userUpdate) {
+          const user = await User.findById(id);
+          if (!user) {
                return res.status(404).json({ message: 'usuario no encontrado' });
           }
 
+          const event = await Event.findById(idEvent);
+          if (!event) {
+               return res.status(404).json({ message: 'evento no encontrado' });
+          }
+
+          const updatedUser = await User.findByIdAndUpdate(
+               id,
+               { $addToSet: { eventsIds: idEvent } }, { new: true }
+          ).populate({
+               path: 'eventsIds',
+               select: 'name type startDate endDate',
+          });
+
+          await Event.findByIdAndUpdate(
+               idEvent,
+               { $addToSet: { attendees: id } },
+               { new: true }
+          );
+
           return res.status(200).json({
-               message: 'El Evento fue eliminado',
-               eventsIds: idEvent,
-               user: userUpdate
+               message: 'evento añadido correctamente',
+               updatedUser
           });
 
      } catch (error) {
-          return res.status(404).json(error);
+          return res.status(500).json({ error: error.message });
+     }
+
+};
+
+
+const removeEventFromUser = async (req, res, next) => {
+     try {
+          const { id } = req.params;
+          const { idEvent } = req.body;
+
+          const user = await User.findById(id);
+          const event = await Event.findById(idEvent);
+
+          if (!user) {
+               return res.status(404).json({ message: 'Usuario no encontrado' });
+          }
+
+          if (!event) {
+               return res.status(404).json({ message: 'Evento no encontrado' });
+          }
+
+          if (user && event) {
+
+               const userUpdate = await User.findByIdAndUpdate(
+                    id,
+                    { $pull: { eventsIds: idEvent } },
+                    { new: true }
+               );
+
+               const eventUpdate = await Event.findByIdAndUpdate(
+                    idEvent,
+                    { $pull: { attendees: id } },
+                    { new: true }
+               );
+
+               return res.status(200).json({
+                    message: 'El Evento fue eliminado',
+                    user: userUpdate,
+                    eventsIds: eventUpdate
+               });
+          }
+
+
+
+     } catch (error) {
+          return res.status(404).json({ error: error.message });
      }
 };
 
@@ -294,7 +311,7 @@ const deleteUser = async (req, res, next) => {
 
           return res.status(200).json({
                message: 'El usuario fue eliminado',
-               user: userDelete
+               user: user
           });
 
      } catch (error) {
