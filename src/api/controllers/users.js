@@ -208,8 +208,8 @@ const putUser = async (req, res, next) => {
 const addEventsFromUser = async (req, res, next) => {
 
      try {
-          const { id } = req.params;
-          const { idEvent } = req.body;
+          const { id, idEvent } = req.params;
+          
 
           const user = await User.findById(id);
           if (!user) {
@@ -249,8 +249,7 @@ const addEventsFromUser = async (req, res, next) => {
 
 const removeEventFromUser = async (req, res, next) => {
      try {
-          const { id } = req.params;
-          const { idEvent } = req.body;
+          const { id, idEvent } = req.params;
 
           const user = await User.findById(id);
           const event = await Event.findById(idEvent);
