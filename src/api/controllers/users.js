@@ -23,7 +23,7 @@ const getUsers = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({ error: error.message });
 
      }
 };
@@ -47,7 +47,7 @@ const getUserById = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({ error: error.message });
 
      }
 };
@@ -91,7 +91,11 @@ const postUser = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          if (req.file) {
+               await deleteCloudinaryImage(req.file.path);
+          }
+
+          return res.status(404).json({ error: error.message });
      }
 
 };
@@ -115,7 +119,7 @@ const putRollUser = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({ error: error.message });
      }
 }
 
@@ -192,14 +196,14 @@ const putUser = async (req, res, next) => {
           if (userName) updateData.userName = userName;
           const userUpdate = await User.findByIdAndUpdate(id, updateData, { new: true });
 
-          if (!userUpdate) {
-               return res.status(404).json({ message: 'usuario no encontrado' });
-          }
-
           return res.status(200).json(userUpdate);
 
 
      } catch (error) {
+
+          if (req.file) {
+               await deleteCloudinaryImage(req.file.path);
+          }
 
           return res.status(404).json({ error: error.message });
      }
@@ -209,7 +213,7 @@ const addEventsFromUser = async (req, res, next) => {
 
      try {
           const { id, idEvent } = req.params;
-          
+
 
           const user = await User.findById(id);
           if (!user) {
@@ -315,7 +319,7 @@ const deleteUser = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({ error: error.message });
 
      }
 };

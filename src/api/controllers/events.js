@@ -9,7 +9,7 @@ const getEvents = async (req, res, next) => {
      try {
 
           const events = await Event.find().populate({
-               path: 'users',
+               path: 'attendees',
                select: 'userName avatar'
           });
 
@@ -21,7 +21,7 @@ const getEvents = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({ error: error.message });
 
      }
 };
@@ -33,7 +33,7 @@ const getEventById = async (req, res, next) => {
 
           const { id } = req.params;
           const event = await Event.findById(id).populate({
-               path: 'users',
+               path: 'attendees',
                select: 'userName avatar'
           });
 
@@ -45,7 +45,7 @@ const getEventById = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({ error: error.message });
 
      }
 };
@@ -54,9 +54,9 @@ const getEventByName = async (req, res, next) => {
 
      try {
 
-          const { userName } = req.params;
-          const event = await Event.findById(userName).populate({
-               path: 'users',
+          const { name } = req.params;
+          const event = await Event.find({name}).populate({
+               path: 'attendees',
                select: 'userName avatar'
           });
 
@@ -68,7 +68,7 @@ const getEventByName = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({ error: error.message });
 
      }
 };
@@ -78,9 +78,9 @@ const postEvent = async (req, res, next) => {
 
      try {
 
-          const { name, startDate, createdBy, ...rest } = req.body;
+          const { name, startDate, attendees, ...rest } = req.body;
           let image;
-          createdBy = req.user._id
+          let createdBy = req.user._id
 
           const existEvent = await Event.findOne({ name, startDate });
 
@@ -109,7 +109,11 @@ const postEvent = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          if (req.file) {
+               await deleteCloudinaryImage(req.file.path); 
+          }
+
+          return res.status(404).json({ error: error.message });
      }
 
 };
@@ -126,26 +130,26 @@ const putEvent = async (req, res, next) => {
                return res.status(404).json({ message: 'Evento no encontrado' });
           }
 
-          if (event.createdBy.toString() !== req.user._id) {
-               return res.status(403).json({ message: 'No tienes permiso para modificar este evento' });
-          }
-
           if (req.file) {
 
                await deleteCloudinaryImage(event.image);
 
-               event.image = req.file.path;
+               req.body.image = req.file.path;
           }
 
           const eventUpdate = await Event.findByIdAndUpdate(id, req.body, { new: true });
-
+          
 
           return res.status(200).json(eventUpdate);
 
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          if (req.file) {
+               await deleteCloudinaryImage(req.file.path);
+          }
+
+          return res.status(404).json({ error: error.message });
      }
 };
 
@@ -154,7 +158,7 @@ const deleteEvent = async (req, res, next) => {
      try {
 
           const { id } = req.params;
-          const event = Event.findById(id)
+          const event = await Event.findById(id)
 
           if (!event) {
                return res.status(404).json({ message: 'evento no encontrado' });
@@ -164,7 +168,7 @@ const deleteEvent = async (req, res, next) => {
           
           await Event.findByIdAndDelete(id);
 
-          await User.updateMany({ events: id }, { $pull: { events: id } });
+          await User.updateMany({ eventsIds: id }, { $pull: { eventsIds: id } });
 
           return res.status(200).json({
                message: 'El evento fue eliminado',
@@ -173,7 +177,7 @@ const deleteEvent = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({ error: error.message });
 
      }
 };
@@ -188,3 +192,5 @@ module.exports = {
      putEvent,
      deleteEvent
 };
+
+

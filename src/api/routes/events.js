@@ -10,8 +10,8 @@ postEvent,putEvent,deleteEvent } = require("../controllers/events");
 const eventsRouter = require('express').Router();
 
 eventsRouter.get('/:id', isAuth, getEventById);
-eventsRouter.get('/:name', isAuth, getEvents);
-eventsRouter.get('/', isAuth, getEventByName);
+eventsRouter.get('/name/:name', isAuth, getEventByName );
+eventsRouter.get('/', isAuth, getEvents);
 eventsRouter.post('/', isAuth, upload.single('image'), postEvent);
 eventsRouter.put('/:id', isAuth, idCreated, upload.single('image'), putEvent);
 eventsRouter.delete('/:id', isAuth, idCreated, deleteEvent);

@@ -19,14 +19,14 @@ const eventSchema = new mongoose.Schema({
      description: { type: String, required: true,  trim: true },
      startDate: {type: Date, required: true, set: value => new Date(value), validate: {
                validator: value => value >= new Date(),
-               message: 'La fecha de inicio no puede ser anterior a la actual'
+               message: 'la fecha de inicio no puede ser anterior a la actual'
           } },
      endDate: {
           type: Date, default: function () { return this.startDate; }, set: value => new Date(value), validate: {
                validator: function (value) {
                     return value >= this.startDate;
                },
-               message: 'La fecha de finalización debe ser igual o posterior a la fecha de inicio.'
+               message: 'la fecha de finalización debe ser igual o posterior a la fecha de inicio'
           }
 },
      image: { type: String, default: "https://res.cloudinary.com/dn6utw1rl/image/upload/v1736008149/default/default-image-event_zk7dcu.webp"},
