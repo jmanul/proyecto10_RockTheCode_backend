@@ -2,25 +2,29 @@ const mongoose = require('mongoose');
 
 const eventSchema = new mongoose.Schema({
 
-     name: { type: String, required: true,  trim: true },
+     name: { type: String, required: true, trim: true },
      type: {
-          type: String, enum: [
+          type: String, default: "Others", enum: [
                "Music",
                "Sport",
                "Party",
                "Training",
+               "Art",
+               "Gastronomy",
+               "Technology",
                "Others"
-          ],
-          required: true
+          ]
      },
-     location: { type: String, required: true,  trim: true },
-     adress: { type: String, required: true,  trim: true },
-     city: { type: String, required: true,  trim: true },
-     description: { type: String, required: true,  trim: true },
-     startDate: {type: Date, required: true, set: value => new Date(value), validate: {
+     location: { type: String, required: true, trim: true },
+     adress: { type: String, required: true, trim: true },
+     city: { type: String, required: true, trim: true },
+     description: { type: String, required: true, trim: true },
+     startDate: {
+          type: Date, required: true, set: value => new Date(value), validate: {
                validator: value => value >= new Date(),
                message: 'la fecha de inicio no puede ser anterior a la actual'
-          } },
+          }
+     },
      endDate: {
           type: Date, default: function () { return this.startDate; }, set: value => new Date(value), validate: {
                validator: function (value) {
@@ -28,13 +32,18 @@ const eventSchema = new mongoose.Schema({
                },
                message: 'la fecha de finalización debe ser igual o posterior a la fecha de inicio'
           }
-},
-     image: { type: String, default: "https://res.cloudinary.com/dn6utw1rl/image/upload/v1736008149/default/default-image-event_zk7dcu.webp"},
+     },
+     image: { type: String, default: "https://res.cloudinary.com/dn6utw1rl/image/upload/v1736008149/default/default-image-event_zk7dcu.webp" },
+     createdBy: { type: mongoose.Types.ObjectId, ref: 'users', default: "67784a087790d458a8eaef58", required: true },
+     isPaid: { type: Boolean, default: false },
+     price: { type: Number, default: 0 },
+     maxCapacity: { type: Number },
+     totalReservedPlaces: { type: Number, default: 0 },
      attendees: [{ type: mongoose.Types.ObjectId, ref: 'users', required: false }],
-     createdBy: { type: mongoose.Types.ObjectId, ref: 'users', default: "67784a087790d458a8eaef58", required: true }
+     ticketsSold: [{ type: mongoose.Types.ObjectId, ref: 'tickets', required: false }]
 
 },
-     { 
+     {
           timestamps: true,
           collection: 'events'
      });

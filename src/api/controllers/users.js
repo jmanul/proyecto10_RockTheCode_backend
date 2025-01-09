@@ -3,6 +3,7 @@ const deleteCloudinaryImage = require('../../utils/cloudinary/deleteCloudinaryIm
 
 const User = require("../models/users");
 const Event = require("../models/events");
+const Ticket = require("../models/tickets");
 
 const bcrypt = require('bcrypt');
 
@@ -214,6 +215,8 @@ const addEventsFromUser = async (req, res, next) => {
      try {
           const { id, idEvent } = req.params;
 
+          const { reservedPlaces } = req.body;
+
 
           const user = await User.findById(id);
           if (!user) {
@@ -225,22 +228,42 @@ const addEventsFromUser = async (req, res, next) => {
                return res.status(404).json({ message: 'evento no encontrado' });
           }
 
+          const freePlaces = event.maxCapacity - event.totalReservedPlaces;
+          if (reservedPlaces > freePlaces) {
+               return res.status(400).json({
+                    message: `no hay suficientes plazas disponibles`
+               });
+          }
+
+          const newTicket = await Ticket.create({
+               event: idEvent,
+               user: id,
+               reservedPlaces,
+               ticketPrice: event.price * reservedPlaces
+          });
+
           const updatedUser = await User.findByIdAndUpdate(
                id,
-               { $addToSet: { eventsIds: idEvent } }, { new: true }
+               { $addToSet: { eventsIds: idEvent, ticketsIds: newTicket._id } },  { new: true }
           ).populate({
-               path: 'eventsIds',
-               select: 'name type startDate endDate',
+               path: 'ticketsIds',
+               select: 'reservedPlaces ticketPrice',
+               populate: {
+                    path: 'event',
+                    select: 'name'
+               }
           });
 
           await Event.findByIdAndUpdate(
                idEvent,
-               { $addToSet: { attendees: id } },
+               { $addToSet: { attendees: id, ticketsSold: newTicket._id },
+                    $inc: { totalReservedPlaces: reservedPlaces }
+               },
                { new: true }
           );
 
           return res.status(200).json({
-               message: 'evento añadido correctamente',
+               message: 'evento añadido correctamente un nuevo tickets generado',
                updatedUser
           });
 

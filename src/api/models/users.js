@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
      roll: { type: String, enum: ["user", "administrator"], default: "user", trim: true },
      avatar: {
           type: String, default: "https://res.cloudinary.com/dn6utw1rl/image/upload/v1736008037/default/default-person-EDIT_vonfhq.jpg"},
-     eventsIds: [{ type: mongoose.Types.ObjectId, ref: 'events', required: false }]
+     eventsIds: [{ type: mongoose.Types.ObjectId, ref: 'events', required: false }],
+     ticketsIds: [{ type: mongoose.Types.ObjectId, ref: 'tickets', required: false }]
 
 },
      {

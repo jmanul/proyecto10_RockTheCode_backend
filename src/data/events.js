@@ -1,5 +1,127 @@
 const eventDate = [
      {
+          name: "Concierto de Jazz Nocturno",
+          type: "Music",
+          location: "Teatro de la Ciudad",
+          adress: "Calle del Sol 123",
+          city: "Barcelona",
+          description: "Un espectáculo único con los mejores artistas de jazz.",
+          startDate: "2025-02-15T20:00:00",
+          endDate: "2025-02-15T23:00:00",
+          attendees: [],
+          ticketsSold: [],
+          maxCapacity: 200
+     },
+     {
+          name: "Feria Gastronómica",
+          type: "Gastronomy",
+          location: "Plaza Central",
+          adress: "Plaza Mayor S/N",
+          city: "Madrid",
+          description: "Degusta lo mejor de la gastronomía española.",
+          startDate: "2025-03-10T12:00:00",
+          endDate: "2025-03-10T18:00:00",
+          attendees: [],
+          ticketsSold: [],
+          maxCapacity: 500
+     },
+     {
+          name: "Exposición de Arte Contemporáneo",
+          type: "Art",
+          location: "Museo de Arte Moderno",
+          adress: "Av. Insurgentes 300",
+          city: "Ciudad de México",
+          description: "Obras de los artistas más influyentes del siglo XXI.",
+          startDate: "2025-04-05T10:00:00",
+          endDate: "2025-04-05T18:00:00",
+          attendees: [],
+          ticketsSold: [],
+          maxCapacity: 150
+     },
+     {
+          name: "Festival de Cine Independiente",
+          location: "Cine Estrella",
+          adress: "Calle de las Estrellas 45",
+          city: "Buenos Aires",
+          description: "Proyección de películas de directores emergentes.",
+          startDate: "2025-05-20T15:00:00",
+          endDate: "2025-05-25T22:00:00",
+          attendees: [],
+          ticketsSold: [],
+          maxCapacity: 300
+     },
+     {
+          name: "Obra de Teatro Clásico",
+          type: "Art",
+          location: "Teatro Principal",
+          adress: "Av. Reforma 200",
+          city: "Lima",
+          description: "Una obra clásica interpretada por un elenco de primera.",
+          startDate: "2025-06-12T19:00:00",
+          endDate: "2025-06-12T21:30:00",
+          attendees: [],
+          ticketsSold: [],
+          maxCapacity: 100
+     },
+     {
+          name: "Charla Motivacional",
+          location: "Centro de Convenciones",
+          adress: "Boulevard Principal 80",
+          city: "Santiago",
+          description: "Encuentra tu propósito con este evento inspirador.",
+          startDate: "2025-07-15T18:00:00",
+          endDate: "2025-07-15T20:00:00",
+          attendees: [],
+          ticketsSold: []
+     },
+     {
+          name: "Clase Magistral de Fotografía",
+          location: "Centro Cultural",
+          adress: "Calle del Arte 5",
+          city: "Quito",
+          description: "Aprende fotografía con un experto reconocido.",
+          startDate: "2025-08-01T10:00:00",
+          endDate: "2025-08-01T13:00:00",
+          attendees: [],
+          ticketsSold: []
+     },
+     {
+          name: "Carrera Nocturna 5K",
+          type: "Sport",
+          location: "Parque Metropolitano",
+          adress: "Calle Verde 50",
+          city: "Bogotá",
+          description: "Participa en esta emocionante carrera nocturna.",
+          startDate: "2025-09-10T19:00:00",
+          endDate: "2025-09-10T21:00:00",
+          attendees: [],
+          ticketsSold: []
+     },
+     {
+          name: "Festival de Música Electrónica",
+          type: "Music",
+          location: "Parque de los Sueños",
+          adress: "Calle Beats 88",
+          city: "Montevideo",
+          description: "Los mejores DJs del mundo en un solo lugar.",
+          startDate: "2025-10-05T17:00:00",
+          endDate: "2025-10-05T23:59:00",
+          attendees: [],
+          ticketsSold: []
+     },
+     {
+          name: "Competencia de Esports",
+          type: "Technology",
+          location: "Arena Virtual",
+          adress: "Calle Gamer 42",
+          city: "San José",
+          description: "Los mejores gamers compitiendo en vivo.",
+          startDate: "2025-11-15T10:00:00",
+          endDate: "2025-11-15T20:00:00",
+          attendees: [],
+          ticketsSold: []
+     },
+     {
           name: "Concierto en la Alhambra",
           type: "Music",
           location: "La Alhambra",
@@ -8,7 +130,8 @@ const eventDate = [
           description: "Un concierto mágico en uno de los lugares más emblemáticos de España.",
           startDate: "2025-01-15T20:00:00",
           endDate: "2025-01-15T23:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Maratón de Madrid",
@@ -19,7 +142,8 @@ const eventDate = [
           description: "Un evento deportivo para los amantes del running en el corazón de la capital.",
           startDate: "2025-03-10T08:00:00",
           endDate: "2025-03-10T14:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Fiesta Mayor de Sitges",
@@ -30,7 +154,8 @@ const eventDate = [
           description: "Celebración tradicional con música, bailes y fuegos artificiales.",
           startDate: "2025-07-23T18:00:00",
           endDate: "2025-07-23T23:59:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Taller de fotografía en el Guggenheim",
@@ -41,7 +166,8 @@ const eventDate = [
           description: "Aprende técnicas avanzadas de fotografía en un entorno único.",
           startDate: "2025-02-05T10:00:00",
           endDate: "2025-02-05T14:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Feria del libro de Barcelona",
@@ -52,7 +178,8 @@ const eventDate = [
           description: "Encuentra libros y autores increíbles en esta feria literaria.",
           startDate: "2025-04-21T10:00:00",
           endDate: "2025-04-23T19:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Concierto de Flamenco en Sevilla",
@@ -63,7 +190,8 @@ const eventDate = [
           description: "Disfruta del arte flamenco en su máxima expresión.",
           startDate: "2025-02-14T20:00:00",
           endDate: "2025-02-14T22:30:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Carrera Popular de Valencia",
@@ -74,7 +202,8 @@ const eventDate = [
           description: "Evento deportivo para disfrutar en familia.",
           startDate: "2025-03-25T09:00:00",
           endDate: "2025-03-25T12:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Carnaval de Cádiz",
@@ -85,7 +214,8 @@ const eventDate = [
           description: "Una de las celebraciones más divertidas y coloridas de España.",
           startDate: "2025-02-10T18:00:00",
           endDate: "2025-02-18T23:59:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Curso de cocina gallega",
@@ -96,7 +226,8 @@ const eventDate = [
           description: "Aprende a preparar los platos más tradicionales de Galicia.",
           startDate: "2025-05-05T10:00:00",
           endDate: "2025-05-05T13:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Feria de Abril en Barcelona",
@@ -107,7 +238,8 @@ const eventDate = [
           description: "Una versión de la Feria de Abril andaluza en la ciudad condal.",
           startDate: "2025-04-20T18:00:00",
           endDate: "2025-04-25T23:59:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Concierto sinfónico en Valencia",
@@ -118,7 +250,8 @@ const eventDate = [
           description: "Una noche mágica con la orquesta sinfónica de Valencia.",
           startDate: "2025-06-10T20:00:00",
           endDate: "2025-06-10T22:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Torneo de pádel en Málaga",
@@ -129,7 +262,8 @@ const eventDate = [
           description: "Compite o disfruta como espectador en este torneo de pádel.",
           startDate: "2025-07-15T09:00:00",
           endDate: "2025-07-15T18:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Fiesta de San Juan en Alicante",
@@ -140,7 +274,8 @@ const eventDate = [
           description: "Celebra la mágica noche de San Juan en la playa.",
           startDate: "2025-06-23T22:00:00",
           endDate: "2025-06-24T02:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Taller de pintura al aire libre",
@@ -151,7 +286,8 @@ const eventDate = [
           description: "Aprende a plasmar paisajes urbanos en tus lienzos.",
           startDate: "2025-09-15T10:00:00",
           endDate: "2025-09-15T13:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Festival de cine de San Sebastián",
@@ -162,7 +298,8 @@ const eventDate = [
           description: "Descubre lo mejor del cine en este prestigioso festival.",
           startDate: "2025-09-20T10:00:00",
           endDate: "2025-09-27T23:59:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Festival de Jazz en Madrid",
@@ -173,7 +310,8 @@ const eventDate = [
           description: "Una noche de jazz con artistas nacionales e internacionales.",
           startDate: "2025-03-15T19:30:00",
           endDate: "2025-03-15T22:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Maratón de Barcelona",
@@ -184,7 +322,8 @@ const eventDate = [
           description: "Participa o anima en una de las carreras más importantes de España.",
           startDate: "2025-04-07T08:00:00",
           endDate: "2025-04-07T14:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Fiesta Mayor de Gràcia",
@@ -195,7 +334,8 @@ const eventDate = [
           description: "Calles decoradas y actividades culturales en el corazón de Gràcia.",
           startDate: "2025-08-15T10:00:00",
           endDate: "2025-08-21T23:59:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Curso de fotografía nocturna",
@@ -206,7 +346,8 @@ const eventDate = [
           description: "Aprende a capturar estrellas y paisajes nocturnos.",
           startDate: "2025-05-12T20:00:00",
           endDate: "2025-05-12T23:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Feria del Libro de Madrid",
@@ -217,7 +358,8 @@ const eventDate = [
           description: "Encuentra autores, presentaciones y miles de libros en esta feria anual.",
           startDate: "2025-06-01T10:00:00",
           endDate: "2025-06-15T21:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Concierto de Rock en Gijón",
@@ -228,7 +370,8 @@ const eventDate = [
           description: "Disfruta de las mejores bandas de rock en directo.",
           startDate: "2025-07-20T21:00:00",
           endDate: "2025-07-20T23:30:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Campeonato de Surf en Fuerteventura",
@@ -239,7 +382,8 @@ const eventDate = [
           description: "Los mejores surfistas del mundo se reúnen en las playas de Canarias.",
           startDate: "2025-08-05T09:00:00",
           endDate: "2025-08-07T18:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Noche de San Valentín en Granada",
@@ -250,7 +394,8 @@ const eventDate = [
           description: "Una velada romántica con vistas a la Alhambra.",
           startDate: "2025-02-14T20:00:00",
           endDate: "2025-02-14T23:59:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Taller de cerámica en Toledo",
@@ -261,7 +406,8 @@ const eventDate = [
           description: "Crea tus propias piezas de cerámica en este taller único.",
           startDate: "2025-04-10T10:00:00",
           endDate: "2025-04-10T14:00:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      },
      {
           name: "Semana Santa en Sevilla",
@@ -272,9 +418,12 @@ const eventDate = [
           description: "Vive la tradición y solemnidad de la Semana Santa sevillana.",
           startDate: "2025-03-29T18:00:00",
           endDate: "2025-04-05T23:59:00",
-          attendees: []
+          attendees: [],
+          ticketsSold: []
      }
 ];
 
 
 module.exports = eventDate;
+
+
