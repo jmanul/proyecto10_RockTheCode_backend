@@ -4,15 +4,15 @@ const eventSchema = new mongoose.Schema({
 
      name: { type: String, required: true, trim: true },
      type: {
-          type: String, default: "Others", enum: [
-               "Music",
-               "Sport",
-               "Party",
-               "Training",
-               "Art",
-               "Gastronomy",
-               "Technology",
-               "Others"
+          type: String, default: "others", enum: [
+               "music",
+               "sport",
+               "party",
+               "training",
+               "art",
+               "gastronomy",
+               "technology",
+               "others"
           ]
      },
      location: { type: String, required: true, trim: true },
@@ -33,9 +33,18 @@ const eventSchema = new mongoose.Schema({
                message: 'la fecha de finalización debe ser igual o posterior a la fecha de inicio'
           }
      },
+     eventStatus: {
+          type: String, default: "not-start", enum: [
+               "not-start",
+               "suspended",
+               "postponed",
+               "cancelled",
+               "finalized"
+          ]
+     },
      image: { type: String, default: "https://res.cloudinary.com/dn6utw1rl/image/upload/v1736008149/default/default-image-event_zk7dcu.webp" },
-     createdBy: { type: mongoose.Types.ObjectId, ref: 'users', default: "67784a087790d458a8eaef58", required: true },
-     isPaid: { type: Boolean, default: false },
+     createdBy: { type: mongoose.Types.ObjectId, ref:'users',default:"67784a087790d458a8eaef58", required: true },
+     isPaid: { type: Boolean, default: false },soldout: { type: Boolean, default: false },
      price: { type: Number, default: 0 },
      maxCapacity: { type: Number },
      totalReservedPlaces: { type: Number, default: 0 },
