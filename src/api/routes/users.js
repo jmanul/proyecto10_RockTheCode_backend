@@ -17,8 +17,8 @@ usersRouter.post('/', isAuth, rollAuth('administrator'), upload.single('avatar')
 usersRouter.put('/roll/:id', isAuth, rollAuth('administrator'), putRollUser);
 usersRouter.put('/password/:id', isAuth, idAuth, putPasswordById);
 usersRouter.put('/:id', isAuth, idAuth, upload.single('avatar'), putUser);
-usersRouter.put('/:id/events/:idEvent', isAuth, idAuth, addEventsFromUser);
-usersRouter.delete('/:id/events/:idEvent', isAuth, idAuth, removeEventFromUser,);
+usersRouter.put('/:userId/events/:eventId', isAuth, idAuth, addEventsFromUser);
+usersRouter.delete('/:userId/events/:eventId', isAuth, idAuth, removeEventFromUser,);
 usersRouter.delete('/:id', isAuth, idAuth, deleteUser);
 
 

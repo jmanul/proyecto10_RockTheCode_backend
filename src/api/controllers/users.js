@@ -34,8 +34,8 @@ const getUserById = async (req, res, next) => {
 
      try {
 
-          const { UserId } = req.params;
-          const user = await User.findById(UserId).populate({
+          const { userId } = req.params;
+          const user = await User.findById(userId).populate({
                path: 'eventsIds',
                select: 'name startDate'
           });
@@ -105,12 +105,12 @@ const putRollUser = async (req, res, next) => {
 
      try {
 
-          const { UserId } = req.params;
+          const { userId } = req.params;
           const { roll } = req.body;
 
           const updateData = { roll }
 
-          const userUpdate = await User.findByIdAndUpdate(UserId, updateData, { new: true });
+          const userUpdate = await User.findByIdAndUpdate(userId, updateData, { new: true });
 
           if (!userUpdate) {
                return res.status(404).json({ message: 'usuario no encontrado' });
@@ -128,10 +128,10 @@ const putPasswordById = async (req, res, next) => {
 
      try {
 
-          const { UserId } = req.params;
+          const { userId } = req.params;
           const { password } = req.body;
 
-          const user = await User.findById(UserId);
+          const user = await User.findById(userId);
 
           if (!user) {
                return res.status(404).json({ message: 'Usuario no encontrado' });
@@ -143,7 +143,7 @@ const putPasswordById = async (req, res, next) => {
                req.body.password = hashedPassword;
           }
 
-          const userUpdate = await User.findByIdAndUpdate(UserId, req.body, { new: true });
+          const userUpdate = await User.findByIdAndUpdate(userId, req.body, { new: true });
 
           return res.status(200).json(userUpdate);
 
@@ -158,21 +158,21 @@ const putUser = async (req, res, next) => {
 
      try {
 
-          const { UserId } = req.params;
+          const { userId } = req.params;
           const { email, userName, eventsIds, ...rest } = req.body;
 
           const updateData = { ...rest }
 
-          const user = await User.findById(UserId);
+          const user = await User.findById(userId);
           if (!user) {
                return res.status(404).json({ message: 'Usuario no encontrado' });
           }
 
           const existingUserName = await User.findOne({
-               userName, _id: { $ne: UserId }
+               userName, _id: { $ne: userId }
           });
           const existingUserEmail = await User.findOne({
-               email, _id: { $ne: UserId }
+               email, _id: { $ne: userId }
           });
 
           if (existingUserEmail) {
@@ -195,7 +195,7 @@ const putUser = async (req, res, next) => {
 
           if (email) updateData.email = email;
           if (userName) updateData.userName = userName;
-          const userUpdate = await User.findByIdAndUpdate(UserId, updateData, { new: true });
+          const userUpdate = await User.findByIdAndUpdate(userId, updateData, { new: true });
 
           return res.status(200).json(userUpdate);
 
@@ -213,12 +213,11 @@ const putUser = async (req, res, next) => {
 const addEventsFromUser = async (req, res, next) => {
 
      try {
-          const { UserId, eventId } = req.params;
+          const { userId, eventId } = req.params;
 
           const { reservedPlaces } = req.body;
 
-
-          const user = await User.findById(UserId);
+          const user = await User.findById(userId);
           if (!user) {
                return res.status(404).json({ message: 'usuario no encontrado' });
           }
@@ -232,14 +231,14 @@ const addEventsFromUser = async (req, res, next) => {
 
           
           const updatedUser = await User.findByIdAndUpdate(
-               UserId,
+               userId,
                { $addToSet: { eventsIds: eventId, ticketsIds: ticket._id } },
                { new: true });
           
           await Event.findByIdAndUpdate(
                eventId,
                {
-                    $addToSet: { attendees: UserId, ticketsSold: ticket._id },
+                    $addToSet: { attendees: userId, ticketsSold: ticket._id },
                     $inc: { totalReservedPlaces: reservedPlaces }
                },
                { new: true }
@@ -261,9 +260,9 @@ const addEventsFromUser = async (req, res, next) => {
 
 const removeEventFromUser = async (req, res, next) => {
      try {
-          const { UserId, eventId } = req.params;
+          const { userId, eventId } = req.params;
 
-          const user = await User.findById(UserId);
+          const user = await User.findById(userId);
           const event = await Event.findById(eventId);
 
           if (!user) {
@@ -274,28 +273,39 @@ const removeEventFromUser = async (req, res, next) => {
                return res.status(404).json({ message: 'Evento no encontrado' });
           }
 
-          if (user && event) {
+          const tickets = await Ticket.find({ userId, eventId });
+
+          const totalReservedPlacesToReturn = tickets.reduce(
+               (sum, ticket) => sum + ticket.reservedPlaces,
+               0
+          );
+
+          const cancelledTickets = await Ticket.updateMany(
+               { userId, eventId },
+               { ticketStatus: 'cancelled' }
+          );
 
                const userUpdate = await User.findByIdAndUpdate(
-                    UserId,
+                    userId,
                     { $pull: { eventsIds: eventId } },
                     { new: true }
                );
 
                const eventUpdate = await Event.findByIdAndUpdate(
                     eventId,
-                    { $pull: { attendees: UserId } },
+                    {
+                         $pull: { attendees: userId },
+                         $inc: { totalReservedPlaces: -totalReservedPlacesToReturn }
+                    },
                     { new: true }
                );
+          
 
                return res.status(200).json({
                     message: 'El Evento fue eliminado',
                     user: userUpdate,
-                    eventsIds: eventUpdate
+                    event: eventUpdate, cancelledTickets
                });
-          }
-
-
 
      } catch (error) {
           return res.status(404).json({ error: error.message });
@@ -307,8 +317,8 @@ const deleteUser = async (req, res, next) => {
 
      try {
 
-          const { UserId } = req.params;
-          const user = await User.findById(UserId);
+          const { userId } = req.params;
+          const user = await User.findById(userId);
 
           if (!user) {
                return res.status(404).json({ message: 'usuario no encontrado' });
@@ -316,9 +326,16 @@ const deleteUser = async (req, res, next) => {
 
           await deleteCloudinaryImage(user.avatar);
 
-          await User.findByIdAndDelete(UserId);
+          await User.findByIdAndDelete(userId);
 
-          await Event.updateMany({ attendees: UserId }, { $pull: { attendees: UserId } });
+          await Ticket.updateMany(
+               { userId },
+               { ticketStatus: 'cancelled' }
+          );
+
+          await Event.updateMany({ attendees: userId }, {
+               $pull: { attendees: userId }
+           });
 
           return res.status(200).json({
                message: 'El usuario fue eliminado',

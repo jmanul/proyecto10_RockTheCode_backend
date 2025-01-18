@@ -19,7 +19,7 @@ const ticketSchema = new mongoose.Schema({
                "used",
                "vip-unused",
                "vip-used",
-               "finalized"
+               "cancelled"
           ]
      },
      createdAt: { type: Date, default: Date.now }

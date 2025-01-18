@@ -6,7 +6,8 @@ const cloudinary = require('cloudinary').v2;
 const registerRouter = require('./src/api/routes/register');
 const usersRouter = require('./src/api/routes/users');
 const eventsRouter = require('./src/api/routes/events');
-const  ticketsRouter = require('./src/api/routes/tickets');
+const ticketsRouter = require('./src/api/routes/tickets');
+const { cleanUpdateOldData } = require('./src/utils/cronJobs/cronJobs');
 
 
 const app = express();
@@ -14,6 +15,10 @@ const app = express();
 app.use(express.json());
 
 conectDDBB();
+
+// verificar eventos caducados
+
+cleanUpdateOldData();
 
 cloudinary.config({
 

@@ -33,7 +33,7 @@ const ticketGenerator = async (event, user, reservedPlaces) => {
 
           await ticket.save();
 
-          return { message: `quedan ${freePlaces - reservedPlaces} plazas`, ticket};
+          return ticket;
 
      } catch (error) {
           throw new Error(`error al generar el ticket: ${error.message}`);

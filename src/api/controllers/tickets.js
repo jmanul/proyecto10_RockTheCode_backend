@@ -2,7 +2,7 @@ const Ticket = require("../models/tickets");
 const User = require("../models/users");
 const Event = require("../models/events");
 const ticketGenerator = require('../../services/ticketGenerator');
-const qrGenerator = require('../../services/qrGenerator');
+
 
 const postTicket = async (req, res, next) => {
 
@@ -54,7 +54,32 @@ const postTicket = async (req, res, next) => {
 
 };
 
+const getTicketsByIdEvent = async (req, res, next) => {
+
+     try {
+
+          const { eventId } = req.params;
+          const tickets = await Ticket.find({ eventId })
+          
+          if (!tickets) {
+               return res.status(404).json({ message: 'ticket no encontrado' });
+          }
+
+          return res.status(200).json(tickets);
+
+     } catch (error) {
+
+          return res.status(404).json({ error: error.message });
+
+     }
+};
+
+//todo: hay que hacer el ajuste de modificacion de estadomde lños tique si se modifica la fecha del evento a evento pospuesto 
+
+// todo: cuando se elimina un evento hay que modificar los tickets a evento cancelado
+
 module.exports = {
 
-      postTicket
+     postTicket,
+     getTicketsByIdEvent
 };
