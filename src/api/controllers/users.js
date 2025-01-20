@@ -328,15 +328,6 @@ const deleteUser = async (req, res, next) => {
 
           await User.findByIdAndDelete(userId);
 
-          await Ticket.updateMany(
-               { userId },
-               { ticketStatus: 'cancelled' }
-          );
-
-          await Event.updateMany({ attendees: userId }, {
-               $pull: { attendees: userId }
-           });
-
           return res.status(200).json({
                message: 'El usuario fue eliminado',
                user: user

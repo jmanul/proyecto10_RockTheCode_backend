@@ -13,6 +13,7 @@ const ticketGenerator = async (event, user, reservedPlaces) => {
           const ticket = new Ticket({
                eventId: event._id,
                eventName: event.name,
+               eventStatus: event.eventStatus,
                userId: user._id,
                userName: user.userName,
                reservedPlaces,

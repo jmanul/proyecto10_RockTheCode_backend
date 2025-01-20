@@ -7,7 +7,7 @@ const registerRouter = require('./src/api/routes/register');
 const usersRouter = require('./src/api/routes/users');
 const eventsRouter = require('./src/api/routes/events');
 const ticketsRouter = require('./src/api/routes/tickets');
-const { cleanUpdateOldData } = require('./src/utils/cronJobs/cronJobs');
+const  cleanUpdateOldData = require('./src/utils/cronJobs/cronJobs');
 
 
 const app = express();

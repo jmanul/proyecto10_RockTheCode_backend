@@ -1,9 +1,6 @@
 
 
-const { idAuth } = require("../../middlewares/auth/idAuth");
-const { isAuth
-} = require("../../middlewares/auth/isAuth");
-
+const { isAuth, idAuth } = require("../../middlewares/auth/auth");
 
 const { postTicket, getTicketsByIdEvent } = require("../controllers/tickets");
 

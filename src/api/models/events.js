@@ -36,7 +36,6 @@ const eventSchema = new mongoose.Schema({
      eventStatus: {
           type: String, default: "not-start", enum: [
                "not-start",
-               "suspended",
                "postponed",
                "cancelled",
                "finalized"

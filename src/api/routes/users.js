@@ -1,9 +1,6 @@
 
 
-const { idAuth } = require("../../middlewares/auth/idAuth");
-const { isAuth
- } = require("../../middlewares/auth/isAuth");
-const { rollAuth } = require("../../middlewares/auth/rollAuth");
+const {isAuth, rollAuth, idAuth } = require("../../middlewares/auth/auth");
 
 const upload = require('../../middlewares/file/file');
 const { getUsers, getUserById, postUser, putRollUser, putPasswordById, putUser, addEventsFromUser, removeEventFromUser, deleteUser } = require("../controllers/users");

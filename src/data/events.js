@@ -6,8 +6,8 @@ const eventDate = [
           adress: "Calle del Sol 123",
           city: "Barcelona",
           description: "Un espectáculo único con los mejores artistas de jazz.",
-          startDate: "2025-02-15T20:00:00",
-          endDate: "2025-02-15T23:00:00",
+          startDate: "2025-03-15T20:00:00",
+          endDate: "2025-03-15T23:00:00",
           attendees: [],
           ticketsSold: [],
           maxCapacity: 200
@@ -128,8 +128,8 @@ const eventDate = [
           adress: "Calle Real de la Alhambra, s/n",
           city: "Granada",
           description: "Un concierto mágico en uno de los lugares más emblemáticos de España.",
-          startDate: "2025-01-15T20:00:00",
-          endDate: "2025-01-15T23:00:00",
+          startDate: "2025-05-15T20:00:00",
+          endDate: "2025-05-15T23:00:00",
           attendees: [],
           ticketsSold: []
      },
@@ -164,8 +164,8 @@ const eventDate = [
           adress: "Avenida Abandoibarra, 2",
           city: "Bilbao",
           description: "Aprende técnicas avanzadas de fotografía en un entorno único.",
-          startDate: "2025-02-05T10:00:00",
-          endDate: "2025-02-05T14:00:00",
+          startDate: "2025-03-05T10:00:00",
+          endDate: "2025-03-05T14:00:00",
           attendees: [],
           ticketsSold: []
      },
@@ -188,8 +188,8 @@ const eventDate = [
           adress: "Avenida de María Luisa, s/n",
           city: "Sevilla",
           description: "Disfruta del arte flamenco en su máxima expresión.",
-          startDate: "2025-02-14T20:00:00",
-          endDate: "2025-02-14T22:30:00",
+          startDate: "2025-03-14T20:00:00",
+          endDate: "2025-03-14T22:30:00",
           attendees: [],
           ticketsSold: []
      },
@@ -212,8 +212,8 @@ const eventDate = [
           adress: "Plaza de San Juan de Dios, s/n",
           city: "Cádiz",
           description: "Una de las celebraciones más divertidas y coloridas de España.",
-          startDate: "2025-02-10T18:00:00",
-          endDate: "2025-02-18T23:59:00",
+          startDate: "2025-03-10T18:00:00",
+          endDate: "2025-03-18T23:59:00",
           attendees: [],
           ticketsSold: []
      },
@@ -382,18 +382,6 @@ const eventDate = [
           description: "Los mejores surfistas del mundo se reúnen en las playas de Canarias.",
           startDate: "2025-08-05T09:00:00",
           endDate: "2025-08-07T18:00:00",
-          attendees: [],
-          ticketsSold: []
-     },
-     {
-          name: "Noche de San Valentín en Granada",
-          type: "party",
-          location: "Mirador de San Nicolás",
-          adress: "Calle Mirador de San Nicolás, 1",
-          city: "Granada",
-          description: "Una velada romántica con vistas a la Alhambra.",
-          startDate: "2025-02-14T20:00:00",
-          endDate: "2025-02-14T23:59:00",
           attendees: [],
           ticketsSold: []
      },

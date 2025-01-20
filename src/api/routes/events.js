@@ -1,6 +1,5 @@
 
-const { isAuth } = require("../../middlewares/auth/isAuth");
-const { idCreated } = require("../../middlewares/auth/idCreated");
+const { isAuth, idCreated } = require("../../middlewares/auth/auth");
 
 const upload = require('../../middlewares/file/file');
 const { getEvents,getEventById,getEventByName,
