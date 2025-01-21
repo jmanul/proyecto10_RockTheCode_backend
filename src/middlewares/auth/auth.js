@@ -1,6 +1,5 @@
-
+const mongoose = require('mongoose');
 const Event = require('../../api/models/events');
-
 const User = require('../../api/models/users');
 const { verifyToken } = require('../../utils/jwt/jwt')
 
@@ -45,9 +44,13 @@ const idCreated = async (req, res, next) => {
 
      try {
           const { roll, _id } = req.user;
-          const { id } = req.params;
+          const { eventId } = req.params;
 
-          const event = await Event.findById(id);
+          if (!mongoose.Types.ObjectId.isValid(eventId)) {
+               return res.status(400).json({ message: 'el Id no es valido' });
+          }
+
+          const event = await Event.findById(eventId);
           if (!event) {
                return res.status(404).json({ message: 'Evento no encontrado' });
           }
@@ -73,18 +76,15 @@ const idCreated = async (req, res, next) => {
 
 const idAuth = (req, res, next) => {
      try {
-          const { roll, _id, userName } = req.user;
+          const { roll, _id } = req.user;
           const { userId } = req.params;
           
-          // Si es administrador, tiene acceso a todos los usuarios
           if (roll === 'administrator') {
                return next();
           }
 
-          // Si es un usuario user y el ID coincide con su propio ID 
-
           if (_id.toString() === userId) {
-               return next(); // Permitir acceso a la ruta
+               return next(); 
                
           }
 

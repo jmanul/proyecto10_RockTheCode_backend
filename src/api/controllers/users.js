@@ -4,6 +4,7 @@ const Ticket = require("../models/tickets");
 const User = require("../models/users");
 const Event = require("../models/events");
 const ticketGenerator = require('../../services/ticketGenerator');
+const calculateFreePlaces = require('../../services/ticketGenerator');
 
 const bcrypt = require('bcrypt');
 
@@ -228,22 +229,31 @@ const addEventsFromUser = async (req, res, next) => {
           }
 
           const ticket = await ticketGenerator(event, user, reservedPlaces);
-
+          
           
           const updatedUser = await User.findByIdAndUpdate(
                userId,
                { $addToSet: { eventsIds: eventId, ticketsIds: ticket._id } },
                { new: true });
           
-          await Event.findByIdAndUpdate(
+          const updatedEvent = await Event.findByIdAndUpdate(
                eventId,
                {
                     $addToSet: { attendees: userId, ticketsSold: ticket._id },
-                    $inc: { totalReservedPlaces: reservedPlaces }
+                    $inc: { totalReservedPlaces: reservedPlaces },
+                    
                },
                { new: true }
           );
 
+          if (updatedEvent.totalReservedPlaces >= updatedEvent.maxCapacity) {
+               await Event.findByIdAndUpdate(
+                    eventId,
+                    { soldOut: true },
+                    { new: true }
+               );
+          }
+          
           return res.status(200).json({
                message: 'Evento añadido correctamente, ticket generado',
                ticket: ticket,
@@ -322,6 +332,18 @@ const deleteUser = async (req, res, next) => {
 
           if (!user) {
                return res.status(404).json({ message: 'usuario no encontrado' });
+          }
+
+          const activeEvents = await Event.find({
+               attendees: userId,
+               endDate: { $gte: new Date() }
+          });
+
+          if (activeEvents.length > 0) {
+               return res.status(400).json({
+                    message: 'no puedes eliminar tu cuenta mientras tengas eventos sin finalizar',
+                    activeEvents,
+               });
           }
 
           await deleteCloudinaryImage(user.avatar);

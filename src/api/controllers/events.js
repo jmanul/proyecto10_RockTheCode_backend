@@ -3,6 +3,7 @@ const deleteCloudinaryImage = require('../../utils/cloudinary/deleteCloudinaryIm
 
 const User = require("../models/users");
 const Event = require("../models/events");
+const Ticket = require("../models/tickets");
 
 const getEvents = async (req, res, next) => {
 
@@ -31,8 +32,8 @@ const getEventById = async (req, res, next) => {
 
      try {
 
-          const { id } = req.params;
-          const event = await Event.findById(id).populate({
+          const { eventId } = req.params;
+          const event = await Event.findById(eventId).populate({
                path: 'attendees',
                select: 'userName avatar'
           });
@@ -50,12 +51,12 @@ const getEventById = async (req, res, next) => {
      }
 };
 
-const getEventByName = async (req, res, next) => {
+const getEventByStatus = async (req, res, next) => {
 
      try {
 
-          const { name } = req.params;
-          const event = await Event.find({name}).populate({
+          const { eventStatus } = req.params;
+          const event = await Event.find({eventStatus}).populate({
                path: 'attendees',
                select: 'userName avatar'
           });
@@ -78,11 +79,11 @@ const postEvent = async (req, res, next) => {
 
      try {
 
-          const { name, startDate, attendees, ...rest } = req.body;
+          const { status, startDate, attendees, ...rest } = req.body;
           let image;
           let createdBy = req.user._id
 
-          const existEvent = await Event.findOne({ name, startDate });
+          const existEvent = await Event.findOne({ status, startDate });
 
           if (existEvent) {
                return res.status(400).json({ message: 'El evento ya existe en la fecha indicada' });
@@ -94,7 +95,7 @@ const postEvent = async (req, res, next) => {
           }
 
           const newEvent = await Event.create({
-               name,
+               status,
                startDate,
                image,
                createdBy,
@@ -120,36 +121,45 @@ const postEvent = async (req, res, next) => {
 
 
 const putEvent = async (req, res, next) => {
-
      try {
-
-          const { id } = req.params;
-          const event = await Event.findById(id);
+          const { eventId } = req.params;
+          const event = await Event.findById(eventId);
 
           if (!event) {
                return res.status(404).json({ message: 'Evento no encontrado' });
           }
 
-          if (req.file) {
-
-               await deleteCloudinaryImage(event.image);
-
-               req.body.image = req.file.path;
+          if (req.body.startDate && new Date(req.body.startDate) <= new Date(event.startDate)) {
+               return res.status(400).json({ message: 'la nueva fecha de inicio debe ser posterior a la fecha actual del evento' });
           }
 
-          const eventUpdate = await Event.findByIdAndUpdate(id, req.body, { new: true });
-          
+         
+          const startDate = req.body.startDate ? new Date(req.body.startDate) : new Date(event.startDate);
+          if (req.body.endDate && new Date(req.body.endDate) <= startDate) {
+               return res.status(400).json({ message: 'la fecha  de fin debe ser posterior a la fecha de inicio' });
+          }
+
+       
+          const updateData = { ...req.body };
+
+          if (req.body.startDate && new Date(req.body.startDate) > new Date(event.startDate)) {
+               updateData.eventStatus = 'postponed';
+          }
+
+          if (req.file) {
+               await deleteCloudinaryImage(event.image);
+               updateData.image = req.file.path;
+          }
+
+          const eventUpdate = await Event.findByIdAndUpdate(eventId, updateData, { new: true });
 
           return res.status(200).json(eventUpdate);
-
-
      } catch (error) {
-
           if (req.file) {
                await deleteCloudinaryImage(req.file.path);
           }
 
-          return res.status(404).json({ error: error.message });
+          return res.status(500).json({ error: error.message });
      }
 };
 
@@ -157,18 +167,20 @@ const deleteEvent = async (req, res, next) => {
 
      try {
 
-          const { id } = req.params;
-          const event = await Event.findById(id)
+          const { eventId } = req.params;
+          const event = await Event.findById(eventId)
 
           if (!event) {
                return res.status(404).json({ message: 'evento no encontrado' });
           }
 
           await deleteCloudinaryImage(event.image);
-          
-          await Event.findByIdAndDelete(id);
 
-          await User.updateMany({ eventsIds: id }, { $pull: { eventsIds: id } });
+          await Ticket.updateMany({ eventId: eventId }, { $set: { eventStatus: 'cancelled' } });
+          
+          await Event.findByIdAndDelete(eventId);
+
+          await User.updateMany({ eventsIds: eventId }, { $pull: { eventsIds: eventId } });
 
           return res.status(200).json({
                message: 'El evento fue eliminado',
@@ -187,7 +199,7 @@ module.exports = {
 
      getEvents,
      getEventById,
-     getEventByName,
+     getEventByStatus,
      postEvent,
      putEvent,
      deleteEvent

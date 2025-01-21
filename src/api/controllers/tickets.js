@@ -74,9 +74,7 @@ const getTicketsByIdEvent = async (req, res, next) => {
 };
 
 //todo: password no
-//todo: hay que hacer el ajuste de modificacion de estadomde lños tique si se modifica la fecha del evento a evento pospuesto 
-
-// todo: cuando se elimina un evento hay que modificar los tickets a evento cancelado
+//todo readme y listar ticket por userid
 
 module.exports = {
 
