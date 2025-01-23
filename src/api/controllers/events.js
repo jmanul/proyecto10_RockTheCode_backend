@@ -140,7 +140,7 @@ const putEvent = async (req, res, next) => {
           }
 
        
-          const updateData = { ...req.body };
+          const updateData = {eventStatus, ...req.body };
 
           if (req.body.startDate && new Date(req.body.startDate) > new Date(event.startDate)) {
                updateData.eventStatus = 'postponed';

@@ -227,24 +227,33 @@ const addEventsFromUser = async (req, res, next) => {
           if (!event) {
                return res.status(404).json({ message: 'evento no encontrado' });
           }
+          
+          let updatedEvent = {};
+          let updatedUser = {};
+          let ticket = {};
+          const ticketsList = [];
 
-          const ticket = await ticketGenerator(event, user, reservedPlaces);
-          
-          
-          const updatedUser = await User.findByIdAndUpdate(
-               userId,
-               { $addToSet: { eventsIds: eventId, ticketsIds: ticket._id } },
-               { new: true });
-          
-          const updatedEvent = await Event.findByIdAndUpdate(
-               eventId,
-               {
-                    $addToSet: { attendees: userId, ticketsSold: ticket._id },
-                    $inc: { totalReservedPlaces: reservedPlaces },
-                    
-               },
-               { new: true }
-          );
+          for (let element = 0; element < reservedPlaces; element++) {
+
+               ticket = await ticketGenerator(event, user, 1);
+
+               ticketsList.push(ticket)
+
+               updatedUser = await User.findByIdAndUpdate(
+                    userId,
+                    { $addToSet: { eventsIds: eventId, ticketsIds: ticket._id } },
+                    { new: true });
+
+               updatedEvent = await Event.findByIdAndUpdate(
+                    eventId,
+                    {
+                         $addToSet: { attendees: userId, ticketsSold: ticket._id },
+                         $inc: { totalReservedPlaces: 1 },
+
+                    },
+                    { new: true }
+               );
+          }
 
           if (updatedEvent.totalReservedPlaces >= updatedEvent.maxCapacity) {
                await Event.findByIdAndUpdate(
@@ -253,11 +262,12 @@ const addEventsFromUser = async (req, res, next) => {
                     { new: true }
                );
           }
-          
+
           return res.status(200).json({
                message: 'Evento añadido correctamente, ticket generado',
-               ticket: ticket,
-               updatedUser
+               ticket: ticketsList,
+               user: updatedUser,
+               event: updatedEvent
           });
 
      } catch (error) {

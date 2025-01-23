@@ -72,7 +72,8 @@ const eventDate = [
           startDate: "2025-07-15T18:00:00",
           endDate: "2025-07-15T20:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 200
      },
      {
           name: "Clase Magistral de Fotografía",
@@ -83,7 +84,8 @@ const eventDate = [
           startDate: "2025-08-01T10:00:00",
           endDate: "2025-08-01T13:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 200
      },
      {
           name: "Carrera Nocturna 5K",
@@ -95,7 +97,8 @@ const eventDate = [
           startDate: "2025-09-10T19:00:00",
           endDate: "2025-09-10T21:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 90
      },
      {
           name: "Festival de Música Electrónica",
@@ -107,7 +110,8 @@ const eventDate = [
           startDate: "2025-10-05T17:00:00",
           endDate: "2025-10-05T23:59:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 90
      },
      {
           name: "Competencia de Esports",
@@ -119,7 +123,8 @@ const eventDate = [
           startDate: "2025-11-15T10:00:00",
           endDate: "2025-11-15T20:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 90
      },
      {
           name: "Concierto en la Alhambra",
@@ -131,7 +136,8 @@ const eventDate = [
           startDate: "2025-05-15T20:00:00",
           endDate: "2025-05-15T23:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 90
      },
      {
           name: "Maratón de Madrid",
@@ -143,7 +149,8 @@ const eventDate = [
           startDate: "2025-03-10T08:00:00",
           endDate: "2025-03-10T14:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 90
      },
      {
           name: "Fiesta Mayor de Sitges",
@@ -155,7 +162,8 @@ const eventDate = [
           startDate: "2025-07-23T18:00:00",
           endDate: "2025-07-23T23:59:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 90
      },
      {
           name: "Taller de fotografía en el Guggenheim",
@@ -167,7 +175,8 @@ const eventDate = [
           startDate: "2025-03-05T10:00:00",
           endDate: "2025-03-05T14:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 90
      },
      {
           name: "Feria del libro de Barcelona",
@@ -179,7 +188,8 @@ const eventDate = [
           startDate: "2025-04-21T10:00:00",
           endDate: "2025-04-23T19:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Concierto de Flamenco en Sevilla",
@@ -191,7 +201,8 @@ const eventDate = [
           startDate: "2025-03-14T20:00:00",
           endDate: "2025-03-14T22:30:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Carrera Popular de Valencia",
@@ -203,7 +214,8 @@ const eventDate = [
           startDate: "2025-03-25T09:00:00",
           endDate: "2025-03-25T12:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Carnaval de Cádiz",
@@ -215,7 +227,8 @@ const eventDate = [
           startDate: "2025-03-10T18:00:00",
           endDate: "2025-03-18T23:59:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Curso de cocina gallega",
@@ -227,7 +240,8 @@ const eventDate = [
           startDate: "2025-05-05T10:00:00",
           endDate: "2025-05-05T13:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Feria de Abril en Barcelona",
@@ -239,7 +253,8 @@ const eventDate = [
           startDate: "2025-04-20T18:00:00",
           endDate: "2025-04-25T23:59:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Concierto sinfónico en Valencia",
@@ -251,7 +266,8 @@ const eventDate = [
           startDate: "2025-06-10T20:00:00",
           endDate: "2025-06-10T22:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Torneo de pádel en Málaga",
@@ -263,7 +279,8 @@ const eventDate = [
           startDate: "2025-07-15T09:00:00",
           endDate: "2025-07-15T18:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Fiesta de San Juan en Alicante",
@@ -275,7 +292,8 @@ const eventDate = [
           startDate: "2025-06-23T22:00:00",
           endDate: "2025-06-24T02:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Taller de pintura al aire libre",
@@ -287,7 +305,8 @@ const eventDate = [
           startDate: "2025-09-15T10:00:00",
           endDate: "2025-09-15T13:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Festival de cine de San Sebastián",
@@ -299,7 +318,9 @@ const eventDate = [
           startDate: "2025-09-20T10:00:00",
           endDate: "2025-09-27T23:59:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 110
+
      },
      {
           name: "Festival de Jazz en Madrid",
@@ -311,7 +332,8 @@ const eventDate = [
           startDate: "2025-03-15T19:30:00",
           endDate: "2025-03-15T22:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Maratón de Barcelona",
@@ -323,7 +345,8 @@ const eventDate = [
           startDate: "2025-04-07T08:00:00",
           endDate: "2025-04-07T14:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Fiesta Mayor de Gràcia",
@@ -335,7 +358,8 @@ const eventDate = [
           startDate: "2025-08-15T10:00:00",
           endDate: "2025-08-21T23:59:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Curso de fotografía nocturna",
@@ -347,7 +371,8 @@ const eventDate = [
           startDate: "2025-05-12T20:00:00",
           endDate: "2025-05-12T23:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Feria del Libro de Madrid",
@@ -359,7 +384,8 @@ const eventDate = [
           startDate: "2025-06-01T10:00:00",
           endDate: "2025-06-15T21:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Concierto de Rock en Gijón",
@@ -371,7 +397,8 @@ const eventDate = [
           startDate: "2025-07-20T21:00:00",
           endDate: "2025-07-20T23:30:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Campeonato de Surf en Fuerteventura",
@@ -383,7 +410,8 @@ const eventDate = [
           startDate: "2025-08-05T09:00:00",
           endDate: "2025-08-07T18:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Taller de cerámica en Toledo",
@@ -395,7 +423,8 @@ const eventDate = [
           startDate: "2025-04-10T10:00:00",
           endDate: "2025-04-10T14:00:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 190
      },
      {
           name: "Semana Santa en Sevilla",
@@ -407,7 +436,8 @@ const eventDate = [
           startDate: "2025-03-29T18:00:00",
           endDate: "2025-04-05T23:59:00",
           attendees: [],
-          ticketsSold: []
+          ticketsSold: [],
+          maxCapacity: 19
      }
 ];
 

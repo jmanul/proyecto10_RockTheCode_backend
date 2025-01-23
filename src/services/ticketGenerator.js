@@ -9,7 +9,7 @@ const ticketGenerator = async (event, user, reservedPlaces) => {
      try {
 
           const freePlaces = calculateFreePlaces(event, reservedPlaces)
-          
+
           const ticket = new Ticket({
                eventId: event._id,
                eventName: event.name,
@@ -17,7 +17,8 @@ const ticketGenerator = async (event, user, reservedPlaces) => {
                userId: user._id,
                userName: user.userName,
                reservedPlaces,
-               ticketPrice: event.price * reservedPlaces
+               ticketPrice: event.price * reservedPlaces,
+               ticketPriceVip: event.priceVip * reservedPlaces,
           });
 
           const qrData = {
@@ -35,6 +36,8 @@ const ticketGenerator = async (event, user, reservedPlaces) => {
           await ticket.save();
 
           return ticket;
+          
+
 
      } catch (error) {
           throw new Error(`error al generar el ticket: ${error.message}`);

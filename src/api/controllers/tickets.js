@@ -53,6 +53,35 @@ const postTicket = async (req, res, next) => {
 
 };
 
+const putStatusById = async (req, res, next) => {
+
+     try {
+
+          const { ticketId } = req.params;
+          const { ticketStatus } = req.body;
+
+          const ticket = await Ticket.findById(ticketId);
+
+          if (!ticket) {
+               return res.status(404).json({ message: 'ticket no encontrado' });
+          }
+
+          const updateData = { ticketStatus }
+
+          const ticketUpdate = await Ticket.findByIdAndUpdate(ticketId, updateData, { new: true });
+
+          console.log(ticketUpdate);
+
+          return res.status(200).json({
+               message: `status del ticket actualizado a ${ticketStatus}`, ticketUpdate
+          });
+
+     } catch (error) {
+
+          return res.status(404).json({ error: error.message });
+     }
+}
+
 const getTicketsByIdEvent = async (req, res, next) => {
 
      try {
@@ -126,12 +155,16 @@ const getTicketsByIdEventAndUser = async (req, res, next) => {
      }
 };
 
-//todo probar ultimos controladores de tickets
-//todo readme  mio tambien, prohibir modificar el status del evento
+
+//todo readme  mio tambien, 
+
+
+// todo eslorar la idea de que las actualizaciones en otros modelos sean a traves de una funcion posteriormente para que la solicitud no sea mas pesada de realizarse 
 
 module.exports = {
 
      postTicket,
+     putStatusById,
      getTicketsByIdEvent,
      getTicketsByIdUser,
      getTicketsByIdEventAndUser

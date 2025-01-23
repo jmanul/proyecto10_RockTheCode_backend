@@ -12,14 +12,13 @@ const ticketSchema = new mongoose.Schema({
      userId: { type: mongoose.Types.ObjectId, ref: 'users', required: true },
      userName: { type: String, required: true, trim: true },
      reservedPlaces: { type: Number, default: 1 },
-     ticketPrice: { type: Number, default: 0},
+     ticketPrice: { type: Number, default: 0 },
+     ticketPriceVip: { type: Number, default: 0 },
      qrCode: { type: String }, 
      ticketStatus: {
           type: String, default: "unused", enum: [
                "unused",
                "used",
-               "vip-unused",
-               "vip-used",
                "cancelled"
           ]
      },
