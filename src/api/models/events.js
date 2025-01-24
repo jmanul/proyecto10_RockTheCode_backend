@@ -44,8 +44,6 @@ const eventSchema = new mongoose.Schema({
      image: { type: String, default: "https://res.cloudinary.com/dn6utw1rl/image/upload/v1736008149/default/default-image-event_zk7dcu.webp" },
      createdBy: { type: mongoose.Types.ObjectId, ref:'users',default:"67784a087790d458a8eaef58", required: true },
      isPaid: { type: Boolean, default: false },soldOut: { type: Boolean, default: false },
-     price: { type: Number, default: 0 },
-     priceVip: { type: Number, default: 0 },
      maxCapacity: { type: Number, required: true },
      totalReservedPlaces: { type: Number, default: 0 },
      attendees: [{ type: mongoose.Types.ObjectId, ref: 'users', required: false }],

@@ -3,6 +3,26 @@ const User = require("../models/users");
 const Event = require("../models/events");
 const ticketGenerator = require('../../services/ticketGenerator');
 
+const getById = async (req, res, next) => {
+
+     try {
+
+          const { ticketId } = req.params;
+          
+          const ticket = await Ticket.findById(ticketId).populate('eventId', 'name location city eventStatus image').populate('userId', 'userName ');
+
+          if (!ticket) {
+               return res.status(404).json({ message: 'ticket no encontrado' });
+          }
+
+          return res.status(200).json(ticket);
+
+     } catch (error) {
+
+          return res.status(404).json({ error: error.message });
+     }
+}
+
 
 const postTicket = async (req, res, next) => {
 
@@ -57,7 +77,7 @@ const putStatusById = async (req, res, next) => {
 
      try {
 
-          const { ticketId } = req.params;
+          const { eventId, ticketId } = req.params;
           const { ticketStatus } = req.body;
 
           const ticket = await Ticket.findById(ticketId);
@@ -69,8 +89,6 @@ const putStatusById = async (req, res, next) => {
           const updateData = { ticketStatus }
 
           const ticketUpdate = await Ticket.findByIdAndUpdate(ticketId, updateData, { new: true });
-
-          console.log(ticketUpdate);
 
           return res.status(200).json({
                message: `status del ticket actualizado a ${ticketStatus}`, ticketUpdate
@@ -157,7 +175,8 @@ const getTicketsByIdEventAndUser = async (req, res, next) => {
 
 
 //todo readme  mio tambien, 
-
+//todo quedate solo con los ids de referencia y revisa las actualizaciones que haces por si no son precisas
+//todo ruta en el qr
 
 // todo eslorar la idea de que las actualizaciones en otros modelos sean a traves de una funcion posteriormente para que la solicitud no sea mas pesada de realizarse 
 
@@ -167,5 +186,6 @@ module.exports = {
      putStatusById,
      getTicketsByIdEvent,
      getTicketsByIdUser,
-     getTicketsByIdEventAndUser
+     getTicketsByIdEventAndUser,
+     getById
 };

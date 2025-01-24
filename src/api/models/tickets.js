@@ -7,14 +7,9 @@ const mongoose = require('mongoose');
 const ticketSchema = new mongoose.Schema({
 
      eventId: { type: mongoose.Types.ObjectId, ref: 'events', required: true },
-     eventName: { type: String, required: true, trim: true },
-     eventStatus: { type: String, required: true, trim: true },
      userId: { type: mongoose.Types.ObjectId, ref: 'users', required: true },
-     userName: { type: String, required: true, trim: true },
-     reservedPlaces: { type: Number, default: 1 },
-     ticketPrice: { type: Number, default: 0 },
-     ticketPriceVip: { type: Number, default: 0 },
-     qrCode: { type: String }, 
+     passId: { type: mongoose.Types.ObjectId, ref: 'passes', required: true },
+     qrCode: { type: String, required: true }, 
      ticketStatus: {
           type: String, default: "unused", enum: [
                "unused",

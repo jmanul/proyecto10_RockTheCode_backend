@@ -22,13 +22,9 @@ const ticketGenerator = async (event, user, reservedPlaces) => {
           });
 
           const qrData = {
-               ticketId: ticket._id,
-               image: event.image,
-               eventName: event.name,
-               userName: user.userName,
-               reservedPlaces,
-               startDate: event.startDate,
-               endDate: event.endDate,
+
+               ticketUrl: `http://localhost:3000/api/v1/tickets/${ticket._id}` 
+              
           };
 
           ticket.qrCode = await qrGenerator(qrData);

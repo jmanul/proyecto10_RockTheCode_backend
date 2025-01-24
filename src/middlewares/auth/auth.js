@@ -45,9 +45,10 @@ const idCreated = async (req, res, next) => {
      try {
           const { roll, _id } = req.user;
           const { eventId } = req.params;
-
+          
           if (!mongoose.Types.ObjectId.isValid(eventId)) {
-               return res.status(400).json({ message: 'el Id no es valido' });
+               return res.status(400).json({ message: 'el Id no es valido', _id });
+               
           }
 
           const event = await Event.findById(eventId);

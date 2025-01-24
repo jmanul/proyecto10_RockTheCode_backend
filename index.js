@@ -7,6 +7,7 @@ const registerRouter = require('./src/api/routes/register');
 const usersRouter = require('./src/api/routes/users');
 const eventsRouter = require('./src/api/routes/events');
 const ticketsRouter = require('./src/api/routes/tickets');
+const passesRouter = require('./src/api/routes/passes');
 const  cleanUpdateOldData = require('./src/utils/cronJobs/cronJobs');
 
 
@@ -31,6 +32,7 @@ app.use('/api/v1/register', registerRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/events', eventsRouter);
 app.use('/api/v1/tickets', ticketsRouter);
+app.use('/api/v1/passes', passesRouter);
 
 
 
