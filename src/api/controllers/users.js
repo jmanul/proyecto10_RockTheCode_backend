@@ -3,6 +3,7 @@ const deleteCloudinaryImage = require('../../utils/cloudinary/deleteCloudinaryIm
 const Ticket = require("../models/tickets");
 const User = require("../models/users");
 const Event = require("../models/events");
+const Pass = require("../models/passes");
 const ticketGenerator = require('../../services/ticketGenerator');
 const calculateFreePlaces = require('../../services/ticketGenerator');
 
@@ -211,10 +212,10 @@ const putUser = async (req, res, next) => {
      }
 };
 
-const addEventsFromUser = async (req, res, next) => {
+const addPassFromUser = async (req, res, next) => {
 
      try {
-          const { userId, eventId } = req.params;
+          const { userId, passId } = req.params;
 
           const { reservedPlaces } = req.body;
 
@@ -223,32 +224,43 @@ const addEventsFromUser = async (req, res, next) => {
                return res.status(404).json({ message: 'usuario no encontrado' });
           }
 
-          const event = await Event.findById(eventId);
-          if (!event) {
-               return res.status(404).json({ message: 'evento no encontrado' });
+          const pass = await Pass.findById(passId);
+          if (!pass) {
+               return res.status(404).json({ message: 'entrada no encontrada' });
           }
           
           let updatedEvent = {};
           let updatedUser = {};
+          let updatedPass = {};
           let ticket = {};
           const ticketsList = [];
 
           for (let element = 0; element < reservedPlaces; element++) {
 
-               ticket = await ticketGenerator(event, user, 1);
+               ticket = await ticketGenerator(pass, user, 1);
 
                ticketsList.push(ticket)
 
                updatedUser = await User.findByIdAndUpdate(
                     userId,
-                    { $addToSet: { eventsIds: eventId, ticketsIds: ticket._id } },
+                    { $addToSet: { passesIds: passId, eventsIds: pass.eventId, ticketsIds: ticket._id } },
                     { new: true });
 
                updatedEvent = await Event.findByIdAndUpdate(
-                    eventId,
+                    pass.eventId,
                     {
                          $addToSet: { attendees: userId, ticketsSold: ticket._id },
                          $inc: { totalReservedPlaces: 1 },
+
+                    },
+                    { new: true }
+               );
+               
+               updatedPass = await Pass.findByIdAndUpdate(
+                    passId,
+                    {
+                         $addToSet: { attendeesPass: userId, ticketsSoldPass: ticket._id },
+                         $inc: { totalReservedPlacesPass: 1 },
 
                     },
                     { new: true }
@@ -257,7 +269,7 @@ const addEventsFromUser = async (req, res, next) => {
 
           if (updatedEvent.totalReservedPlaces >= updatedEvent.maxCapacity) {
                await Event.findByIdAndUpdate(
-                    eventId,
+                    pass.eventId,
                     { soldOut: true },
                     { new: true }
                );
@@ -278,44 +290,57 @@ const addEventsFromUser = async (req, res, next) => {
 };
 
 
-const removeEventFromUser = async (req, res, next) => {
+const removePassFromUser = async (req, res, next) => {
      try {
-          const { userId, eventId } = req.params;
+          const { userId, passId } = req.params;
 
           const user = await User.findById(userId);
-          const event = await Event.findById(eventId);
+          const pass = await Event.findById(passId);
 
           if (!user) {
                return res.status(404).json({ message: 'Usuario no encontrado' });
           }
 
-          if (!event) {
-               return res.status(404).json({ message: 'Evento no encontrado' });
+          if (!pass) {
+               return res.status(404).json({ message: 'entrada no encontrada' });
           }
 
-          const tickets = await Ticket.find({ userId, eventId });
+          if (pass.passPrice > 0) {
+               return res.status(404).json({ message: 'la entrada no se pueden cancelar' });
+          }
+
+          const tickets = await Ticket.find({ userId, passId });
 
           const totalReservedPlacesToReturn = tickets.reduce(
-               (sum, ticket) => sum + ticket.reservedPlaces,
+               (sum, ticket) => sum + ticket.passId.reservedPlacesPass,
                0
           );
 
           const cancelledTickets = await Ticket.updateMany(
-               { userId, eventId },
+               { userId, passId },
                { ticketStatus: 'cancelled' }
           );
 
                const userUpdate = await User.findByIdAndUpdate(
                     userId,
-                    { $pull: { eventsIds: eventId } },
+                    { $pull: { eventsIds: pass.eventId, passesIds: passId } },
                     { new: true }
                );
 
                const eventUpdate = await Event.findByIdAndUpdate(
-                    eventId,
+                    pass.eventId,
                     {
                          $pull: { attendees: userId },
                          $inc: { totalReservedPlaces: -totalReservedPlacesToReturn }
+                    },
+                    { new: true }
+          );
+          
+          const passUpdate = await Pass.findByIdAndUpdate(
+                    passId,
+                    {
+                         $pull: { attendeesPass: userId },
+                         $inc: { totalReservedPlacesPass: -totalReservedPlacesToReturn }
                     },
                     { new: true }
                );
@@ -324,7 +349,9 @@ const removeEventFromUser = async (req, res, next) => {
                return res.status(200).json({
                     message: 'El Evento fue eliminado',
                     user: userUpdate,
-                    event: eventUpdate, cancelledTickets
+                    event: eventUpdate,
+                    pass: passUpdate,
+                    cancelledTickets
                });
 
      } catch (error) {
@@ -381,8 +408,8 @@ module.exports = {
      putRollUser,
      putPasswordById,
      putUser,
-     addEventsFromUser,
-     removeEventFromUser,
+     addPassFromUser,
+     removePassFromUser,
      deleteUser
 };
 

@@ -1,6 +1,7 @@
 const Ticket = require("../models/tickets");
 const User = require("../models/users");
 const Event = require("../models/events");
+const Pass = require("../models/passes");
 const ticketGenerator = require('../../services/ticketGenerator');
 
 const getById = async (req, res, next) => {
@@ -80,6 +81,12 @@ const putStatusById = async (req, res, next) => {
           const { eventId, ticketId } = req.params;
           const { ticketStatus } = req.body;
 
+          const event = await Event.findById(eventId);
+
+          if (!event) {
+               return res.status(400).json({ message: 'El evento no existe' });
+          }
+
           const ticket = await Ticket.findById(ticketId);
 
           if (!ticket) {
@@ -109,6 +116,34 @@ const getTicketsByIdEvent = async (req, res, next) => {
 
           if (!eventId) {
                return res.status(404).json({ message: 'evento no encontrado' });
+          }
+          
+          if (!tickets) {
+               return res.status(404).json({ message: 'ticket no encontrado' });
+          }
+
+          return res.status(200).json(tickets);
+
+     } catch (error) {
+
+          return res.status(404).json({ error: error.message });
+
+     }
+};
+
+const getTicketsByIdPass = async (req, res, next) => {
+
+     try {
+
+          const {eventId, passId } = req.params;
+          const tickets = await Ticket.find({ passId })
+
+          if (!eventId) {
+               return res.status(404).json({ message: 'evento no encontrado' });
+          }
+
+          if (!passId) {
+               return res.status(404).json({ message: 'entrada no encontrada' });
           }
           
           if (!tickets) {
@@ -175,16 +210,16 @@ const getTicketsByIdEventAndUser = async (req, res, next) => {
 
 
 //todo readme  mio tambien, 
-//todo quedate solo con los ids de referencia y revisa las actualizaciones que haces por si no son precisas
 //todo ruta en el qr
 
-// todo eslorar la idea de que las actualizaciones en otros modelos sean a traves de una funcion posteriormente para que la solicitud no sea mas pesada de realizarse 
+
 
 module.exports = {
 
      postTicket,
      putStatusById,
      getTicketsByIdEvent,
+     getTicketsByIdPass,
      getTicketsByIdUser,
      getTicketsByIdEventAndUser,
      getById

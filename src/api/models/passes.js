@@ -7,19 +7,21 @@ const passSchema = new mongoose.Schema({
 
      eventId: { type: mongoose.Types.ObjectId, ref: 'events', required: [true, 'el ID del evento es obligatorio'] },
      namePass: { type: String, required: true, default: "general" },
-     reservedPlaces: { type: Number, default: 1 },
+     reservedPlacesPass: { type: Number, default: 1 },
      passPrice: { type: Number, default: 0 },
-     maxCapacity: { type: Number, required: true },
-     totalReservedPlaces: { type: Number, default: 0 },
-     soldOut: { type: Boolean, default: false },
+     maxCapacityPass: { type: Number, required: true },
+     totalReservedPlacesPass: { type: Number, default: 0 },
+     soldOutPass: { type: Boolean, default: false },
      color: { type: String, required: true, default: "white" },
-     startDate: {
+     attendeesPass: [{ type: mongoose.Types.ObjectId, ref: 'users', required: false }],
+     ticketsSoldPass: [{ type: mongoose.Types.ObjectId, ref: 'tickets', required: false }],
+     startDatePass: {
           type: Date, required: true, set: value => new Date(value), validate: {
                validator: value => value >= new Date(),
                message: 'la fecha de inicio no puede ser anterior a la actual'
           }
      },
-     endDate: {
+     endDatePass: {
           type: Date, default: function () { return this.startDate; }, set: value => new Date(value), validate: {
                validator: function (value) {
                     return value >= this.startDate;

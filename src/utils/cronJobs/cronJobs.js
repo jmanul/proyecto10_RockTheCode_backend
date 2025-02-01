@@ -2,6 +2,7 @@
 
 const cron = require('node-cron');
 const Event = require('../../api/models/events'); 
+const Pass = require('../../api/models/passes'); 
 const User = require('../../api/models/users'); 
 const Ticket = require('../../api/models/tickets'); 
 
@@ -24,11 +25,11 @@ const cleanUpdateOldData = () => {
                const cutoffDate = new Date();
                cutoffDate.setDate(cutoffDate.getDate() - 90); // han pasado 90 dias
 
-               const eventsToDelete = await Event.find({ endDate: { $lte: cutoffDate }});
+               const passToDelete = await Pass.find({ endDate: { $lte: cutoffDate } });
 
-               for (const event of eventsToDelete) {
-                    // eliminar tickets relacionados con el evento
-                    const ticketsToDelete = await Ticket.find({ eventId: event._id });
+               for (const pass of passToDelete) {
+                 
+                    const ticketsToDelete = await Ticket.find({ passId: pass._id });
                     const ticketsToDeleteIds = ticketsToDelete.map(ticket => ticket._id);
 
                     if (ticketsToDeleteIds.length > 0) {
@@ -40,18 +41,27 @@ const cleanUpdateOldData = () => {
                               { ticketsIds: { $in: ticketsToDeleteIds } },
                               { $pull: { ticketsIds: { $in: ticketsToDeleteIds } } }
                          );
-                         console.log(`Referencias de tickets al evento ${event.name}  eliminadas de los usuarios`);
+                         console.log(`Referencias de tickets a la entrada ${pass.name}  eliminadas de los usuarios`);
 
                          await User.updateMany(
-                              { eventsIds: event._id },
-                              { $pull: { eventsIds: event._id } }
+                              { eventsIds: pass._id },
+                              { $pull: { eventsIds: pass._id } }
                          );
-                         console.log(`Referencias al evento ${event.name} eliminadas de los usuarios`);
+                         console.log(`Referencias al evento ${pass.name} eliminadas de los usuarios`);
                     }   
+
+                    await Pass.findByIdAndDelete(pass._id);
+                    console.log(`entrada ${pass.name} eliminada`);
+               };
+
+               const eventsToDelete = await Event.deleteMany({ endDate: { $lte: cutoffDate } });
+
+               for (const event of eventsToDelete){
 
                     await Event.findByIdAndDelete(event._id);
                     console.log(`evento ${event.name} eliminado`);
                }
+
 
                console.log('Cron Job completado exitosamente');
           } catch (error) {

@@ -1,8 +1,8 @@
 
 
-const calculateFreePlaces = (event, reservedPlaces) => {
+const calculateFreePlaces = (pass, reservedPlaces) => {
 
-     const freePlaces = event.maxCapacity - event.totalReservedPlaces;
+     const freePlaces = pass.maxCapacityPass - pass.totalReservedPlacesPass;
      if (freePlaces <= 0) {
 
           throw new Error('soldout!!, ya no hay plazas disponibles');

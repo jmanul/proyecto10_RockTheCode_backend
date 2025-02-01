@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
      avatar: {
           type: String, default: "https://res.cloudinary.com/dn6utw1rl/image/upload/v1736008037/default/default-person-EDIT_vonfhq.jpg"},
      eventsIds: [{ type: mongoose.Types.ObjectId, ref: 'events', required: false }],
+     passesIds: [{ type: mongoose.Types.ObjectId, ref: 'passes', required: false }],
      ticketsIds: [{ type: mongoose.Types.ObjectId, ref: 'tickets', required: false }]
 
 },

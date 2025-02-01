@@ -54,7 +54,7 @@ const postPass = async (req, res, next) => {
 
      try {
 
-          const { eventId, startDate, endDate, ...rest } = req.body;
+          const { eventId, startDatePass, endDatePass, ...rest } = req.body;
 
           if (!eventId) {
                return res.status(400).json({ message: 'el ID del evento es obligatorio para crear un abono' });
@@ -65,8 +65,8 @@ const postPass = async (req, res, next) => {
                return res.status(404).json({ message: 'evento no encontrado' });
           }
 
-          const passStartDate = new Date(startDate);
-          const passEndDate = new Date(endDate);
+          const passStartDate = new Date(startDatePass);
+          const passEndDate = new Date(endDatePass);
 
           if (passStartDate < event.startDate || passEndDate > event.endDate) {
                return res.status(400).json({
@@ -74,7 +74,7 @@ const postPass = async (req, res, next) => {
                });
           }
 
-          const newPass = await Pass.create({ eventId, startDate: passStartDate, endDate: passEndDate, ...rest });
+          const newPass = await Pass.create({ eventId, startDatePass: passStartDate, endDatePass: passEndDate, ...rest });
 
           const populatedPass = await Pass.findById(newPass._id).populate('eventId', 'name location city eventStatus image');
 
@@ -95,7 +95,7 @@ const postPass = async (req, res, next) => {
 const putPass = async (req, res, next) => {
      try {
           const { passId } = req.params;
-          const { startDate, endDate, eventId, ...rest } = req.body; 
+          const { startDatePass, endDatePass, eventId, ...rest } = req.body; 
 
           const pass = await Pass.findById(passId);
 
@@ -105,9 +105,9 @@ const putPass = async (req, res, next) => {
 
           const event = await Event.findById(pass.eventId)
 
-          if (startDate || endDate) {
-               const newStartDate = startDate ? new Date(startDate) : pass.startDate;
-               const newEndDate = endDate ? new Date(endDate) : pass.endDate;
+          if (startDatePass || endDatePass) {
+               const newStartDate = startDatePass ? new Date(startDatePass) : pass.startDatePass;
+               const newEndDate = endDatePass ? new Date(endDatePass) : pass.endDatePass;
 
                if (newStartDate < event.startDate || newEndDate > event.endDate) {
                     return res.status(400).json({
@@ -115,8 +115,8 @@ const putPass = async (req, res, next) => {
                     });
                }
 
-               rest.startDate = newStartDate;
-               rest.endDate = newEndDate;
+               rest.startDatePass = newStartDate;
+               rest.endDatePass = newEndDate;
           }
 
           const passUpdate = await Pass.findByIdAndUpdate(passId, rest, { new: true });

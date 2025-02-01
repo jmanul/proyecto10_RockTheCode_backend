@@ -4,21 +4,19 @@ const Ticket = require('../api/models/tickets');
 const qrGenerator = require('./qrGenerator');
 const calculateFreePlaces = require('./CalculateFreePlaces');
 
-const ticketGenerator = async (event, user, reservedPlaces) => {
+const ticketGenerator = async (pass, user, reservedPlaces) => {
      
      try {
 
-          const freePlaces = calculateFreePlaces(event, reservedPlaces)
+          calculateFreePlaces(pass, reservedPlaces)
 
           const ticket = new Ticket({
-               eventId: event._id,
-               eventName: event.name,
-               eventStatus: event.eventStatus,
-               userId: user._id,
-               userName: user.userName,
+               passId: pass._id,
+               eventId: pass.eventId,
+               userId: user.userId,
+               passName: pass.name,
                reservedPlaces,
-               ticketPrice: event.price * reservedPlaces,
-               ticketPriceVip: event.priceVip * reservedPlaces,
+               ticketPrice: pass.price * reservedPlaces
           });
 
           const qrData = {

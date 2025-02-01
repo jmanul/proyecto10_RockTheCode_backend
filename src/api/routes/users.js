@@ -3,7 +3,7 @@
 const {isAuth, rollAuth, idAuth } = require("../../middlewares/auth/auth");
 
 const upload = require('../../middlewares/file/file');
-const { getUsers, getUserById, postUser, putRollUser, putPasswordById, putUser, addEventsFromUser, removeEventFromUser, deleteUser } = require("../controllers/users");
+const { getUsers, getUserById, postUser, putRollUser, putPasswordById, putUser, addPassFromUser, removePassFromUser, deleteUser } = require("../controllers/users");
 
 
 const usersRouter = require('express').Router();
@@ -14,8 +14,8 @@ usersRouter.post('/', isAuth, rollAuth('administrator'), upload.single('avatar')
 usersRouter.put('/roll/:userId', isAuth, rollAuth('administrator'), putRollUser);
 usersRouter.put('/password/:userId', isAuth, idAuth, putPasswordById);
 usersRouter.put('/:userId', isAuth, idAuth, upload.single('avatar'), putUser);
-usersRouter.put('/:userId/events/:eventId', isAuth, idAuth, addEventsFromUser);
-usersRouter.delete('/:userId/events/:eventId', isAuth, idAuth, removeEventFromUser,);
+usersRouter.put('/:userId/pass/:passId', isAuth, idAuth, addPassFromUser);
+usersRouter.delete('/:userId/pass/:passId', isAuth, idAuth, removePassFromUser,);
 usersRouter.delete('/:userId', isAuth, idAuth, deleteUser);
 
 
