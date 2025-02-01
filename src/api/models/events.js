@@ -47,6 +47,7 @@ const eventSchema = new mongoose.Schema({
      maxCapacity: { type: Number, required: true },
      totalReservedPlaces: { type: Number, default: 0 },
      attendees: [{ type: mongoose.Types.ObjectId, ref: 'users', required: false }],
+     passesOffered: [{ type: mongoose.Types.ObjectId, ref: 'passes', required: false }],
      ticketsSold: [{ type: mongoose.Types.ObjectId, ref: 'tickets', required: false }]
 
 },

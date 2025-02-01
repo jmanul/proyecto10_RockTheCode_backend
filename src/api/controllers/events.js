@@ -79,11 +79,11 @@ const postEvent = async (req, res, next) => {
 
      try {
 
-          const { status, startDate, attendees, ...rest } = req.body;
+          const { startDate, ...rest } = req.body;
           let image;
           let createdBy = req.user._id
 
-          const existEvent = await Event.findOne({ status, startDate });
+          const existEvent = await Event.findOne({ startDate });
 
           if (existEvent) {
                return res.status(400).json({ message: 'El evento ya existe en la fecha indicada' });
@@ -95,7 +95,6 @@ const postEvent = async (req, res, next) => {
           }
 
           const newEvent = await Event.create({
-               status,
                startDate,
                image,
                createdBy,

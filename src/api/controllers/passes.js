@@ -1,178 +1,165 @@
 
-const User = require("../models/users");
 const Event = require("../models/events");
-const Ticket = require("../models/tickets");
 const Pass = require("../models/passes");
 
 
-// const getPassesByEvent = async (req, res, next) => {
+const getPassesByEvent = async (req, res, next) => {
 
-//      try {
-
-//           const events = await Event.find().populate({
-//                path: 'attendees',
-//                select: 'userName avatar'
-//           });
-
-//           if (!events) {
-//                return res.status(404).json({ message: 'eventos no encontrados' });
-//           }
-
-//           return res.status(200).json(events);
-
-//      } catch (error) {
-
-//           return res.status(404).json({ error: error.message });
-
-//      }
-// };
+     try {
+          const {eventId} = req.params
+          const passes = await Pass.find({ eventId }).populate('eventId', 'name location city eventStatus image');
 
 
-// const getEventById = async (req, res, next) => {
+          if (!eventId) {
+               return res.status(404).json({ message: 'evento no encontrado' });
+          }
 
-//      try {
+          if (!passes) {
+               return res.status(404).json({ message: 'entradas no encontradas' });
+          }
 
-//           const { eventId } = req.params;
-//           const event = await Event.findById(eventId).populate({
-//                path: 'attendees',
-//                select: 'userName avatar'
-//           });
+          return res.status(200).json(passes);
 
-//           if (!event) {
-//                return res.status(404).json({ message: 'evento no encontrado' });
-//           }
+     } catch (error) {
 
-//           return res.status(200).json(event);
+          return res.status(404).json({ error: error.message });
 
-//      } catch (error) {
-
-//           return res.status(404).json({ error: error.message });
-
-//      }
-// };
+     }
+};
 
 
-// const postEvent = async (req, res, next) => {
+const getPassById = async (req, res, next) => {
 
-//      try {
+     try {
 
-//           const { status, startDate, attendees, ...rest } = req.body;
-//           let image;
-//           let createdBy = req.user._id
+          const { passeId } = req.params;
+          const passe = await Pass.findById(passeId).populate('eventId', 'name location city eventStatus image');
 
-//           const existEvent = await Event.findOne({ status, startDate });
+          if (!passe) {
+               return res.status(404).json({ message: 'entrada no encontrada' });
+          }
 
-//           if (existEvent) {
-//                return res.status(400).json({ message: 'El evento ya existe en la fecha indicada' });
-//           }
+          return res.status(200).json(passe);
 
-//           if (req.file) {
+     } catch (error) {
 
-//                image = req.file.path;
-//           }
+          return res.status(404).json({ error: error.message });
 
-//           const newEvent = await Event.create({
-//                status,
-//                startDate,
-//                image,
-//                createdBy,
-//                ...rest
-//           });
-
-//           return res.status(201).json({
-//                message: 'evento creado correctamente',
-//                user: newEvent
-//           });
+     }
+};
 
 
-//      } catch (error) {
 
-//           if (req.file) {
-//                await deleteCloudinaryImage(req.file.path);
-//           }
+const postPass = async (req, res, next) => {
 
-//           return res.status(404).json({ error: error.message });
-//      }
+     try {
 
-// };
+          const { eventId, startDate, endDate, ...rest } = req.body;
+
+          if (!eventId) {
+               return res.status(400).json({ message: 'el ID del evento es obligatorio para crear un abono' });
+          }
+
+          const event = await Event.findById(eventId);
+          if (!event) {
+               return res.status(404).json({ message: 'evento no encontrado' });
+          }
+
+          const passStartDate = new Date(startDate);
+          const passEndDate = new Date(endDate);
+
+          if (passStartDate < event.startDate || passEndDate > event.endDate) {
+               return res.status(400).json({
+                    message: 'La fecha de inicio y fin del abono deben estar entre la fecha de inicio y fin del evento'
+               });
+          }
+
+          const newPass = await Pass.create({ eventId, startDate: passStartDate, endDate: passEndDate, ...rest });
+
+          const populatedPass = await Pass.findById(newPass._id).populate('eventId', 'name location city eventStatus image');
+
+          return res.status(201).json({
+               message: 'entrada creada correctamente',
+               pass: populatedPass
+          });
 
 
-// const putEvent = async (req, res, next) => {
-//      try {
-//           const { eventId } = req.params;
-//           const event = await Event.findById(eventId);
+     } catch (error) {
 
-//           if (!event) {
-//                return res.status(404).json({ message: 'Evento no encontrado' });
-//           }
+          return res.status(404).json({ error: error.message });
+     }
 
-//           if (req.body.startDate && new Date(req.body.startDate) <= new Date(event.startDate)) {
-//                return res.status(400).json({ message: 'la nueva fecha de inicio debe ser posterior a la fecha actual del evento' });
-//           }
+};
 
 
-//           const startDate = req.body.startDate ? new Date(req.body.startDate) : new Date(event.startDate);
-//           if (req.body.endDate && new Date(req.body.endDate) <= startDate) {
-//                return res.status(400).json({ message: 'la fecha  de fin debe ser posterior a la fecha de inicio' });
-//           }
+const putPass = async (req, res, next) => {
+     try {
+          const { passId } = req.params;
+          const { startDate, endDate, eventId, ...rest } = req.body; 
 
+          const pass = await Pass.findById(passId);
 
-//           const updateData = { eventStatus, ...req.body };
+          if (!pass) {
+               return res.status(404).json({ message: 'entrada no encontrada' });
+          }
 
-//           if (req.body.startDate && new Date(req.body.startDate) > new Date(event.startDate)) {
-//                updateData.eventStatus = 'postponed';
-//           }
+          const event = await Event.findById(pass.eventId)
 
-//           if (req.file) {
-//                await deleteCloudinaryImage(event.image);
-//                updateData.image = req.file.path;
-//           }
+          if (startDate || endDate) {
+               const newStartDate = startDate ? new Date(startDate) : pass.startDate;
+               const newEndDate = endDate ? new Date(endDate) : pass.endDate;
 
-//           const eventUpdate = await Event.findByIdAndUpdate(eventId, updateData, { new: true });
+               if (newStartDate < event.startDate || newEndDate > event.endDate) {
+                    return res.status(400).json({
+                         message: 'las fechas deben estar dentro del rango del evento'
+                    });
+               }
 
-//           return res.status(200).json(eventUpdate);
-//      } catch (error) {
-//           if (req.file) {
-//                await deleteCloudinaryImage(req.file.path);
-//           }
+               rest.startDate = newStartDate;
+               rest.endDate = newEndDate;
+          }
 
-//           return res.status(500).json({ error: error.message });
-//      }
-// };
+          const passUpdate = await Pass.findByIdAndUpdate(passId, rest, { new: true });
 
-// const deleteEvent = async (req, res, next) => {
+          return res.status(200).json(passUpdate);
+     } catch (error) {
 
-//      try {
+          return res.status(500).json({ error: error.message });
+     }
+};
 
-//           const { eventId } = req.params;
-//           const event = await Event.findById(eventId)
+const deletePass = async (req, res, next) => {
 
-//           if (!event) {
-//                return res.status(404).json({ message: 'evento no encontrado' });
-//           }
+     try {
 
-//           await deleteCloudinaryImage(event.image);
+          const { passId } = req.params;
+          const pass = await Pass.findById(passId)
 
-//           await Ticket.updateMany({ eventId: eventId }, { $set: { eventStatus: 'cancelled' } });
+          if (!pass) {
+               return res.status(404).json({ message: 'entrada no encontrada' });
+          }
 
-//           await Event.findByIdAndDelete(eventId);
+          await pass.findByIdAndDelete(passId);
 
-//           await User.updateMany({ eventsIds: eventId }, { $pull: { eventsIds: eventId } });
+          return res.status(200).json({
+               message: 'la entrada fue eliminada',
+               user: pass
+          });
 
-//           return res.status(200).json({
-//                message: 'El evento fue eliminado',
-//                user: event
-//           });
+     } catch (error) {
 
-//      } catch (error) {
+          return res.status(404).json({ error: error.message });
 
-//           return res.status(404).json({ error: error.message });
-
-//      }
-// };
+     }
+};
 
 
 module.exports = {
 
-   
+     getPassesByEvent,
+     getPassById,
+     postPass,
+     putPass,
+     deletePass
 };
+

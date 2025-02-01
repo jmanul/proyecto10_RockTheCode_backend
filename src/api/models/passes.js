@@ -5,12 +5,13 @@ const mongoose = require('mongoose');
 
 const passSchema = new mongoose.Schema({
 
-     eventId: { type: mongoose.Types.ObjectId, ref: 'events', required: true },
+     eventId: { type: mongoose.Types.ObjectId, ref: 'events', required: [true, 'el ID del evento es obligatorio'] },
      namePass: { type: String, required: true, default: "general" },
      reservedPlaces: { type: Number, default: 1 },
      passPrice: { type: Number, default: 0 },
      maxCapacity: { type: Number, required: true },
      totalReservedPlaces: { type: Number, default: 0 },
+     soldOut: { type: Boolean, default: false },
      color: { type: String, required: true, default: "white" },
      startDate: {
           type: Date, required: true, set: value => new Date(value), validate: {
@@ -25,8 +26,7 @@ const passSchema = new mongoose.Schema({
                },
                message: 'la fecha de finalización debe ser igual o posterior a la fecha de inicio'
           }
-     },
-     createdAt: { type: Date, default: Date.now }
+     }
 
 },
      {

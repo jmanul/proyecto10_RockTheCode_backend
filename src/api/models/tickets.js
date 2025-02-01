@@ -16,8 +16,7 @@ const ticketSchema = new mongoose.Schema({
                "used",
                "cancelled"
           ]
-     },
-     createdAt: { type: Date, default: Date.now }
+     }
 
 },
      {
