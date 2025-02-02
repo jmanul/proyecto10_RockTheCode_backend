@@ -249,7 +249,7 @@ const addPassFromUser = async (req, res, next) => {
                updatedEvent = await Event.findByIdAndUpdate(
                     pass.eventId,
                     {
-                         $addToSet: { attendees: userId, ticketsSold: ticket._id },
+                         $addToSet: { attendees: userId, ticketsSold: ticket._id, },
                          $inc: { totalReservedPlaces: 1 },
 
                     },
@@ -270,6 +270,14 @@ const addPassFromUser = async (req, res, next) => {
           if (updatedEvent.totalReservedPlaces >= updatedEvent.maxCapacity) {
                await Event.findByIdAndUpdate(
                     pass.eventId,
+                    { soldOut: true },
+                    { new: true }
+               );
+          }
+          
+          if (updatedPass.totalReservedPlacesPass >= updatedPass.maxCapacityPass) {
+               await Pass.findByIdAndUpdate(
+                    passId,
                     { soldOut: true },
                     { new: true }
                );

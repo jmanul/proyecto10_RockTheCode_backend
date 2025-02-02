@@ -4,17 +4,17 @@
 const { isAuth, idCreated, idAuth } = require("../../middlewares/auth/auth");
 
 
-const { } = require("../controllers/passes");
+const { getPassesByEvent, getPassById, postPass, putPass, deletePass } = require("../controllers/passes");
 
 
 const passesRouter = require('express').Router();
 
-// passesRouter.get('/:eventId', isAuth, getEventById);
-// passesRouter.get('/status/:eventStatus', isAuth, getEventByStatus);
-// passesRouter.get('/', isAuth, getEvents);
-// passesRouter.post('/', isAuth, upload.single('image'), postEvent);
-// passesRouter.put('/:eventId', isAuth, idCreated, upload.single('image'), putEvent);
-// passesRouter.delete('/:eventId', isAuth, idCreated, deleteEvent);
+passesRouter.get('/:passId', isAuth, getPassById);
+passesRouter.get('/event/:eventId', isAuth, getPassesByEvent);
+passesRouter.post('/event/:eventId', isAuth, idCreated, postPass);
+passesRouter.put('/:passId', isAuth, idCreated, putPass);
+passesRouter.delete('/:passId', isAuth, idCreated, deletePass);
 
 
 module.exports = passesRouter;
+

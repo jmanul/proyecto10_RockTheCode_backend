@@ -54,7 +54,7 @@ const cleanUpdateOldData = () => {
                     console.log(`entrada ${pass.name} eliminada`);
                };
 
-               const eventsToDelete = await Event.deleteMany({ endDate: { $lte: cutoffDate } });
+               const eventsToDelete = await Event.find({ endDate: { $lte: cutoffDate } });
 
                for (const event of eventsToDelete){
 

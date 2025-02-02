@@ -32,10 +32,10 @@ const getPassById = async (req, res, next) => {
 
      try {
 
-          const { passeId } = req.params;
-          const passe = await Pass.findById(passeId).populate('eventId', 'name location city eventStatus image');
+          const { passId } = req.params;
+          const pass = await Pass.findById(passId).populate('eventId', 'name location city eventStatus image');
 
-          if (!passe) {
+          if (!pass) {
                return res.status(404).json({ message: 'entrada no encontrada' });
           }
 
@@ -75,6 +75,15 @@ const postPass = async (req, res, next) => {
           }
 
           const newPass = await Pass.create({ eventId, startDatePass: passStartDate, endDatePass: passEndDate, ...rest });
+
+          await Event.findByIdAndUpdate(
+               eventId,
+               {
+                    $addToSet: { passesOfferedIds: newPass._id }
+               },
+               { new: true }
+          );
+
 
           const populatedPass = await Pass.findById(newPass._id).populate('eventId', 'name location city eventStatus image');
 
@@ -139,11 +148,19 @@ const deletePass = async (req, res, next) => {
                return res.status(404).json({ message: 'entrada no encontrada' });
           }
 
+          await Event.findByIdAndUpdate(
+               pass.eventId,
+               {
+                    $pull: { passesOfferedIds: passId }
+               },
+               { new: true }
+          );
+
           await pass.findByIdAndDelete(passId);
 
           return res.status(200).json({
                message: 'la entrada fue eliminada',
-               user: pass
+               pass: pass
           });
 
      } catch (error) {

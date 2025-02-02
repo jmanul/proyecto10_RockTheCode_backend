@@ -13,7 +13,8 @@ ticketsRouter.put('/event/:eventId/status/:ticketId', isAuth, idCreated, putStat
 ticketsRouter.get('/event/:eventId', isAuth, idCreated, getTicketsByIdEvent);
 ticketsRouter.get('/event/:eventId/pass/:passId', isAuth, idCreated, getTicketsByIdPass);
 ticketsRouter.get('/user/:userId', isAuth, idAuth, getTicketsByIdUser);
-ticketsRouter.get('/event/:eventId/user/:userId', isAuth, idCreated, getTicketsByIdEventAndUser); ticketsRouter.get('/:ticketId', isAuth, idAuth, getById);
+ticketsRouter.get('/event/:eventId/user/:userId', isAuth, idCreated, getTicketsByIdEventAndUser);
+ticketsRouter.get('/:ticketId', isAuth, getById);
 
 
 module.exports = ticketsRouter;
