@@ -9,20 +9,22 @@ const isAuth = async (req, res, next) => {
 
      try {
 
-          const [, token] = req.headers.authorization.split(" ");
+          const token = req.cookies.token;
 
-          const { id } = verifyToken(token);
-
-          const user = await User.findById(id);
-
-          req.user = user;
-          user.password = null;
+          req.user = verifyToken(token);
 
           next();
 
      } catch (error) {
 
-          return res.status(400).json("error");
+          let message = 'error de autenticación';
+          if (error.name === 'TokenExpiredError') {
+               message = 'sesión caducada';
+          } else if (error.name === 'JsonWebTokenError') {
+               message = 'token no válido';
+          }
+
+          return res.status(401).clearCookie('token').json({ error: error.message });
      }
 };
 

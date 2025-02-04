@@ -52,12 +52,43 @@ Inicia sesión un usuario existente.
 
 ---
 
+### **Cierra sesión de Usuario**
+**Endpoint:** `GET /api/v1/register/logout`
+
+- **Autenticación:** Requerida.
+- **Autorización:** solo el usuario con mismo id.
+- Cierra sesion del usuario.
+
+---
+
+### **Modifica el Password**
+**Endpoint:** `GET /api/v1/register/logout`
+
+- **Autenticación:** Requerida.
+- **Autorización:** solo el usuario con mismo id.
+- Actualiza la contraseña del usuario.
+- **Cuerpo de Solicitud:** 
+  
+  ```json
+
+  {  
+    "oldPassword": "0000",
+    "newPassword": "0123"
+    }
+
+  ```
+
+---
+
+
 ## Resumen de Endpoints de Autenticación
 
 | **Método** | **Endpoint**             | **Descripción**              |
 | ---------- | ------------------------ | ---------------------------- |
 | POST       | `/api/v1/register`       | Registrar un nuevo usuario   |
 | GET        | `/api/v1/register/login` | Iniciar sesión de un usuario |
+| GET        | `/api/v1/register/logout` | Cierra sesión de un usuario |
+| PUT        | `/api/v1/register/changePassword` | Cambia password de un usuario |
 
 ---
 
@@ -444,15 +475,6 @@ Inicia sesión un usuario existente.
 - **Autenticación:** Requerida.
 - **Autorización:** Solo los administradores pueden modificar el rol.
 - Actualiza el rol de un usuario específico.
-
----
-
-### **Actualizar Contraseña del Usuario**
-**Endpoint:** `PUT /api/v1/users/password/:userId`
-
-- **Autenticación:** Requerida.
-- **Autorización:** solo el usuario con mismo id o administrador.
-- Actualiza la contraseña del usuario.
 
 ---
 

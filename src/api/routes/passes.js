@@ -1,7 +1,7 @@
 
 
 
-const { isAuth, idCreated, idAuth } = require("../../middlewares/auth/auth");
+const { isAuth, idCreated } = require("../../middlewares/auth/auth");
 
 
 const { getPassesByEvent, getPassById, postPass, putPass, deletePass } = require("../controllers/passes");

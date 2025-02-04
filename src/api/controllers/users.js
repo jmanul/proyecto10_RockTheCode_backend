@@ -5,7 +5,7 @@ const User = require("../models/users");
 const Event = require("../models/events");
 const Pass = require("../models/passes");
 const ticketGenerator = require('../../services/ticketGenerator');
-const calculateFreePlaces = require('../../services/ticketGenerator');
+
 
 const bcrypt = require('bcrypt');
 
@@ -117,35 +117,6 @@ const putRollUser = async (req, res, next) => {
           if (!userUpdate) {
                return res.status(404).json({ message: 'usuario no encontrado' });
           }
-
-          return res.status(200).json(userUpdate);
-
-     } catch (error) {
-
-          return res.status(404).json({ error: error.message });
-     }
-}
-
-const putPasswordById = async (req, res, next) => {
-
-     try {
-
-          const { userId } = req.params;
-          const { password } = req.body;
-
-          const user = await User.findById(userId);
-
-          if (!user) {
-               return res.status(404).json({ message: 'Usuario no encontrado' });
-          }
-
-          if (password) {
-
-               const hashedPassword = await bcrypt.hash(password, 10);
-               req.body.password = hashedPassword;
-          }
-
-          const userUpdate = await User.findByIdAndUpdate(userId, req.body, { new: true });
 
           return res.status(200).json(userUpdate);
 
@@ -414,7 +385,6 @@ module.exports = {
      getUserById,
      postUser,
      putRollUser,
-     putPasswordById,
      putUser,
      addPassFromUser,
      removePassFromUser,
