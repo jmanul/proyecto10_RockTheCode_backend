@@ -45,12 +45,13 @@ const login = async (req, res, next) => {
                return res.status(401).json({ error: 'usuario o contraseña incorrecta' });
           }
 
+
           const token = generateToken(user);
 
           res.cookie('token', token, {
                httpOnly: true,
                secure: process.env.NODE_ENV === 'production',
-               sameSite: 'Strict',
+               sameSite:'Strict',
                maxAge: 24 * 60 * 60 * 1000 // 1 día en milisegundos
           });
 
@@ -82,6 +83,7 @@ const logout = async (req, res, next) => {
      try {
 
           await invalidateUserTokens(req.user._id); 
+       
 
           res.clearCookie('token')
           return res.status(200).json({ message: 'sesión cerrada' });
@@ -100,7 +102,7 @@ const changePassword = async (req, res, next) => {
           const { oldPassword, newPassword } = req.body;
           const userId = req.user._id;
 
-          const user = await User.findById(userId).select('+password +tokenSecret');
+          const user = await User.findById(userId).select('+tokenSecret');
 
           if (!user || !(await user.comparePassword(oldPassword))) {
                return res.status(401).json({ message: 'contraseña incorrecta' });

@@ -11,7 +11,12 @@ const isAuth = async (req, res, next) => {
 
           const token = req.cookies.token;
 
-          req.user = verifyToken(token);
+          if (!token) {
+               return res.status(401).json({ error:' token no proporcionado' });
+          }
+          
+          req.user = await verifyToken(token);
+
 
           next();
 

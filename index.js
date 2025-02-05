@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const { conectDDBB } = require('./src/config/ddbb');
 const cloudinary = require('cloudinary').v2;
 
@@ -14,6 +15,7 @@ const  cleanUpdateOldData = require('./src/utils/cronJobs/cronJobs');
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 conectDDBB();
 

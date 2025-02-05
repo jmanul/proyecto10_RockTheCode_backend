@@ -78,7 +78,7 @@ const getEventByStatus = async (req, res, next) => {
 const postEvent = async (req, res, next) => {
 
      try {
-
+          console.log(req.user);
           const { startDate, ...rest } = req.body;
           let image;
           let createdBy = req.user._id
@@ -168,6 +168,7 @@ const deleteEvent = async (req, res, next) => {
 
           const { eventId } = req.params;
           const event = await Event.findById(eventId)
+          
 
           if (!event) {
                return res.status(404).json({ message: 'evento no encontrado' });

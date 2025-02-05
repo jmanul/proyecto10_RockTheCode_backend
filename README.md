@@ -46,7 +46,7 @@ Registra un nuevo usuario en el sistema.
 ---
 
 ### **Iniciar Sesión de Usuario**
-**Endpoint:** `GET /api/v1/register/login`
+**Endpoint:** `POST /api/v1/register/login`
 
 Inicia sesión un usuario existente.
 
@@ -62,7 +62,7 @@ Inicia sesión un usuario existente.
 ---
 
 ### **Modifica el Password**
-**Endpoint:** `GET /api/v1/register/logout`
+**Endpoint:** `PUT /api/v1/register/logout`
 
 - **Autenticación:** Requerida.
 - **Autorización:** solo el usuario con mismo id.
@@ -86,7 +86,7 @@ Inicia sesión un usuario existente.
 | **Método** | **Endpoint**             | **Descripción**              |
 | ---------- | ------------------------ | ---------------------------- |
 | POST       | `/api/v1/register`       | Registrar un nuevo usuario   |
-| GET        | `/api/v1/register/login` | Iniciar sesión de un usuario |
+| POST        | `/api/v1/register/login` | Iniciar sesión de un usuario |
 | GET        | `/api/v1/register/logout` | Cierra sesión de un usuario |
 | PUT        | `/api/v1/register/changePassword` | Cambia password de un usuario |
 

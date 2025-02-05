@@ -5,10 +5,10 @@ const { isAuth } = require("../../middlewares/auth/auth");
 
 const registerRouter = require('express').Router();
 
-registerRouter.get('/login', login);
+registerRouter.post('/login', login);
 registerRouter.post('/', register);
-registerRouter.post('/', isAuth, logout);
-registerRouter.post('/', isAuth, changePassword);
+registerRouter.get('/logout', isAuth, logout);
+registerRouter.put('/changePassword', isAuth, changePassword);
 
 
 module.exports = registerRouter;

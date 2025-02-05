@@ -16,6 +16,8 @@ const generateToken = (user) => {
           decryptedSecret, 
           { expiresIn: '1d' }
      );
+
+ 
 };
 
 
@@ -55,6 +57,7 @@ const verifyToken = async (token) => {
 };
 
 const invalidateUserTokens = async (userId) => {
+
      await User.findByIdAndUpdate(userId, {
           $inc: { tokenVersion: 1 }
      });
@@ -64,8 +67,7 @@ const invalidateUserTokens = async (userId) => {
 const rotateUserSecret = async (userId) => {
      const newSecret = encrypt(crypto.randomBytes(64).toString('hex'));
      await User.findByIdAndUpdate(userId, {
-          tokenSecret: newSecret,
-          $inc: { tokenVersion: 1 }
+          tokenSecret: newSecret
      });
 };
 
