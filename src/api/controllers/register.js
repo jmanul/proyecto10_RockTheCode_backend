@@ -1,7 +1,7 @@
 const User = require("../models/users");
 
 const bcrypt = require('bcrypt');
-const { generateToken, invalidateUserTokens, rotateUserSecret } = require("../../utils/jwt/jwt");
+const { generateToken, rotateUserSecret } = require("../../utils/jwt/jwt");
 
 
 
@@ -82,10 +82,14 @@ const logout = async (req, res, next) => {
      
      try {
 
-          await invalidateUserTokens(req.user._id); 
-       
-
-          res.clearCookie('token')
+          // Elimina la cookie 'token' configurándola con un valor vacío y una fecha de expiración en el pasado
+          res.cookie('token', '', {
+               httpOnly: true,
+               secure: process.env.NODE_ENV === 'production',
+               sameSite: 'Strict',
+               maxAge: 0 // Establece la duración en 0 para eliminar la cookie
+          });
+         
           return res.status(200).json({ message: 'sesión cerrada' });
           
      } catch (error) {
@@ -99,10 +103,12 @@ const changePassword = async (req, res, next) => {
 
      try {
 
+          
+
           const { oldPassword, newPassword } = req.body;
           const userId = req.user._id;
 
-          const user = await User.findById(userId).select('+tokenSecret');
+          const user = await User.findById(userId).select('+password +tokenSecret');
 
           if (!user || !(await user.comparePassword(oldPassword))) {
                return res.status(401).json({ message: 'contraseña incorrecta' });
@@ -111,7 +117,7 @@ const changePassword = async (req, res, next) => {
           user.password = newPassword;
           await user.save();
 
-          await rotateUserSecret(userId)
+          await rotateUserSecret(userId);
 
           return res.status(200).json({ message: 'contraseña cambiada exitosamente' });
 

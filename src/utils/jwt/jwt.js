@@ -1,7 +1,8 @@
 
 const jwt = require("jsonwebtoken");
 const User = require('../../api/models/users');
-const {decrypt, encrypt} = require('../crypto/crypto');
+const { decrypt, encrypt } = require('../crypto/crypto');
+const crypto = require('crypto');
 
 
 const generateToken = (user) => {
@@ -58,9 +59,10 @@ const verifyToken = async (token) => {
 
 const invalidateUserTokens = async (userId) => {
 
-     await User.findByIdAndUpdate(userId, {
-          $inc: { tokenVersion: 1 }
-     });
+     const user = await User.findById(userId)
+     user.tokenVersion += 1;
+     await user.save();
+    
 };
 
 

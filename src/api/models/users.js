@@ -10,20 +10,7 @@ const userSchema = new mongoose.Schema({
      userName: { type: String, required: true, unique: true, trim: true },
      password: { type: String, required: true, trim: true, select: false },
      email: { type: String, required: false, lowercase: true, trim: true },
-     tokenSecret: {
-          type: String,
-          default: () => {
-               try {
-                    const randomValue = crypto.randomBytes(64).toString("hex");
-                    return encrypt(randomValue);
-               } catch (error) {
-                    console.error("Error generando tokenSecret:", error.message);
-                    // Valor de respaldo (no encriptado)
-                    return crypto.randomBytes(64).toString("hex");
-               }
-          },
-          select: false
-     },
+     tokenSecret: { type: String, default: () => crypto.randomBytes(64).toString("hex"),select: false},
      tokenVersion: { type: Number, default: 0 },
      roll: { type: String, enum: ["user", "administrator"], default: "user", trim: true },
      avatar: {
