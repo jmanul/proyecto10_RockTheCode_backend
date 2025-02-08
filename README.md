@@ -53,7 +53,7 @@ Inicia sesión un usuario existente.
 ---
 
 ### **Cierra sesión de Usuario**
-**Endpoint:** `GET /api/v1/register/logout`
+**Endpoint:** `POST /api/v1/register/logout`
 
 - **Autenticación:** Requerida.
 - **Autorización:** solo el usuario con mismo id.
@@ -87,7 +87,7 @@ Inicia sesión un usuario existente.
 | ---------- | ------------------------ | ---------------------------- |
 | POST       | `/api/v1/register`       | Registrar un nuevo usuario   |
 | POST        | `/api/v1/register/login` | Iniciar sesión de un usuario |
-| GET        | `/api/v1/register/logout` | Cierra sesión de un usuario |
+| POST        | `/api/v1/register/logout` | Cierra sesión de un usuario |
 | PUT        | `/api/v1/register/changePassword` | Cambia password de un usuario |
 
 ---

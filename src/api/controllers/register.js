@@ -1,7 +1,9 @@
 const User = require("../models/users");
 
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const { generateToken, rotateUserSecret } = require("../../utils/jwt/jwt");
+const { decrypt } = require('../../utils/crypto/crypto');
 
 
 
@@ -21,14 +23,13 @@ const register = async (req, res, next) => {
                roll: 'user'
           });
 
-
           const savedUser = await newUser.save();
 
           res.status(201).json({ message: 'usuario registrado exitosamente', user: savedUser });
 
      } catch (error) {
 
-          res.status(500).json({ message: 'error en el registro', error });
+          res.status(500).json({ message: 'error en el registro', error: error.message });
      }
 
 
@@ -41,23 +42,31 @@ const login = async (req, res, next) => {
 
           const user = await User.findOne({ userName }).select('+password +tokenSecret');//permite consultar password y tokenSecret para compararlo
 
+          const decryptedSecret = decrypt(user.tokenSecret, process.env.APP_CRYPTO_KEY);
+
           if (!user || !(await user.comparePassword(password))) {
                return res.status(401).json({ error: 'usuario o contraseña incorrecta' });
           }
+          
 
+          const acessToken = generateToken(user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRATION);
 
-          const token = generateToken(user);
+          const refreshToken = generateToken(user, decryptedSecret, process.env.REFRESH_TOKEN_EXPIRATION);
 
-          res.cookie('token', token, {
+          res.cookie('acessToken', acessToken, {
                httpOnly: true,
                secure: process.env.NODE_ENV === 'production',
                sameSite:'Strict',
                maxAge: 24 * 60 * 60 * 1000 // 1 día en milisegundos
           });
 
+          res.cookie('refreshToken', refreshToken, {
+               httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict', maxAge: 7 * 24 * 60 * 60 * 1000
+          });
+
           return res.status(200).json({
                message: 'autenticación correcta',
-               token,
+               acessToken,
                user: {
                     _id: user._id,
                     userName: user.userName,
@@ -82,13 +91,14 @@ const logout = async (req, res, next) => {
      
      try {
 
-          // Elimina la cookie 'token' configurándola con un valor vacío y una fecha de expiración en el pasado
-          res.cookie('token', '', {
-               httpOnly: true,
-               secure: process.env.NODE_ENV === 'production',
-               sameSite: 'Strict',
-               maxAge: 0 // Establece la duración en 0 para eliminar la cookie
-          });
+          const user = await User.findById(req.user.userId);
+          if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+          user.tokenVersion += 1; // Incrementar la versión del token para invalidar los existentes
+          await user.save();
+
+          res.clearCookie('accessToken');
+          res.clearCookie('refreshToken');
          
           return res.status(200).json({ message: 'sesión cerrada' });
           

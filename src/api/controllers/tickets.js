@@ -209,11 +209,6 @@ const getTicketsByIdEventAndUser = async (req, res, next) => {
 };
 
 
-//todo readme  mio tambien, 
-//todo ruta en el qr
-
-
-
 module.exports = {
 
      postTicket,

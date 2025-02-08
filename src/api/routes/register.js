@@ -7,7 +7,7 @@ const registerRouter = require('express').Router();
 
 registerRouter.post('/login', login);
 registerRouter.post('/', register);
-registerRouter.get('/logout', isAuth, logout);
+registerRouter.post('/logout', isAuth, logout);
 registerRouter.put('/changePassword', isAuth, changePassword);
 
 

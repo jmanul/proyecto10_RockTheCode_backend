@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Event = require('../../api/models/events');
 const User = require('../../api/models/users');
-const { verifyToken } = require('../../utils/jwt/jwt')
+const { verifyToken, refreshAccessToken } = require('../../utils/jwt/jwt')
 
 
 const isAuth = async (req, res, next) => {
@@ -9,29 +9,32 @@ const isAuth = async (req, res, next) => {
 
      try {
 
-          const token = req.cookies.token;
+          const token = req.cookies.acessToken;
 
           if (!token) {
-               return res.status(401).json({ error:' token no proporcionado' });
+               return res.status(401).json({ error: ' token no proporcionado' });
           }
           
-          req.user = await verifyToken(token);
-
+          req.user = await verifyToken(token, process.env.ACCES_TOKEN_SECRET, 'acces');
 
           next();
+               
+          
+
 
      } catch (error) {
 
-          let message = 'error de autenticación';
           if (error.name === 'TokenExpiredError') {
-               message = 'sesión caducada';
-          } else if (error.name === 'JsonWebTokenError') {
-               message = 'token no válido';
-          }
+               
+               const token = req.cookies.refreshToken;
+               req.user = await verifyToken(token, process.env.REFRESH_TOKEN_SECRET, 'refresh');
 
-          return res.status(401).clearCookie('token').json({ error: error.message });
-     }
+               return refreshAccessToken(req, res, next); // Intentar refrescar token
+          }
+          return res.status(401).json({ error: 'Token inválido o expirado' });
+     };
 };
+
 
 const rollAuth = (...alloAuthRoles) => {
 

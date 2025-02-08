@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
      userName: { type: String, required: true, unique: true, trim: true },
      password: { type: String, required: true, trim: true, select: false },
      email: { type: String, required: false, lowercase: true, trim: true },
-     tokenSecret: { type: String, default: () => crypto.randomBytes(64).toString("hex"),select: false},
+     tokenSecret: { type: String, default: () => crypto.randomBytes(32).toString("hex"), select: false },
      tokenVersion: { type: Number, default: 0 },
      roll: { type: String, enum: ["user", "administrator"], default: "user", trim: true },
      avatar: {
@@ -28,23 +28,36 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', async function (next) {
 
-     if (!this.isModified('password')) return next();
 
      try {
-          this.tokenSecret = crypto.randomBytes(64).toString("hex");
-          const salt = await bcrypt.genSalt(10);
+          // Verificar si la clave de encriptación existe
+          if (!process.env.APP_CRYPTO_KEY) {
+               throw new Error("APP_CRYPTO_KEY no está definida.");
+          }
 
-          this.password = await bcrypt.hash(this.password, salt);
-          this.tokenSecret = encrypt(this.tokenSecret)
+          // Si el usuario es nuevo o cambia la contraseña
+          if (this.isModified('password')) {
+               // Verificar si tokenSecret ya está generado, si no, asignarlo
+               if (!this.tokenSecret) {
+                    this.tokenSecret = crypto.randomBytes(32).toString("hex");
+               }
+              
+               // Encriptar tokenSecret
+               this.tokenSecret = await encrypt(this.tokenSecret, process.env.APP_CRYPTO_KEY);
+
+               // Hashear la contraseña con un salt seguro
+               const salt = await bcrypt.genSalt(10);
+               this.password = await bcrypt.hash(this.password, salt);
+          }
 
           // Incrementar tokenVersion
           this.tokenVersion += 1;
 
           next();
-
+          
      } catch (error) {
-
-          next({ error: error.message });
+          console.error("Error en pre-save:", error);
+          next(error);
      }
 });
 

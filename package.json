@@ -13,21 +13,28 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "bcrypt": "^5.1.1",
-    "cloudinary": "^1.41.3",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.9.3",
-    "multer": "^1.4.5-lts.1",
-    "multer-storage-cloudinary": "^4.0.0",
-    "node-cron": "^3.0.3",
-    "qrcode": "^1.5.4"
+    "bcrypt": "5.1.1",
+    "cloudinary": "1.41.3",
+    "cookie-parser": "1.4.7",
+    "cors": "2.8.5",
+    "dotenv": "16.4.7",
+    "express": "4.21.2",
+    "jsonwebtoken": "9.0.2",
+    "mongoose": "8.9.3",
+    "multer": "1.4.5-lts.1",
+    "multer-storage-cloudinary": "4.0.0",
+    "node-cron": "3.0.3",
+    "qrcode": "1.5.4"
   },
   "devDependencies": {
-    "dotenv-cli": "^8.0.0",
-    "nodemon": "^3.1.9"
+    "dotenv-cli": "8.0.0",
+    "nodemon": "3.1.9",
+    "standard": "17.1.2"
+  },
+  "eslintConfig": {
+
+    "standard": "17.1.2"
+
+
   }
 }
