@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production dotenv -e .env.production node index.js",
-    "dev": "NODE_ENV=development dotenv -e .env.development nodemon index.js",
+  
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  ,
     "dev:4000": "PORT=4000 npm run dev",
     "seed": "node ./src/utils/seeds/upSeed.js"
   },
@@ -20,21 +22,19 @@
     "dotenv": "16.4.7",
     "express": "4.21.2",
     "jsonwebtoken": "9.0.2",
-    "mongoose": "8.9.3",
+    "mongoose": "^8.10.0",
     "multer": "1.4.5-lts.1",
     "multer-storage-cloudinary": "4.0.0",
     "node-cron": "3.0.3",
     "qrcode": "1.5.4"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "dotenv-cli": "8.0.0",
     "nodemon": "3.1.9",
     "standard": "17.1.2"
   },
   "eslintConfig": {
-
     "standard": "17.1.2"
-
-
   }
 }

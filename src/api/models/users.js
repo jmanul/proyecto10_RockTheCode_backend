@@ -30,10 +30,6 @@ userSchema.pre('save', async function (next) {
 
 
      try {
-          // Verificar si la clave de encriptación existe
-          if (!process.env.APP_CRYPTO_KEY) {
-               throw new Error("APP_CRYPTO_KEY no está definida.");
-          }
 
           // Si el usuario es nuevo o cambia la contraseña
           if (this.isModified('password')) {
@@ -43,7 +39,8 @@ userSchema.pre('save', async function (next) {
                }
               
                // Encriptar tokenSecret
-               this.tokenSecret = await encrypt(this.tokenSecret, process.env.APP_CRYPTO_KEY);
+               console.log(this.tokenSecret);
+               this.tokenSecret = encrypt(this.tokenSecret, process.env.APP_CRYPTO_KEY);
 
                // Hashear la contraseña con un salt seguro
                const salt = await bcrypt.genSalt(10);

@@ -1,3 +1,5 @@
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
+
 const mongoose = require('mongoose');
 const Event = require('../../api/models/events');
 const User = require('../../api/models/users');
@@ -15,7 +17,8 @@ const isAuth = async (req, res, next) => {
                return res.status(401).json({ error: ' token no proporcionado' });
           }
           
-          req.user = await verifyToken(token, process.env.ACCES_TOKEN_SECRET, 'acces');
+          req.user = await verifyToken(token, process.env.ACCES_TOKEN_SECRET, 'accesToken');
+        
 
           next();
                
@@ -27,7 +30,10 @@ const isAuth = async (req, res, next) => {
           if (error.name === 'TokenExpiredError') {
                
                const token = req.cookies.refreshToken;
-               req.user = await verifyToken(token, process.env.REFRESH_TOKEN_SECRET, 'refresh');
+               const decoded = jwt.decode(token);
+
+               const user = await User.findById(decoded.userId).select('+tokenSecret');
+               req.user = await verifyToken(token, user.tokenSecret, 'refreshToken');
 
                return refreshAccessToken(req, res, next); // Intentar refrescar token
           }

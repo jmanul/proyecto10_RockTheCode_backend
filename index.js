@@ -1,4 +1,7 @@
-require('dotenv').config();
+require ('dotenv').config()
+
+
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const { conectDDBB } = require('./src/config/ddbb');
@@ -51,3 +54,5 @@ app.listen( PORT, () => {
      console.log(`listening on port ${PORT} 😎`);
 
 });
+
+

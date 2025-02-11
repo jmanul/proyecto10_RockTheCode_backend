@@ -41,8 +41,12 @@ const eventSchema = new mongoose.Schema({
                "finalized"
           ]
      },
-     image: { type: String, default: "https://res.cloudinary.com/dn6utw1rl/image/upload/v1736008149/default/default-image-event_zk7dcu.webp" },
-     createdBy: { type: mongoose.Types.ObjectId, ref:'users',default:"67784a087790d458a8eaef58", required: true },
+     image: {
+          type: String, default: function () {
+               return `https://res.cloudinary.com/dn6utw1rl/image/upload/v1739241182/default/${this.type}.webp`;
+          }
+},
+     createdBy: { type: mongoose.Types.ObjectId, ref: 'users', default:"67aa5f62e4d1301e1cccbb17", required: true },
      soldOut: { type: Boolean, default: false },
      maxCapacity: { type: Number, required: true },
      totalReservedPlaces: { type: Number, default: 0 },
@@ -55,6 +59,7 @@ const eventSchema = new mongoose.Schema({
           timestamps: true,
           collection: 'events'
      });
+
 
 const Event = mongoose.model('events', eventSchema, 'events');
 

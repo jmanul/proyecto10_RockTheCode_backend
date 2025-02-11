@@ -41,6 +41,7 @@ const eventDate = [
      {
           name: "Festival de Cine Independiente",
           location: "Cine Estrella",
+          type: "art",
           adress: "Calle de las Estrellas 45",
           city: "Buenos Aires",
           description: "Proyección de películas de directores emergentes.",
@@ -64,8 +65,9 @@ const eventDate = [
           maxCapacity: 100
      },
      {
-          name: "Charla Motivacional",
+          name: "Charla tech",
           location: "Centro de Convenciones",
+          type: "technology",
           adress: "Boulevard Principal 80",
           city: "Santiago",
           description: "Encuentra tu propósito con este evento inspirador.",
@@ -77,6 +79,7 @@ const eventDate = [
      },
      {
           name: "Clase Magistral de Fotografía",
+          type: "art",
           location: "Centro Cultural",
           adress: "Calle del Arte 5",
           city: "Quito",
@@ -114,7 +117,7 @@ const eventDate = [
           maxCapacity: 90
      },
      {
-          name: "Competencia de Esports",
+          name: "gaming competition",
           type: "technology",
           location: "Arena Virtual",
           adress: "Calle Gamer 42",
@@ -180,7 +183,7 @@ const eventDate = [
      },
      {
           name: "Feria del libro de Barcelona",
-          type: "others",
+          type: "art",
           location: "Paseo de Gracia",
           adress: "Paseo de Gracia, 15",
           city: "Barcelona",
@@ -232,7 +235,7 @@ const eventDate = [
      },
      {
           name: "Curso de cocina gallega",
-          type: "training",
+          type: "gastronomy",
           location: "Centro Gastronómico de Santiago",
           adress: "Rúa de San Francisco, 12",
           city: "Santiago de Compostela",
@@ -310,7 +313,7 @@ const eventDate = [
      },
      {
           name: "Festival de cine de San Sebastián",
-          type: "others",
+          type: "art",
           location: "Kursaal",
           adress: "Avenida de Zurriola, 1",
           city: "San Sebastián",

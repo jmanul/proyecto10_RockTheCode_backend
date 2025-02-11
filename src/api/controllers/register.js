@@ -57,11 +57,11 @@ const login = async (req, res, next) => {
                httpOnly: true,
                secure: process.env.NODE_ENV === 'production',
                sameSite:'Strict',
-               maxAge: 24 * 60 * 60 * 1000 // 1 día en milisegundos
+               maxAge:2 * 60 * 60 * 1000 // 15 minutos en milisegundos
           });
 
           res.cookie('refreshToken', refreshToken, {
-               httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict', maxAge: 7 * 24 * 60 * 60 * 1000
+               httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict', maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias en milisegundos
           });
 
           return res.status(200).json({
@@ -91,13 +91,14 @@ const logout = async (req, res, next) => {
      
      try {
 
-          const user = await User.findById(req.user.userId);
+          const user = await User.findById(req.user._id);
+       
           if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
-
+         
           user.tokenVersion += 1; // Incrementar la versión del token para invalidar los existentes
           await user.save();
 
-          res.clearCookie('accessToken');
+          res.clearCookie('acessToken');
           res.clearCookie('refreshToken');
          
           return res.status(200).json({ message: 'sesión cerrada' });
