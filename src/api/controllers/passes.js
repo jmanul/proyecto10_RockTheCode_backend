@@ -10,11 +10,6 @@ const getPassesByEvent = async (req, res, next) => {
           const {eventId} = req.params
           const passes = await Pass.find({ eventId }).populate('eventId', 'name location city eventStatus image');
 
-
-          if (!eventId) {
-               return res.status(404).json({ message: 'evento no encontrado' });
-          }
-
           if (!passes) {
                return res.status(404).json({ message: 'entradas no encontradas' });
           }
@@ -40,7 +35,7 @@ const getPassById = async (req, res, next) => {
                return res.status(404).json({ message: 'entrada no encontrada' });
           }
 
-          return res.status(200).json(passe);
+          return res.status(200).json(pass);
 
      } catch (error) {
 
