@@ -1,7 +1,7 @@
 
 const jwt = require("jsonwebtoken");
 const User = require('../../api/models/users');
-const { decrypt, encrypt } = require('../crypto/crypto');
+const { encrypt } = require('../crypto/crypto');
 const crypto = require('crypto');
 
 
@@ -27,7 +27,7 @@ const verifyToken = async (token, keySecret, tokenName) => {
           
           const decoded = jwt.decode(token);
 
-          const user = await User.findById(decoded.userId).select('+tokenSecret');
+          const user = await User.findById(decoded.userId);
 
           jwt.verify(token, keySecret);
       
@@ -36,35 +36,15 @@ const verifyToken = async (token, keySecret, tokenName) => {
           }
 
           return user;
-
-          
+      
      } catch (error) {
           
-          if (error.name === 'TokenExpiredError') {
-               console.log(`${tokenName} expirado`);
-          } else {
-               console.log(`${tokenName} no valido`);
-          }
+          throw new Error(`Fallo en la verificación del ${tokenName}: ${error.message}`);
      }
 
     
 };
 
-const refreshAccessToken = async (req, res, next) => {
-     try {
-
-          const newAccessToken = generateToken(req.user, process.env.REFRESH_TOKEN_SECRET, process.env.REFRESH_TOKEN_EXPIRATION);
-
-          res.cookie('accessToken', newAccessToken, {
-               httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict', maxAge: 2 * 60 * 60 * 1000
-          });
-
-          return res.status(200).json({ message: 'Token actualizado' });
-
-     } catch (error) {
-          return res.status(403).json({ error: 'Error al refrescar el token' });
-     }
-};
 
 const invalidateUserTokens = async (userId) => {
 
@@ -86,7 +66,6 @@ module.exports = {
 
      generateToken,
      verifyToken,
-     refreshAccessToken,
      invalidateUserTokens,
      rotateUserSecret
 }; 

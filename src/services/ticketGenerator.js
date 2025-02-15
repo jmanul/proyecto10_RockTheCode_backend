@@ -13,7 +13,7 @@ const ticketGenerator = async (pass, user, reservedPlaces) => {
           const ticket = new Ticket({
                passId: pass._id,
                eventId: pass.eventId,
-               userId: user.userId,
+               userId: user._id,
                passName: pass.name,
                reservedPlaces,
                ticketPrice: pass.price * reservedPlaces

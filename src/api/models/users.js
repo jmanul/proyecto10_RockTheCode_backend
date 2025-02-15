@@ -39,7 +39,6 @@ userSchema.pre('save', async function (next) {
                }
               
                // Encriptar tokenSecret
-               console.log(this.tokenSecret);
                this.tokenSecret = encrypt(this.tokenSecret, process.env.APP_CRYPTO_KEY);
 
                // Hashear la contraseña con un salt seguro

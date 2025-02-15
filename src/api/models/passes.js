@@ -15,22 +15,10 @@ const passSchema = new mongoose.Schema({
      color: { type: String, required: true, default: "white" },
      attendeesPass: [{ type: mongoose.Types.ObjectId, ref: 'users', required: false }],
      ticketsSoldPass: [{ type: mongoose.Types.ObjectId, ref: 'tickets', required: false }],
-     startDatePass: {
-          type: Date, required: true, set: value => new Date(value), validate: {
-               validator: value => value >= new Date(),
-               message: 'la fecha de inicio no puede ser anterior a la actual'
-          }
-     },
-     endDatePass: {
-          type: Date, default: function () { return this.startDate; }, set: value => new Date(value), validate: {
-               validator: function (value) {
-                    return value >= this.startDate;
-               },
-               message: 'la fecha de finalización debe ser igual o posterior a la fecha de inicio'
-          }
-     }
-
+     startDatePass: { type: Date, required: true },
+     endDatePass: { type: Date, required: true }
 },
+
      {
           timestamps: true,
           collection: 'passes'

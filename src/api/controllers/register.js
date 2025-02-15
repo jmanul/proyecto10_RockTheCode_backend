@@ -49,15 +49,15 @@ const login = async (req, res, next) => {
           }
           
 
-          const acessToken = generateToken(user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRATION);
+          const accessToken = generateToken(user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRATION);
 
           const refreshToken = generateToken(user, decryptedSecret, process.env.REFRESH_TOKEN_EXPIRATION);
 
-          res.cookie('acessToken', acessToken, {
+          res.cookie('accessToken', accessToken, {
                httpOnly: true,
                secure: process.env.NODE_ENV === 'production',
                sameSite:'Strict',
-               maxAge:2 * 60 * 60 * 1000 // 15 minutos en milisegundos
+               maxAge:2 * 60 * 60 * 1000 
           });
 
           res.cookie('refreshToken', refreshToken, {
@@ -66,7 +66,7 @@ const login = async (req, res, next) => {
 
           return res.status(200).json({
                message: 'autenticación correcta',
-               acessToken,
+               accessToken,
                user: {
                     _id: user._id,
                     userName: user.userName,
@@ -98,7 +98,7 @@ const logout = async (req, res, next) => {
           user.tokenVersion += 1; // Incrementar la versión del token para invalidar los existentes
           await user.save();
 
-          res.clearCookie('acessToken');
+          res.clearCookie('accessToken');
           res.clearCookie('refreshToken');
          
           return res.status(200).json({ message: 'sesión cerrada' });

@@ -78,12 +78,12 @@ const getEventByStatus = async (req, res, next) => {
 const postEvent = async (req, res, next) => {
 
      try {
-          console.log(req.user);
-          const { startDate, ...rest } = req.body;
+         
+          const {name, startDate, ...rest } = req.body;
           let image;
           let createdBy = req.user._id
 
-          const existEvent = await Event.findOne({ startDate });
+          const existEvent = await Event.findOne({name, startDate });
 
           if (existEvent) {
                return res.status(400).json({ message: 'El evento ya existe en la fecha indicada' });
@@ -95,6 +95,7 @@ const postEvent = async (req, res, next) => {
           }
 
           const newEvent = await Event.create({
+               name,
                startDate,
                image,
                createdBy,
@@ -138,12 +139,12 @@ const putEvent = async (req, res, next) => {
                return res.status(400).json({ message: 'la fecha  de fin debe ser posterior a la fecha de inicio' });
           }
 
-       
-          const updateData = {eventStatus, ...req.body };
+          let eventStatus = event.eventStatus;
 
-          if (req.body.startDate && new Date(req.body.startDate) > new Date(event.startDate)) {
-               updateData.eventStatus = 'postponed';
+          if (req.body.startDate && new Date(req.body.startDate) > new Date(event.startDate)) {eventStatus = 'postponed';
           }
+
+          const updateData = { eventStatus, ...req.body };
 
           if (req.file) {
                await deleteCloudinaryImage(event.image);

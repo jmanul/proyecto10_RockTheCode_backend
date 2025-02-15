@@ -1,6 +1,7 @@
 
 const Event = require("../models/events");
 const Pass = require("../models/passes");
+const { eventNames } = require("../models/users");
 
 
 const getPassesByEvent = async (req, res, next) => {
@@ -53,8 +54,9 @@ const getPassById = async (req, res, next) => {
 const postPass = async (req, res, next) => {
 
      try {
-
-          const { eventId, startDatePass, endDatePass, ...rest } = req.body;
+          
+          const { eventId } = req.params;
+          const { startDatePass, endDatePass, ...rest } = req.body;
 
           if (!eventId) {
                return res.status(400).json({ message: 'el ID del evento es obligatorio para crear un abono' });
@@ -65,16 +67,9 @@ const postPass = async (req, res, next) => {
                return res.status(404).json({ message: 'evento no encontrado' });
           }
 
-          const passStartDate = new Date(startDatePass);
-          const passEndDate = new Date(endDatePass);
+     
 
-          if (passStartDate < event.startDate || passEndDate > event.endDate) {
-               return res.status(400).json({
-                    message: 'La fecha de inicio y fin del abono deben estar entre la fecha de inicio y fin del evento'
-               });
-          }
-
-          const newPass = await Pass.create({ eventId, startDatePass: passStartDate, endDatePass: passEndDate, ...rest });
+           const newPass = await Pass.create({ eventId, startDatePass: event.startDate, endDatePass: event.endDate,  ...rest });
 
           await Event.findByIdAndUpdate(
                eventId,

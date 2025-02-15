@@ -1,45 +1,66 @@
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
-
+const jwt = require("jsonwebtoken");
 const mongoose = require('mongoose');
 const Event = require('../../api/models/events');
 const User = require('../../api/models/users');
-const { verifyToken, refreshAccessToken } = require('../../utils/jwt/jwt')
+const { verifyToken, generateToken } = require('../../utils/jwt/jwt');
+const { decrypt } = require('../../utils/crypto/crypto');
 
 
 const isAuth = async (req, res, next) => {
-
-
      try {
 
-          const token = req.cookies.acessToken;
+          let token = req.cookies.accessToken;
 
           if (!token) {
-               return res.status(401).json({ error: ' token no proporcionado' });
+
+               const refreshToken = req.cookies.refreshToken;
+
+               if (!refreshToken) {
+                    return res.status(401).json({ error: 'No hay AccessToken ni RefreshToken' });
+               }
+
+               try {
+
+                    const decoded = jwt.decode(refreshToken);
+
+                    const user = await User.findById(decoded.userId).select('+tokenSecret');
+
+                    const decryptedSecret = decrypt(user.tokenSecret, process.env.APP_CRYPTO_KEY);
+
+
+                    req.user = await verifyToken(refreshToken, decryptedSecret, 'refreshToken');
+
+
+                    token = generateToken(user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRATION);
+
+                    // guardar el nuevo accessToken en la cookie
+                    res.cookie('accessToken', token, {
+                         httpOnly: true,
+                         secure: process.env.NODE_ENV === 'production',
+                         sameSite: 'Strict',
+                         maxAge: 2 * 60 * 60 * 1000
+                    });
+
+                    console.log("Nuevo accessToken generado:", token);
+
+               } catch (refreshError) {
+
+                    return res.status(401).json({ error: 'RefreshToken inválido o expirado' });
+               }
           }
-          
-          req.user = await verifyToken(token, process.env.ACCES_TOKEN_SECRET, 'accesToken');
-        
 
-          next();
-               
-          
+          req.user = await verifyToken(token, process.env.ACCESS_TOKEN_SECRET, 'accessToken');
 
+          return next();
 
      } catch (error) {
 
-          if (error.name === 'TokenExpiredError') {
-               
-               const token = req.cookies.refreshToken;
-               const decoded = jwt.decode(token);
-
-               const user = await User.findById(decoded.userId).select('+tokenSecret');
-               req.user = await verifyToken(token, user.tokenSecret, 'refreshToken');
-
-               return refreshAccessToken(req, res, next); // Intentar refrescar token
-          }
           return res.status(401).json({ error: 'Token inválido o expirado' });
-     };
+     }
 };
+
+
 
 
 const rollAuth = (...alloAuthRoles) => {
@@ -61,10 +82,10 @@ const idCreated = async (req, res, next) => {
      try {
           const { roll, _id } = req.user;
           const { eventId } = req.params;
-          
+
           if (!mongoose.Types.ObjectId.isValid(eventId)) {
                return res.status(400).json({ message: 'el Id no es valido', _id });
-               
+
           }
 
           const event = await Event.findById(eventId);
@@ -95,14 +116,14 @@ const idAuth = (req, res, next) => {
      try {
           const { roll, _id } = req.user;
           const { userId } = req.params;
-          
+
           if (roll === 'administrator') {
                return next();
           }
 
           if (_id.toString() === userId) {
-               return next(); 
-               
+               return next();
+
           }
 
           return res.status(403).json({ message: 'Acceso denegado' });
