@@ -1,4 +1,4 @@
-
+require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const mongoose = require('mongoose');
 const Event = require('../../api/models/events');

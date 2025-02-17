@@ -6,9 +6,6 @@ const Event = require("../models/events");
 const Pass = require("../models/passes");
 const ticketGenerator = require('../../services/ticketGenerator');
 
-
-const bcrypt = require('bcrypt');
-
 const getUsers = async (req, res, next) => {
 
      try {
@@ -131,21 +128,20 @@ const putUser = async (req, res, next) => {
 
      try {
 
-          const { userId } = req.params;
           const { email, userName, eventsIds, ...rest } = req.body;
 
           const updateData = { ...rest }
 
-          const user = await User.findById(userId);
+          const user = await User.findById(req.user._id);
           if (!user) {
                return res.status(404).json({ message: 'Usuario no encontrado' });
           }
 
           const existingUserName = await User.findOne({
-               userName, _id: { $ne: userId }
+               userName, _id: { $ne: user._id }
           });
           const existingUserEmail = await User.findOne({
-               email, _id: { $ne: userId }
+               email, _id: { $ne: user._id }
           });
 
           if (existingUserEmail) {
@@ -168,7 +164,7 @@ const putUser = async (req, res, next) => {
 
           if (email) updateData.email = email;
           if (userName) updateData.userName = userName;
-          const userUpdate = await User.findByIdAndUpdate(userId, updateData, { new: true });
+          const userUpdate = await User.findByIdAndUpdate(user._id, updateData, { new: true });
 
           return res.status(200).json(userUpdate);
 
@@ -186,11 +182,11 @@ const putUser = async (req, res, next) => {
 const addPassFromUser = async (req, res, next) => {
 
      try {
-          const { userId, passId } = req.params;
+          const { passId } = req.params;
 
           const { reservedPlaces } = req.body;
 
-          const user = await User.findById(userId);
+          const user = await User.findById(req.user._id);
           if (!user) {
                return res.status(404).json({ message: 'usuario no encontrado' });
           }
@@ -213,14 +209,14 @@ const addPassFromUser = async (req, res, next) => {
                ticketsList.push(ticket)
 
                updatedUser = await User.findByIdAndUpdate(
-                    userId,
+                    user._id,
                     { $addToSet: { passesIds: passId, eventsIds: pass.eventId, ticketsIds: ticket._id } },
                     { new: true });
 
                updatedEvent = await Event.findByIdAndUpdate(
                     pass.eventId,
                     {
-                         $addToSet: { attendees: userId, ticketsSold: ticket._id, },
+                         $addToSet: { attendees: user._id, ticketsSold: ticket._id, },
                          $inc: { totalReservedPlaces: 1 },
 
                     },
@@ -230,7 +226,7 @@ const addPassFromUser = async (req, res, next) => {
                updatedPass = await Pass.findByIdAndUpdate(
                     passId,
                     {
-                         $addToSet: { attendeesPass: userId, ticketsSoldPass: ticket._id },
+                         $addToSet: { attendeesPass: user._id, ticketsSoldPass: ticket._id },
                          $inc: { totalReservedPlacesPass: 1 },
 
                     },
@@ -271,10 +267,10 @@ const addPassFromUser = async (req, res, next) => {
 
 const removePassFromUser = async (req, res, next) => {
      try {
-          const { userId, passId } = req.params;
+          const { passId } = req.params;
 
-          const user = await User.findById(userId);
-          const pass = await Event.findById(passId);
+          const user = await User.findById(req.user._id);
+          const pass = await Pass.findById(passId);
 
           if (!user) {
                return res.status(404).json({ message: 'Usuario no encontrado' });
@@ -288,20 +284,17 @@ const removePassFromUser = async (req, res, next) => {
                return res.status(404).json({ message: 'la entrada no se pueden cancelar' });
           }
 
-          const tickets = await Ticket.find({ userId, passId });
+          const tickets = await Ticket.find({ userId: user._id, passId, ticketStatus: "unused" });
 
-          const totalReservedPlacesToReturn = tickets.reduce(
-               (sum, ticket) => sum + ticket.passId.reservedPlacesPass,
-               0
-          );
+          const totalReservedPlacesToReturn = tickets.length;
 
           const cancelledTickets = await Ticket.updateMany(
-               { userId, passId },
+               { userId: user._id, passId },
                { ticketStatus: 'cancelled' }
           );
 
                const userUpdate = await User.findByIdAndUpdate(
-                    userId,
+                    user._id,
                     { $pull: { eventsIds: pass.eventId, passesIds: passId } },
                     { new: true }
                );
@@ -309,7 +302,7 @@ const removePassFromUser = async (req, res, next) => {
                const eventUpdate = await Event.findByIdAndUpdate(
                     pass.eventId,
                     {
-                         $pull: { attendees: userId },
+                         $pull: { attendees: user._id },
                          $inc: { totalReservedPlaces: -totalReservedPlacesToReturn }
                     },
                     { new: true }
@@ -318,8 +311,8 @@ const removePassFromUser = async (req, res, next) => {
           const passUpdate = await Pass.findByIdAndUpdate(
                     passId,
                     {
-                         $pull: { attendeesPass: userId },
-                         $inc: { totalReservedPlacesPass: -totalReservedPlacesToReturn }
+                         $pull: { attendeesPass: user._id },
+                         $inc: { totalReservedPlacesPass: -totalReservedPlacesToReturn}
                     },
                     { new: true }
                );
@@ -343,28 +336,33 @@ const deleteUser = async (req, res, next) => {
 
      try {
 
-          const { userId } = req.params;
-          const user = await User.findById(userId);
+          const user = await User.findById(req.user._id);
 
           if (!user) {
                return res.status(404).json({ message: 'usuario no encontrado' });
           }
 
-          const activeEvents = await Event.find({
-               attendees: userId,
-               endDate: { $gte: new Date() }
+          const activeTickets = await Ticket.find({
+
+               userId: user._id,
+               ticketStatus : "unused"
+
           });
 
-          if (activeEvents.length > 0) {
+
+          if (activeTickets.length > 0) {
                return res.status(400).json({
                     message: 'no puedes eliminar tu cuenta mientras tengas eventos sin finalizar',
-                    activeEvents,
+                    activeTickets,
                });
           }
 
+          res.clearCookie('accessToken');
+          res.clearCookie('refreshToken');
+
           await deleteCloudinaryImage(user.avatar);
 
-          await User.findByIdAndDelete(userId);
+          await User.findByIdAndDelete(user._id);
 
           return res.status(200).json({
                message: 'El usuario fue eliminado',

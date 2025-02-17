@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const User = require("../models/users");
 const { generateToken, rotateUserSecret, generateCookie } = require("../../utils/jwt/jwt");
 const { decrypt } = require('../../utils/crypto/crypto');
@@ -38,21 +40,20 @@ const login = async (req, res, next) => {
           const { userName, password } = req.body;
 
           const user = await User.findOne({ userName }).select('+password +tokenSecret');//permite consultar password y tokenSecret para compararlo
-
+          
           const decryptedSecret = decrypt(user.tokenSecret, process.env.APP_CRYPTO_KEY);
 
           if (!user || !(await user.comparePassword(password))) {
                return res.status(401).json({ error: 'usuario o contraseña incorrecta' });
           }
-          
 
-          const accessToken = generateToken( user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRATION);
+          const accessToken = generateToken(user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRATION);
 
-          generateCookie(res, 'accessToken', accessToken, process.env.ACCESS_TOKEN_COOKIE_EXPIRATION);
+          await generateCookie(res, 'accessToken', accessToken, process.env.ACCESS_TOKEN_COOKIE_EXPIRATION);
 
-          const refreshToken = generateToken( user, decryptedSecret, process.env.REFRESH_TOKEN_EXPIRATION);
+          const refreshToken = generateToken(user, decryptedSecret, process.env.REFRESH_TOKEN_EXPIRATION);
 
-          generateCookie(res, 'refreshToken', refreshToken, process.env.REFRESH_TOKEN_COOKIE_EXPIRATION);
+          await generateCookie(res, 'refreshToken', refreshToken, process.env.REFRESH_TOKEN_COOKIE_EXPIRATION);
 
           return res.status(200).json({
                message: 'autenticación correcta',
@@ -78,23 +79,23 @@ const login = async (req, res, next) => {
 
 
 const logout = async (req, res, next) => {
-     
+
      try {
 
           const user = await User.findById(req.user._id);
-       
+
           if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
-         
+
           user.tokenVersion += 1; // Incrementar la versión del token para invalidar los existentes
           await user.save();
 
           res.clearCookie('accessToken');
           res.clearCookie('refreshToken');
-         
+
           return res.status(200).json({ message: 'sesión cerrada' });
-          
+
      } catch (error) {
-          
+
           res.status(500).json({ message: 'no se pudo cerrar sesión' });
      }
 }
@@ -102,7 +103,7 @@ const logout = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
 
-     try { 
+     try {
 
           const { oldPassword, newPassword } = req.body;
           const userId = req.user._id;

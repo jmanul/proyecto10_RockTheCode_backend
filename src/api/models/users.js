@@ -42,7 +42,7 @@ userSchema.pre('save', async function (next) {
                this.tokenSecret = encrypt(this.tokenSecret, process.env.APP_CRYPTO_KEY);
 
                // Hashear la contraseña con un salt seguro
-               const salt = await bcrypt.genSalt(10);
+               const salt = await bcrypt.genSalt(Number(process.env.SALT));
                this.password = await bcrypt.hash(this.password, salt);
           }
 
@@ -59,7 +59,9 @@ userSchema.pre('save', async function (next) {
 
 // metodo para comparar contraseñas
 userSchema.methods.comparePassword = async function (password) {
+    
      return await bcrypt.compare(password, this.password);
+
 };
 
 

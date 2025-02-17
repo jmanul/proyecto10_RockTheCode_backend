@@ -6,11 +6,10 @@ const conectDDBB = async () => {
 
           await mongoose.connect(process.env.DDBB_URL);
           console.log('DDBB conectada 🤖🤖');
-          
-
+         
      } catch (error) {
 
-          console.log('No ha sido imposible conectar 🫣');
+          console.log('ha sido imposible conectar 🫣');
 
      }
 };
