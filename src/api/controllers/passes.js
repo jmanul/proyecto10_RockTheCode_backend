@@ -1,7 +1,6 @@
 
 const Event = require("../models/events");
 const Pass = require("../models/passes");
-const { eventNames } = require("../models/users");
 
 
 const getPassesByEvent = async (req, res, next) => {
@@ -62,9 +61,22 @@ const postPass = async (req, res, next) => {
                return res.status(404).json({ message: 'evento no encontrado' });
           }
 
-     
+          // Determinar las fechas para el abono la misma del evento si no se especifica otra distinta
+          let passStartDate = startDatePass ? new Date(startDatePass) : event.startDate;
+          let passEndDate = endDatePass ? new Date(endDatePass) : event.endDate;
 
-           const newPass = await Pass.create({ eventId, startDatePass: event.startDate, endDatePass: event.endDate,  ...rest });
+          if (passStartDate < event.startDate || passEndDate > event.endDate) {
+               return res.status(400).json({
+                    message: 'Las fechas del abono deben estar dentro del rango de fechas del evento'
+               });
+          }
+
+          const newPass = await Pass.create({
+               eventId,
+               startDatePass: passStartDate,
+               endDatePass: passEndDate,
+               ...rest
+          });
 
           await Event.findByIdAndUpdate(
                eventId,

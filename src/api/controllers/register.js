@@ -1,8 +1,5 @@
 const User = require("../models/users");
-
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const { generateToken, rotateUserSecret } = require("../../utils/jwt/jwt");
+const { generateToken, rotateUserSecret, generateCookie } = require("../../utils/jwt/jwt");
 const { decrypt } = require('../../utils/crypto/crypto');
 
 
@@ -49,20 +46,13 @@ const login = async (req, res, next) => {
           }
           
 
-          const accessToken = generateToken(user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRATION);
+          const accessToken = generateToken( user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRATION);
 
-          const refreshToken = generateToken(user, decryptedSecret, process.env.REFRESH_TOKEN_EXPIRATION);
+          generateCookie(res, 'accessToken', accessToken, process.env.ACCESS_TOKEN_COOKIE_EXPIRATION);
 
-          res.cookie('accessToken', accessToken, {
-               httpOnly: true,
-               secure: process.env.NODE_ENV === 'production',
-               sameSite:'Strict',
-               maxAge:2 * 60 * 60 * 1000 
-          });
+          const refreshToken = generateToken( user, decryptedSecret, process.env.REFRESH_TOKEN_EXPIRATION);
 
-          res.cookie('refreshToken', refreshToken, {
-               httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict', maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias en milisegundos
-          });
+          generateCookie(res, 'refreshToken', refreshToken, process.env.REFRESH_TOKEN_COOKIE_EXPIRATION);
 
           return res.status(200).json({
                message: 'autenticación correcta',
@@ -112,9 +102,7 @@ const logout = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
 
-     try {
-
-          
+     try { 
 
           const { oldPassword, newPassword } = req.body;
           const userId = req.user._id;
@@ -129,6 +117,10 @@ const changePassword = async (req, res, next) => {
           await user.save();
 
           await rotateUserSecret(userId);
+
+
+          res.clearCookie('accessToken');
+          res.clearCookie('refreshToken');
 
           return res.status(200).json({ message: 'contraseña cambiada exitosamente' });
 

@@ -5,20 +5,33 @@ const { encrypt } = require('../crypto/crypto');
 const crypto = require('crypto');
 
 
-const generateToken = (user, keySecret, expiration) => {
+const generateToken = ( user, keySecret, expiration) => {
 
 
-     return jwt.sign(
+    return  jwt.sign(
           {
                userId: user._id,
                version: user.tokenVersion
           },
           keySecret, 
           { expiresIn: expiration }
-     );
-
+      );
+     
+     
  
 };
+
+const generateCookie = async (res, nameToken, token, timeMaxAge) => {
+      
+     return res.cookie(nameToken, token, {
+
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'Strict',
+          maxAge: Number(timeMaxAge)
+     });
+   
+}
 
 
 const verifyToken = async (token, keySecret, tokenName) => { 
@@ -40,8 +53,7 @@ const verifyToken = async (token, keySecret, tokenName) => {
      } catch (error) {
           
           throw new Error(`Fallo en la verificación del ${tokenName}: ${error.message}`);
-     }
-
+     }  
     
 };
 
@@ -56,7 +68,7 @@ const invalidateUserTokens = async (userId) => {
 
 
 const rotateUserSecret = async (userId) => {
-     const newSecret = encrypt(crypto.randomBytes(64).toString('hex'));
+     const newSecret =  encrypt(crypto.randomBytes(64).toString('hex'), process.env.APP_CRYPTO_KEY);
      await User.findByIdAndUpdate(userId, {
           tokenSecret: newSecret
      });
@@ -66,6 +78,7 @@ module.exports = {
 
      generateToken,
      verifyToken,
+     generateCookie,
      invalidateUserTokens,
      rotateUserSecret
 }; 

@@ -1,9 +1,9 @@
-require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
+
 const jwt = require("jsonwebtoken");
 const mongoose = require('mongoose');
 const Event = require('../../api/models/events');
 const User = require('../../api/models/users');
-const { verifyToken, generateToken} = require('../../utils/jwt/jwt');
+const { verifyToken, generateToken, generateCookie} = require('../../utils/jwt/jwt');
 const { decrypt } = require('../../utils/crypto/crypto');
 
 
@@ -29,27 +29,24 @@ const isAuth = async (req, res, next) => {
                     const decryptedSecret = decrypt(user.tokenSecret, process.env.APP_CRYPTO_KEY);
 
                     try {
+
                          req.user = await verifyToken(refreshToken, decryptedSecret, 'refreshToken');
+
+                         token = generateToken( user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRATION);
+
+                         generateCookie(res, 'accessToken', token, process.env.ACCESS_TOKEN_COOKIE_EXPIRATION);
+
+                         console.log(`Nuevo accessToken generado:`, token);
+
                     } catch (verifyError) {
-                         console.log("Error verificando RefreshToken:", verifyError.message);
-                         return res.status(401).json({ error: 'RefreshToken inválido o expirado' });
+
+                         return res.status(401).json({ error: 'RefreshToken no valido o expirado' });
                     }
 
-                    token = generateToken(user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRATION);
-
-                    // guardar el nuevo accessToken en la cookie
-                    res.cookie('accessToken', token, {
-                         httpOnly: true,
-                         secure: process.env.NODE_ENV === 'production',
-                         sameSite: 'Strict',
-                         maxAge: 15 * 60 * 1000 
-                    });
-
-                    console.log("Nuevo accessToken generado:", token);
 
                } catch (refreshError) {
-                    console.log("Error al refrescar el token:", refreshError);
-                    return res.status(401).json({ error: 'RefreshToken inválido o expirado' });
+                  
+                    return res.status(401).json({ error: 'RefreshToken no valido' });
                }
           }
 
@@ -60,11 +57,9 @@ const isAuth = async (req, res, next) => {
      } catch (error) {
 
           console.log("Error en isAuth:", error);
-          return res.status(401).json({ error: 'Token inválido o expirado' });
+          return res.status(401).json({ error: 'Token expirado o invalido' });
      }
 };
-
-
 
 
 const rollAuth = (...alloAuthRoles) => {
