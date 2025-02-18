@@ -5,6 +5,7 @@
   "scripts": {
   
     "start": "node index.js",
+    "vercel-build": "npm install",
     "dev": "nodemon index.js"
   ,
     "dev:4000": "PORT=4000 npm run dev",
