@@ -134,7 +134,7 @@ const putUser = async (req, res, next) => {
 
           const updateData = {};
 
-          if (req.body.email) {
+          if (req.body.email && req.body.email.trim() !== "" && req.body.email !== user.email) {
 
                const existingUserEmail = await User.findOne({
                     email: req.body.email,
@@ -146,7 +146,7 @@ const putUser = async (req, res, next) => {
                updateData.email = req.body.email;
           }
 
-          if (req.body.userName) {
+          if (req.body.userName && req.body.userName.trim() !== "" && req.body.userName !== user.userName) {
 
                const existingUserName = await User.findOne({
                     userName: req.body.userName,
