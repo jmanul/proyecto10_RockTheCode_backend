@@ -49,11 +49,15 @@ app.use('*', (req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen( PORT, () => {
+// Solo iniciar el servidor si no se está en el entorno de Vercel
+if (!process.env.VERCEL) {
+     
+     app.listen(PORT, () => {
 
-     console.log(`listening on port ${PORT} 😎`);
+          console.log(`listening on port ${PORT} 😎`);
 
-});
+     });
+}
 
 
 module.exports = app;
