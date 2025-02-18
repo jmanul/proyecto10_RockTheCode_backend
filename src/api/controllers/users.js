@@ -125,65 +125,55 @@ const putRollUser = async (req, res, next) => {
 
 
 const putUser = async (req, res, next) => {
-
      try {
-
-          const { email, userName, eventsIds, ...rest } = req.body;
-
-          const updateData = { ...rest }
-
-          const user = await User.findById(req.user._id);
+          const userId = req.user._id;
+          const user = await User.findById(userId);
           if (!user) {
                return res.status(404).json({ message: 'Usuario no encontrado' });
           }
 
-          const existingUserName = await User.findOne({
-               userName, _id: { $ne: user._id }
-          });
+          const updateData = {};
 
+          if (req.body.email) {
 
-          if (existingUserName) {
-
-               return res.status(400).json({ message: 'El nombre de usuario ya está en uso.' });
-          }
-
-
-          if (email.trim() !== '' && email !== user.email) {
-            
-             const   existingUserEmail = await User.findOne({
-                    email, _id: { $ne: user._id }
-             });
-               
+               const existingUserEmail = await User.findOne({
+                    email: req.body.email,
+                    _id: { $ne: userId }
+               });
                if (existingUserEmail) {
-
                     return res.status(400).json({ message: 'La dirección de correo electrónico ya está en uso.' });
                }
-       }
+               updateData.email = req.body.email;
+          }
 
+          if (req.body.userName) {
+
+               const existingUserName = await User.findOne({
+                    userName: req.body.userName,
+                    _id: { $ne: userId }
+               });
+               if (existingUserName) {
+                    return res.status(400).json({ message: 'El nombre de usuario ya está en uso.' });
+               }
+               updateData.userName = req.body.userName;
+          }
 
           if (req.file) {
-
                await deleteCloudinaryImage(user.avatar);
-
                updateData.avatar = req.file.path;
           }
 
-          if (email) updateData.email = email;
-          if (userName) updateData.userName = userName;
-          const userUpdate = await User.findByIdAndUpdate(user._id, updateData, { new: true });
-
-          return res.status(200).json(userUpdate);
-
+          const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+          return res.status(200).json(updatedUser);
 
      } catch (error) {
-
           if (req.file) {
                await deleteCloudinaryImage(req.file.path);
           }
-
           return res.status(404).json({ error: error.message });
      }
 };
+
 
 const addPassFromUser = async (req, res, next) => {
 
