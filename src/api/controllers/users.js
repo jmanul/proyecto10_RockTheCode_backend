@@ -140,20 +140,26 @@ const putUser = async (req, res, next) => {
           const existingUserName = await User.findOne({
                userName, _id: { $ne: user._id }
           });
-          const existingUserEmail = await User.findOne({
-               email, _id: { $ne: user._id }
-          });
-
-          if (existingUserEmail) {
-
-               return res.status(400).json({ message: 'La dirección de correo electrónico ya está en uso.' });
-          }
 
 
           if (existingUserName) {
 
                return res.status(400).json({ message: 'El nombre de usuario ya está en uso.' });
           }
+
+
+          if (email) {
+            
+             const   existingUserEmail = await User.findOne({
+                    email, _id: { $ne: user._id }
+             });
+               
+               if (existingUserEmail) {
+
+                    return res.status(400).json({ message: 'La dirección de correo electrónico ya está en uso.' });
+               }
+       }
+
 
           if (req.file) {
 
