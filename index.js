@@ -33,11 +33,11 @@ cloudinary.config({
      api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-app.use('/api/v1/register', registerRouter);
-app.use('/api/v1/users', usersRouter);
-app.use('/api/v1/events', eventsRouter);
-app.use('/api/v1/tickets', ticketsRouter);
-app.use('/api/v1/passes', passesRouter);
+app.use('/api/v2/register', registerRouter);
+app.use('/api/v2/users', usersRouter);
+app.use('/api/v2/events', eventsRouter);
+app.use('/api/v2/tickets', ticketsRouter);
+app.use('/api/v2/passes', passesRouter);
 
 
 
@@ -55,4 +55,6 @@ app.listen( PORT, () => {
 
 });
 
+
+module.exports = app;
 
