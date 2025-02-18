@@ -148,7 +148,7 @@ const putUser = async (req, res, next) => {
           }
 
 
-          if (email) {
+          if (email.trim() !== '' && email !== user.email) {
             
              const   existingUserEmail = await User.findOne({
                     email, _id: { $ne: user._id }
