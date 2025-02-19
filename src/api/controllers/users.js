@@ -134,17 +134,17 @@ const putUser = async (req, res, next) => {
 
           const updateData = {};
 
-          // if (req.body.email && req.body.email.trim() !== "" && req.body.email !== user.email) {
+          if (req.body.email && req.body.email.trim() !== "" && req.body.email !== user.email) {
 
-          //      const existingUserEmail = await User.findOne({
-          //           email: req.body.email,
-          //           _id: { $ne: userId }
-          //      });
-          //      if (existingUserEmail) {
-          //           return res.status(400).json({ message: 'La dirección de correo electrónico ya está en uso.' });
-          //      }
-          //      updateData.email = req.body.email;
-          // }
+               const existingUserEmail = await User.findOne({
+                    email: req.body.email,
+                    _id: { $ne: userId }
+               });
+               if (existingUserEmail) {
+                    return res.status(400).json({ message: 'La dirección de correo electrónico ya está en uso.' });
+               }
+               updateData.email = req.body.email;
+          }
 
           if (req.body.userName && req.body.userName.trim() !== "" && req.body.userName !== user.userName) {
 
