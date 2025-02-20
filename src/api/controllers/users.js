@@ -125,55 +125,71 @@ const putRollUser = async (req, res, next) => {
 
 
 const putUser = async (req, res, next) => {
+
      try {
-          const userId = req.user._id;
-          const user = await User.findById(userId);
+
+          const { email, userName, eventsIds, ...rest } = req.body;
+
+          const updateData = { ...rest }
+
+          const user = await User.findById(req.user._id);
           if (!user) {
                return res.status(404).json({ message: 'Usuario no encontrado' });
           }
 
-          const updateData = {};
-
-          if (req.body.email && req.body.email.trim() !== "" && req.body.email !== user.email) {
-
-               const existingUserEmail = await User.findOne({
-                    email: req.body.email,
-                    _id: { $ne: userId }
-               });
-               if (existingUserEmail) {
-                    return res.status(400).json({ message: 'La dirección de correo electrónico ya está en uso.' });
-               }
-               updateData.email = req.body.email;
-          }
-
-          if (req.body.userName && req.body.userName.trim() !== "" && req.body.userName !== user.userName) {
-
+          if (userName) {
+            
                const existingUserName = await User.findOne({
-                    userName: req.body.userName,
-                    _id: { $ne: userId }
+                    userName, _id: { $ne: user._id }
                });
+
+
                if (existingUserName) {
+
                     return res.status(400).json({ message: 'El nombre de usuario ya está en uso.' });
                }
-               updateData.userName = req.body.userName;
+
+               updateData.userName = userName;
+       }
+
+
+          if (email) {
+
+               const existingUserEmail = await User.findOne({
+                    email, _id: { $ne: user._id }
+               });
+
+               if (existingUserEmail) {
+
+                    return res.status(400).json({ message: 'La dirección de correo electrónico ya está en uso.' });
+               }
+
+               updateData.email = email;
           }
 
+
           if (req.file) {
+
                await deleteCloudinaryImage(user.avatar);
+
                updateData.avatar = req.file.path;
           }
 
-          const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
-          return res.status(200).json(updatedUser);
+
+          const userUpdate = await User.findByIdAndUpdate(user._id, updateData, { new: true });
+
+          return res.status(200).json(userUpdate);
+
 
      } catch (error) {
+
           if (req.file) {
                await deleteCloudinaryImage(req.file.path);
           }
+
           return res.status(404).json({ error: error.message });
      }
 };
-
 
 const addPassFromUser = async (req, res, next) => {
 

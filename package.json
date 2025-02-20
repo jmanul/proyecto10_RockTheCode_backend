@@ -3,13 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-  
     "start": "node index.js",
-    "vercel-build": "npm install",
-    "dev": "nodemon index.js"
-  ,
-    "dev:4000": "PORT=4000 npm run dev",
-    "seed": "node ./src/utils/seeds/upSeed.js"
+    "dev": "nodemon index.js",
+    "seed": "node ./src/utils/seeds/upSeed.js",
+    "vercel-build": "npm install"
   },
   "keywords": [],
   "author": "",

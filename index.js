@@ -6,13 +6,16 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const { conectDDBB } = require('./src/config/ddbb');
 const cloudinary = require('cloudinary').v2;
+const cors = require('cors');
 
 const registerRouter = require('./src/api/routes/register');
 const usersRouter = require('./src/api/routes/users');
 const eventsRouter = require('./src/api/routes/events');
 const ticketsRouter = require('./src/api/routes/tickets');
 const passesRouter = require('./src/api/routes/passes');
-const  cleanUpdateOldData = require('./src/utils/cronJobs/cronJobs');
+const cronRouter = require('./src/api/routes/cron');
+
+//const  cleanUpdateOldData = require('./src/utils/cronJobs/cronJobs');
 
 
 const app = express();
@@ -22,9 +25,34 @@ app.use(cookieParser());
 
 conectDDBB();
 
+// configuracion de CORS restringida
+
+const allowedOrigins = process.env.NODE_ENV === 'production'
+     ? [
+          process.env.FRONTEND_URL
+     ]
+     : '*'; 
+
+const corsOptions = {
+     origin: (origin, callback) => {
+          
+          if (!origin || allowedOrigins === '*' || allowedOrigins.includes(origin)) {
+               callback(null, true);
+          } else {
+               callback(new Error('No autorizado por CORS'));
+          }
+     },
+     credentials: true, // Permite cookies y autenticación
+     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+     allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+
+
 // verificar eventos caducados
 
-cleanUpdateOldData();
+//cleanUpdateOldData();
 
 cloudinary.config({
 
@@ -38,6 +66,7 @@ app.use('/api/v2/users', usersRouter);
 app.use('/api/v2/events', eventsRouter);
 app.use('/api/v2/tickets', ticketsRouter);
 app.use('/api/v2/passes', passesRouter);
+app.use('/api/v2/cron', cronRouter);
 
 
 
@@ -49,15 +78,12 @@ app.use('*', (req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-// Solo iniciar el servidor si no se está en el entorno de Vercel
-if (!process.env.VERCEL) {
-     
-     app.listen(PORT, () => {
+app.listen(PORT, () => {
 
-          console.log(`listening on port ${PORT} 😎`);
+     console.log(`listening on port ${PORT} 😎`);
 
-     });
-}
+});
+
 
 
 module.exports = app;
