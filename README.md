@@ -7,6 +7,7 @@ Esta API permite gestionar eventos, usuarios y tickets.
 ## Librerías Utilizadas
 
 - **bcrypt**: Para encriptar contraseñas de manera segura.
+- **bcrypt**: Para encriptar contraseñas de manera segura.
 - **cloudinary**: Para la gestión de imágenes en la nube.
 - **dotenv**: Para gestionar variables de entorno.
 - **express**: Framework web para manejar las rutas y middleware.
@@ -21,7 +22,7 @@ Esta API permite gestionar eventos, usuarios y tickets.
 ---
 
 <div align="center">
-<img src="https://res.cloudinary.com/dn6utw1rl/image/upload/v1737506933/default/default-perfil-peoples_wxg3bf.jpg" alt="Cloudinary-logo" width="450" />
+<img src="https://res.cloudinary.com/dn6utw1rl/image/upload/v2737506933/default/default-perfil-peoples_wxg3bf.jpg" alt="Cloudinary-logo" width="450" />
 </div>
 
 ---
@@ -39,21 +40,21 @@ Esta API permite gestionar eventos, usuarios y tickets.
 ## Endpoints de Autenticación
 
 ### **Registrar Usuario**
-**Endpoint:** `POST /api/v1/register`
+**Endpoint:** `POST /api/v2/register`
 
 Registra un nuevo usuario en el sistema.
 
 ---
 
 ### **Iniciar Sesión de Usuario**
-**Endpoint:** `POST /api/v1/register/login`
+**Endpoint:** `POST /api/v2/register/login`
 
 Inicia sesión un usuario existente.
 
 ---
 
 ### **Cierra sesión de Usuario**
-**Endpoint:** `POST /api/v1/register/logout`
+**Endpoint:** `POST /api/v2/register/logout`
 
 - **Autenticación:** Requerida.
 - **Autorización:** solo el usuario con mismo id.
@@ -62,7 +63,7 @@ Inicia sesión un usuario existente.
 ---
 
 ### **Modifica el Password**
-**Endpoint:** `PUT /api/v1/register/logout`
+**Endpoint:** `PUT /api/v2/register/logout`
 
 - **Autenticación:** Requerida.
 - **Autorización:** solo el usuario con mismo id.
@@ -85,10 +86,10 @@ Inicia sesión un usuario existente.
 
 | **Método** | **Endpoint**             | **Descripción**              |
 | ---------- | ------------------------ | ---------------------------- |
-| POST       | `/api/v1/register`       | Registrar un nuevo usuario   |
-| POST        | `/api/v1/register/login` | Iniciar sesión de un usuario |
-| POST        | `/api/v1/register/logout` | Cierra sesión de un usuario |
-| PUT        | `/api/v1/register/changePassword` | Cambia password de un usuario |
+| POST       | `/api/v2/register`       | Registrar un nuevo usuario   |
+| POST        | `/api/v2/register/login` | Iniciar sesión de un usuario |
+| POST        | `/api/v2/register/logout` | Cierra sesión de un usuario |
+| PUT        | `/api/v2/register/changePassword` | Cambia password de un usuario |
 
 ---
 
@@ -115,35 +116,34 @@ Inicia sesión un usuario existente.
 ## Endpoints de Eventos
 
 #### **Obtener Evento por ID**
-**Endpoint:** `GET /api/v1/events/:eventId`
+**Endpoint:** `GET /api/v2/events/:eventId`
 
 - **Autenticación:** Requerida.
 - Devuelve los detalles de un evento por su Id.
 
 ```json
-
-	{
-		"_id": "6791a1d86d91efc38617ae06",
-		"name": "Concierto de Jazz Nocturno",
-		"type": "music",
-		"location": "Teatro de la Ciudad",
-		"adress": "Calle del Sol 123",
-		"city": "Barcelona",
-		"description": "Un espectáculo único con los mejores artistas de jazz.",
-		"startDate": "2025-03-15T19:00:00.000Z",
-		"endDate": "2025-03-15T22:00:00.000Z",
+{
+		"_id": "67aac4571205d94c3489e7a9",
+		"name": "Carrera Nocturna 5K",
+		"type": "sport",
+		"location": "Parque Metropolitano",
+		"adress": "Calle Verde 50",
+		"city": "Bogotá",
+		"description": "Participa en esta emocionante carrera nocturna.",
+		"startDate": "2025-09-10T17:00:00.000Z",
+		"endDate": "2025-09-10T19:00:00.000Z",
 		"eventStatus": "not-start",
-		"image": "https://res.cloudinary.com/dn6utw1rl/image/upload/v1736008149/default/default-image-event_zk7dcu.webp",
-		"createdBy": "67784a087790d458a8eaef58",
+		"createdBy": "67aa5f62e4d1301e1cccbb17",
 		"soldOut": false,
-		"maxCapacity": 200,
+		"maxCapacity": 90,
 		"totalReservedPlaces": 0,
 		"attendees": [],
+		"passesOfferedIds": [],
 		"ticketsSold": [],
-		"passesOfferedIds:": [],
+		"image": "https://res.cloudinary.com/dn6utw1rl/image/upload/v1739241182/default/sport.webp",
 		"__v": 0,
-		"createdAt": "2025-01-23T01:56:40.502Z",
-		"updatedAt": "2025-01-23T01:56:40.502Z"
+		"createdAt": "2025-02-11T03:30:31.629Z",
+		"updatedAt": "2025-02-11T03:30:31.629Z"
 	}
 
 ```
@@ -151,7 +151,7 @@ Inicia sesión un usuario existente.
 ---
 
 #### **Obtener Eventos por Estado**
-**Endpoint:** `GET /api/v1/events/status/:eventStatus`
+**Endpoint:** `GET /api/v2/events/status/:eventStatus`
 
 - **Autenticación:** Requerida.
 - Devuelve todos los eventos que coinciden con el estado especificado, pudiendo ser los siguientes: **not-start, postponed, cancelled o finalized.**
@@ -159,7 +159,7 @@ Inicia sesión un usuario existente.
 ---
 
 #### **Obtener Todos los Eventos**
-**Endpoint:** `GET /api/v1/events`
+**Endpoint:** `GET /api/v2/events`
 
 - **Autenticación:** Requerida.
 - Devuelve todos los eventos disponibles.
@@ -167,7 +167,7 @@ Inicia sesión un usuario existente.
 ---
 
 #### **Crear un Evento**
-**Endpoint:** `POST /api/v1/events`
+**Endpoint:** `POST /api/v2/events`
 
 - **Autenticación:** Requerida.
 - **Subida de Imagen:** Permitida subida de una Imagen.
@@ -176,7 +176,7 @@ Inicia sesión un usuario existente.
 ---
 
 #### **Actualizar un Evento**
-**Endpoint:** `PUT /api/v1/events/:eventId`
+**Endpoint:** `PUT /api/v2/events/:eventId`
 
 - **Autenticación:** Requerida.
 - **Verificación del Creador o administrator:** Requerida.
@@ -186,7 +186,7 @@ Inicia sesión un usuario existente.
 ---
 
 #### **Eliminar un Evento**
-**Endpoint:** `DELETE /api/v1/events/:eventId`
+**Endpoint:** `DELETE /api/v2/events/:eventId`
 
 - **Autenticación:** Requerida.
 - **Verificación del Creador o administrator:** Requerida.
@@ -198,12 +198,12 @@ Inicia sesión un usuario existente.
 
 | **Método** | **Endpoint**                         | **Descripción**                                                                  |
 | ---------- | ------------------------------------ | -------------------------------------------------------------------------------- |
-| GET        | `/api/v1/events`                     | Obtiene todos los eventos                                                        |
-| GET        | `/api/v1/events/:eventId`            | Obtiene un evento por su Id                                                      |
-| GET        | `/api/v1/status/events/:eventStatus` | Obtiene un evento por su estado **(not-start, postponed, cancelled, finalized)** |
-| POST       | `/api/v1/events`                     | Crea un nuevo evento                                                             |
-| PUT        | `/api/v1/events/:eventId`            | Actualiza un evento                                                              |
-| DELETE     | `/api/v1/events/:eventId`            | Elimina un evento                                                                |
+| GET        | `/api/v2/events`                     | Obtiene todos los eventos                                                        |
+| GET        | `/api/v2/events/:eventId`            | Obtiene un evento por su Id                                                      |
+| GET        | `/api/v2/status/events/:eventStatus` | Obtiene un evento por su estado **(not-start, postponed, cancelled, finalized)** |
+| POST       | `/api/v2/events`                     | Crea un nuevo evento                                                             |
+| PUT        | `/api/v2/events/:eventId`            | Actualiza un evento                                                              |
+| DELETE     | `/api/v2/events/:eventId`            | Elimina un evento                                                                |
 
 ---
 
@@ -233,16 +233,46 @@ Inicia sesión un usuario existente.
 
 ### **Obtener Entrada por ID**
 
-**Endpoint:** `GET /api/v1/passes/:passId`
+**Endpoint:** `GET /api/v2/passes/:passId`
 
 - **Autenticación:** Requerida.
 - Devuelve los detalles de una entrada por su ID.
+  
+```json
+
+{
+		"_id": "67b0437889dec20adaadd71b",
+		"eventId": {
+			"_id": "67aac4571205d94c3489e7a4",
+			"name": "Exposición de Arte Contemporáneo",
+			"location": "Museo de Arte Moderno",
+			"city": "Ciudad de México",
+			"eventStatus": "not-start",
+			"image": "https://res.cloudinary.com/dn6utw1rl/image/upload/v1739241182/default/art.webp"
+		},
+		"namePass": "general",
+		"reservedPlacesPass": 1,
+		"passPrice": 0,
+		"maxCapacityPass": 50,
+		"totalReservedPlacesPass": 0,
+		"soldOutPass": false,
+		"color": "white",
+		"attendeesPass": [],
+		"ticketsSoldPass": [],
+		"startDatePass": "2025-04-05T08:00:00.000Z",
+		"endDatePass": "2025-04-05T16:00:00.000Z",
+		"createdAt": "2025-02-15T07:34:16.137Z",
+		"updatedAt": "2025-02-15T07:34:16.137Z",
+		"__v": 0
+	}
+
+```
 
 ---
 
 ### **Obtener Entradas por Evento**
 
-**Endpoint:** `GET /api/v1/passes/event/:eventId`
+**Endpoint:** `GET /api/v2/passes/event/:eventId`
 
 - **Autenticación:** Requerida.
 - Devuelve todas las entradas asociadas a un evento específico.
@@ -251,7 +281,7 @@ Inicia sesión un usuario existente.
 
 ### **Crear una Entrada**
 
-**Endpoint:** `POST /api/v1/passes/event/:eventId`
+**Endpoint:** `POST /api/v2/passes/event/:eventId`
 
 - **Autenticación:** Requerida.
 - **Verificación del Creador o Administrador:** Requerida.
@@ -261,7 +291,7 @@ Inicia sesión un usuario existente.
 
 ### **Actualizar una Entrada**
 
-**Endpoint:** `PUT /api/v1/passes/:passId`
+**Endpoint:** `PUT /api/v2/passes/:passId`
 
 - **Autenticación:** Requerida.
 - **Verificación del Creador Administrador:** Requerida.
@@ -271,7 +301,7 @@ Inicia sesión un usuario existente.
 
 ### **Eliminar una Entrada**
 
-**Endpoint:** `DELETE /api/v1/passes/:passId`
+**Endpoint:** `DELETE /api/v2/passes/:passId`
 
 - **Autenticación:** Requerida.
 - **Verificación del Creador o Administrador:** Requerida.
@@ -283,11 +313,11 @@ Inicia sesión un usuario existente.
 
 | **Método** | **Endpoint**                    | **Descripción**                         |
 | ---------- | ------------------------------- | --------------------------------------- |
-| GET        | `/api/v1/passes/:passId`        | Obtiene una entrada por su ID           |
-| GET        | `/api/v1/passes/event/:eventId` | Obtiene todas las entradas de un evento |
-| POST       | `/api/v1/passes/event/:eventId` | Crea una nueva entrada para un evento   |
-| PUT        | `/api/v1/passes/:passId`        | Actualiza una entrada existente         |
-| DELETE     | `/api/v1/passes/:passId`        | Elimina una entrada por su ID           |
+| GET        | `/api/v2/passes/:passId`        | Obtiene una entrada por su ID           |
+| GET        | `/api/v2/passes/event/:eventId` | Obtiene todas las entradas de un evento |
+| POST       | `/api/v2/passes/event/:eventId` | Crea una nueva entrada para un evento   |
+| PUT        | `/api/v2/passes/:passId`        | Actualiza una entrada existente         |
+| DELETE     | `/api/v2/passes/:passId`        | Elimina una entrada por su ID           |
 
 ---
 
@@ -307,7 +337,7 @@ Inicia sesión un usuario existente.
 ## Endpoints de Tickets
 
 #### **Modifica el status de un Ticket**
-**Endpoint:** `PUT /api/v1/tickets/status/:ticketId`
+**Endpoint:** `PUT /api/v2/tickets/status/:ticketId`
 
 - **Autenticación:** Requerida.
 - **Verificación del administrator:** Requerida.
@@ -331,7 +361,7 @@ Inicia sesión un usuario existente.
 ---
 
 #### **Crear un Ticket**
-**Endpoint:** `POST /api/v1/tickets`
+**Endpoint:** `POST /api/v2/tickets`
 
 - **Autenticación:** Requerida.
 - **Verificación del Creador o administrator:** Requerida.
@@ -340,7 +370,7 @@ Inicia sesión un usuario existente.
 ---
 
 #### **Obtener Tickets por Evento**
-**Endpoint:** `GET /api/v1/tickets/event/:eventId`
+**Endpoint:** `GET /api/v2/tickets/event/:eventId`
 
 - **Autenticación:** Requerida.
 - **Verificación del Creador o administrator:** Requerida.
@@ -349,7 +379,7 @@ Inicia sesión un usuario existente.
 ---
 
 #### **Obtener Tickets por tipo de entrada**
-**Endpoint:** `GET /api/v1/tickets/event/:eventId/pass/:passId`
+**Endpoint:** `GET /api/v2/tickets/event/:eventId/pass/:passId`
 
 - **Autenticación:** Requerida.
 - **Verificación del Creador o administrator:** Requerida.
@@ -358,7 +388,7 @@ Inicia sesión un usuario existente.
 ---
 
 #### **Obtener Tickets por Usuario**
-**Endpoint:** `GET /api/v1/tickets/user/:userId`
+**Endpoint:** `GET /api/v2/tickets/user/:userId`
 
 - **Autenticación:** Requerida.
 - **Verificación del Usuario autenticado:** Requerida.
@@ -367,7 +397,7 @@ Inicia sesión un usuario existente.
 ---
 
 #### **Obtener Tickets por Evento y Usuario**
-**Endpoint:** `GET /api/v1/tickets/event/:eventId/user/:userId`
+**Endpoint:** `GET /api/v2/tickets/event/:eventId/user/:userId`
 
 - **Autenticación:** Requerida.
 - **Verificación del Creador o administrator:** Requerida.
@@ -376,7 +406,7 @@ Inicia sesión un usuario existente.
 ---
 
 #### **Obtener Tickets por ID**
-**Endpoint:** `GET /api/v1/tickets/ticketId`
+**Endpoint:** `GET /api/v2/tickets/ticketId`
 
 - **Autenticación:** Requerida.
 
@@ -386,13 +416,13 @@ Inicia sesión un usuario existente.
 
 | **Método** | **Endpoint**                                  | **Descripción**                                                       |
 | ---------- | --------------------------------------------- | --------------------------------------------------------------------- |
-| POST       | `/api/v1/tickets`                             | Crea un nuevo ticket                                                  |
-| PUT        | `/api/v1/tickets/status/:ticketId`            | Modifica el status de un ticket a **"used" o "cancelled"**            |
-| GET        | `/api/v1/tickets/event/:eventId`              | Obtiene todos los tickets de un evento                                |
-| GET        | `/api/v1/tickets/event/:eventId/pass/passId`  | Obtiene todos los tickets de un evento de un tipo de entrada concreto |
-| GET        | `/api/v1/tickets/user/:userId`                | Obtiene todos los tickets de un usuario                               |
-| GET        | `/api/v1/tickets/event/:eventId/user/:userId` | Obtiene todos los tickets de un usuario en un evento                  |
-| GET        | `/api/v1/tickets/ticketId`                    | Obtiene un ticket por su ID                                           |
+| POST       | `/api/v2/tickets`                             | Crea un nuevo ticket                                                  |
+| PUT        | `/api/v2/tickets/status/:ticketId`            | Modifica el status de un ticket a **"used" o "cancelled"**            |
+| GET        | `/api/v2/tickets/event/:eventId`              | Obtiene todos los tickets de un evento                                |
+| GET        | `/api/v2/tickets/event/:eventId/pass/passId`  | Obtiene todos los tickets de un evento de un tipo de entrada concreto |
+| GET        | `/api/v2/tickets/user/:userId`                | Obtiene todos los tickets de un usuario                               |
+| GET        | `/api/v2/tickets/event/:eventId/user/:userId` | Obtiene todos los tickets de un usuario en un evento                  |
+| GET        | `/api/v2/tickets/ticketId`                    | Obtiene un ticket por su ID                                           |
 
 ---
 
@@ -416,33 +446,29 @@ Inicia sesión un usuario existente.
 ## **Endpoints de Usuarios**
 
 ### **Obtener Usuario por ID**
-**Endpoint:** `GET /api/v1/users/:userId`
+**Endpoint:** `GET /api/v2/users/:userId`
 
 - **Autenticación:** Requerida.
 - **Autorización:** solo el usuario con mismo id o ser administrator.
 - Devuelve los detalles de un usuario específico.
   
 ```json
-	{
-		"_id": "67784a087790d458a8eaef58",
-		"userName": "admin",
-		"roll": "administrator",
-		"avatar": "https://res.cloudinary.com/dn6utw1rl/image/upload/v1736101747/users-events/q12bgop3r1axv9war6nm.jpg",
-		"createdAt": "2025-01-03T20:35:20.592Z",
-		"updatedAt": "2025-01-21T22:52:02.985Z",
-		"__v": 0,
+	 {
+		"_id": "67aa5f62e4d1301e1cccbb17",
+		"userName": "juan",
+		"roll": "user",
 		"eventsIds": [
-			{
-				"_id": "678ec43ce124c363dac94a54",
-				"name": "Feria Gastronómica",
-				"startDate": "2027-07-11T11:00:00.000Z"
-			}
+			"67aac4571205d94c3489e7a3"
 		],
-		"email": "manul@gmail.com",
+		"passesIds": [
+			"67b03c997257574259420d81"
+		],
 		"ticketsIds": [
-			"678ec472463a66112c09c83f",
-			"678ec518a8b958ffce88c4fc",
-			"678ec57d85052bf246ddaab1"
+			"67b04a281fd349400aaf56b0",
+			"67b04a291fd349400aaf56b5",
+			"67b04a291fd349400aaf56ba",
+			"67b04a291fd349400aaf56bf",
+			"67b04a291fd349400aaf56c4"
 		]
 	}
 
@@ -451,7 +477,7 @@ Inicia sesión un usuario existente.
 ---
 
 ### **Obtener Todos los Usuarios**
-**Endpoint:** `GET /api/v1/users`
+**Endpoint:** `GET /api/v2/users`
 
 - **Autenticación:** Requerida.
 - **Autorización:** Solo los administradores pueden acceder.
@@ -460,7 +486,7 @@ Inicia sesión un usuario existente.
 ---
 
 ### **Crear un Usuario**
-**Endpoint:** `POST /api/v1/users`
+**Endpoint:** `POST /api/v2/users`
 
 - **Autenticación:** Requerida.
 - **Autorización:** Solo los administradores pueden crear usuarios por este metodo.
@@ -470,7 +496,7 @@ Inicia sesión un usuario existente.
 ---
 
 ### **Actualizar el Rol de un Usuario**
-**Endpoint:** `PUT /api/v1/users/roll/:userId`
+**Endpoint:** `PUT /api/v2/users/roll/:userId`
 
 - **Autenticación:** Requerida.
 - **Autorización:** Solo los administradores pueden modificar el rol.
@@ -479,38 +505,38 @@ Inicia sesión un usuario existente.
 ---
 
 ### **Actualizar un Usuario**
-**Endpoint:** `PUT /api/v1/users/:userId`
+**Endpoint:** `PUT /api/v2/users`
 
 - **Autenticación:** Requerida.
-- **Autorización:** solo el usuario con mismo id o administrador.
+- **Autorización:** solo el usuario con mismo id.
 - **Subida de Imagen:** Permitida para cargar un avatar.
 - Actualiza los datos de un usuario específico.
 
 ---
 
 ### **Agregar un Evento a un Usuario**
-**Endpoint:** `PUT /api/v1/users/:userId/events/:eventId`
+**Endpoint:** `PUT /api/v2/users/pass/:passId`
 
 - **Autenticación:** Requerida.
-- **Autorización:** solo el usuario con mismo id o administrador.
+- **Autorización:** solo el usuario con mismo id.
 - Agrega un evento al historial del usuario.
 
 ---
 
 ### **Eliminar un Evento de un Usuario**
-**Endpoint:** `DELETE /api/v1/users/:userId/events/:eventId`
+**Endpoint:** `DELETE /api/v2/users/pass/:passId`
 
 - **Autenticación:** Requerida.
-- **Autorización:** solo el usuario con mismo id o administrador.
+- **Autorización:** solo el usuario con mismo id.
 - Elimina un evento del historial del usuario.
 
 ---
 
 ### **Eliminar un Usuario**
-**Endpoint:** `DELETE /api/v1/users/:userId`
+**Endpoint:** `DELETE /api/v2/users`
 
 - **Autenticación:** Requerida.
-- **Autorización:** solo el usuario con mismo id o administrador.
+- **Autorización:** solo el usuario con mismo id.
 - Elimina un usuario del sistema.
 
 ---
@@ -519,15 +545,14 @@ Inicia sesión un usuario existente.
 
 | **Método** | **Endpoint**                            | **Descripción**                                               |
 | ---------- | --------------------------------------- | ------------------------------------------------------------- |
-| GET        | `/api/v1/users/:userId`                 | Obtiene un usuario por su ID                                  |
-| GET        | `/api/v1/users`                         | Obtiene todos los usuarios                                    |
-| POST       | `/api/v1/users`                         | Crea un nuevo usuario                                         |
-| PUT        | `/api/v1/users/roll/:userId`            | Actualiza el rol de un usuario                                |
-| PUT        | `/api/v1/users/password/:userId`        | Actualiza la contraseña de un usuario                         |
-| PUT        | `/api/v1/users/:userId`                 | Actualiza los datos de un usuario                             |
-| PUT        | `/api/v1/users/:userId/events/:eventId` | Agrega un evento a la lista eventos de un usuario             |
-| DELETE     | `/api/v1/users/:userId/events/:eventId` | Elimina un evento de la lista de eventos de un usuario        |
-| DELETE     | `/api/v1/users/:userId`                 | Elimina un usuario siempre que no tenga eventos sin finalizar |
+| GET        | `/api/v2/users/:userId`                 | Obtiene un usuario por su ID                                  |
+| GET        | `/api/v2/users`                         | Obtiene todos los usuarios                                    |
+| POST       | `/api/v2/users`                         | Crea un nuevo usuario                                         |
+| PUT        | `/api/v2/users/roll/:userId`            | Actualiza el rol de un usuario                                |
+| PUT        | `/api/v2/users`                 | Actualiza los datos de un usuario                             |
+| PUT        | `/api/v2/users/pass/:passId` | Agrega un evento a la lista eventos de un usuario             |
+| DELETE     | `/api/v2/users/pass/:passId` | Elimina un evento de la lista de eventos de un usuario        |
+| DELETE     | `/api/v2/users`                 | Elimina un usuario siempre que no tenga eventos sin finalizar |
 
 
 
