@@ -1,10 +1,9 @@
 require('dotenv').config()
 
-
-
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const { conectDDBB } = require('./src/config/ddbb');
+//const { corsOptions } = require('./src/config/cors');
 const cloudinary = require('cloudinary').v2;
 const cors = require('cors');
 
@@ -15,44 +14,45 @@ const ticketsRouter = require('./src/api/routes/tickets');
 const passesRouter = require('./src/api/routes/passes');
 const cronRouter = require('./src/api/routes/cron');
 
-//const  cleanUpdateOldData = require('./src/utils/cronJobs/cronJobs');
 
+//const  cleanUpdateOldData = require('./src/utils/cronJobs/cronJobs');
 
 const app = express();
 
+
+app.use(
+     cors({
+          origin: (origin, callback) => {
+
+               const ACCEPTED_ORIGINS = [
+                    "http://localhost:5191",
+                    "https://frontend.vercel.app",
+               ];
+
+               if (ACCEPTED_ORIGINS.includes(origin)) {
+
+                    return callback(null, true);
+               }
+
+               if (!origin) {
+
+                    return callback(null, true);
+
+               }
+
+               return callback(new Error("Not allowed by CORS"));
+          },
+          credentials: true,// Permite cookies y autenticación
+          methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+          allowedHeaders: ['Content-Type', 'Authorization']
+     })
+);
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 conectDDBB();
-
-// configuracion de CORS restringida
-
-const allowedOrigins = process.env.NODE_ENV === 'production'
-     ? [
-          process.env.FRONTEND_URL
-     ]
-     : '*'; 
-
-const corsOptions = {
-     origin: (origin, callback) => {
-          
-          if (!origin || allowedOrigins === '*' || allowedOrigins.includes(origin)) {
-               callback(null, true);
-          } else {
-               callback(new Error('No autorizado por CORS'));
-          }
-     },
-     credentials: true, // Permite cookies y autenticación
-     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-     allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-app.use(cors(corsOptions));
-
-
-// verificar eventos caducados
-
-//cleanUpdateOldData();
 
 cloudinary.config({
 

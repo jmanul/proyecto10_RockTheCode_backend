@@ -10,7 +10,7 @@ const ticketsRouter = require('express').Router();
 
 ticketsRouter.post('/', isAuth, idCreated, postTicket);
 ticketsRouter.put('/event/:eventId/status/:ticketId', isAuth, idCreated, putStatusById);
-ticketsRouter.get('/event/:eventId', isAuth, idCreated, getTicketsByIdEvent);
+ticketsRouter.get('/event/:eventId', getTicketsByIdEvent);
 ticketsRouter.get('/event/:eventId/pass/:passId', isAuth, idCreated, getTicketsByIdPass);
 ticketsRouter.get('/user/:userId', isAuth, idAuth, getTicketsByIdUser);
 ticketsRouter.get('/event/:eventId/user/:userId', isAuth, idCreated, getTicketsByIdEventAndUser);
