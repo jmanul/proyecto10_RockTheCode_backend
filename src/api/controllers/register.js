@@ -9,16 +9,22 @@ const { decrypt } = require('../../utils/crypto/crypto');
 const register = async (req, res, next) => {
 
      try {
-          const { userName, password } = req.body;
+          const { userName, password, email} = req.body;
 
-          const existingUser = await User.findOne({ userName });
+          const existingUser = await User.findOne({
+               $or: [
+                    { userName: userName },
+                    { email: email }       
+               ]
+          });
           if (existingUser) {
-               return res.status(400).json({ message: 'el nombre de usuario ya existe' });
+               return res.status(400).json({ message: 'el nombre de usuario o la direccion de correo electronico ya existe' });
           }
 
           const newUser = new User({
                userName,
                password,
+               email,
                roll: 'user'
           });
 

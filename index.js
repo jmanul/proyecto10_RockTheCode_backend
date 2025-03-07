@@ -25,7 +25,7 @@ app.use(
           origin: (origin, callback) => {
 
                const ACCEPTED_ORIGINS = [
-                    "http://localhost:5191",
+                    "http://localhost:5173",
                     "https://frontend.vercel.app",
                ];
 
