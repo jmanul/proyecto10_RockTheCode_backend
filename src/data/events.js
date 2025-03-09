@@ -1,7 +1,7 @@
 const eventDate = [
      {
           name: "Concierto de Jazz Nocturno",
-          type: "music",
+          type: "musica",
           location: "Teatro de la Ciudad",
           adress: "Calle del Sol 123",
           city: "Barcelona",
@@ -14,7 +14,7 @@ const eventDate = [
      },
      {
           name: "Feria Gastronómica",
-          type: "gastronomy",
+          type: "gastronomía",
           location: "Plaza Central",
           adress: "Plaza Mayor S/N",
           city: "Madrid",
@@ -27,7 +27,7 @@ const eventDate = [
      },
      {
           name: "Exposición de Arte Contemporáneo",
-          type: "art",
+          type: "arte",
           location: "Museo de Arte Moderno",
           adress: "Av. Insurgentes 300",
           city: "Ciudad de México",
@@ -41,7 +41,7 @@ const eventDate = [
      {
           name: "Festival de Cine Independiente",
           location: "Cine Estrella",
-          type: "art",
+          type: "arte",
           adress: "Calle de las Estrellas 45",
           city: "Buenos Aires",
           description: "Proyección de películas de directores emergentes.",
@@ -53,7 +53,7 @@ const eventDate = [
      },
      {
           name: "Obra de Teatro Clásico",
-          type: "art",
+          type: "arte",
           location: "Teatro Principal",
           adress: "Av. Reforma 200",
           city: "Lima",
@@ -67,7 +67,7 @@ const eventDate = [
      {
           name: "Charla tech",
           location: "Centro de Convenciones",
-          type: "technology",
+          type: "tecnología",
           adress: "Boulevard Principal 80",
           city: "Santiago",
           description: "Encuentra tu propósito con este evento inspirador.",
@@ -79,7 +79,7 @@ const eventDate = [
      },
      {
           name: "Clase Magistral de Fotografía",
-          type: "art",
+          type: "arte",
           location: "Centro Cultural",
           adress: "Calle del Arte 5",
           city: "Quito",
@@ -92,7 +92,7 @@ const eventDate = [
      },
      {
           name: "Carrera Nocturna 5K",
-          type: "sport",
+          type: "deporte",
           location: "Parque Metropolitano",
           adress: "Calle Verde 50",
           city: "Bogotá",
@@ -105,7 +105,7 @@ const eventDate = [
      },
      {
           name: "Festival de Música Electrónica",
-          type: "music",
+          type: "musica",
           location: "Parque de los Sueños",
           adress: "Calle Beats 88",
           city: "Montevideo",
@@ -118,7 +118,7 @@ const eventDate = [
      },
      {
           name: "gaming competition",
-          type: "technology",
+          type: "tecnología",
           location: "Arena Virtual",
           adress: "Calle Gamer 42",
           city: "San José",
@@ -131,7 +131,7 @@ const eventDate = [
      },
      {
           name: "Concierto en la Alhambra",
-          type: "music",
+          type: "musica",
           location: "La Alhambra",
           adress: "Calle Real de la Alhambra, s/n",
           city: "Granada",
@@ -144,7 +144,7 @@ const eventDate = [
      },
      {
           name: "Maratón de Madrid",
-          type: "sport",
+          type: "deporte",
           location: "Parque del Retiro",
           adress: "Plaza de la Independencia, 7",
           city: "Madrid",
@@ -157,7 +157,7 @@ const eventDate = [
      },
      {
           name: "Fiesta Mayor de Sitges",
-          type: "party",
+          type: "fiesta",
           location: "Plaza del Ayuntamiento",
           adress: "Plaza del Ayuntamiento, 1",
           city: "Sitges",
@@ -170,20 +170,20 @@ const eventDate = [
      },
      {
           name: "Taller de fotografía en el Guggenheim",
-          type: "training",
+          type: "formación",
           location: "Museo Guggenheim",
           adress: "Avenida Abandoibarra, 2",
           city: "Bilbao",
           description: "Aprende técnicas avanzadas de fotografía en un entorno único.",
-          startDate: "2025-03-05T10:00:00",
-          endDate: "2025-03-05T14:00:00",
+          startDate: "2025-04-05T10:00:00",
+          endDate: "2025-04-05T14:00:00",
           attendees: [],
           ticketsSold: [],
           maxCapacity: 90
      },
      {
           name: "Feria del libro de Barcelona",
-          type: "art",
+          type: "arte",
           location: "Paseo de Gracia",
           adress: "Paseo de Gracia, 15",
           city: "Barcelona",
@@ -196,7 +196,7 @@ const eventDate = [
      },
      {
           name: "Concierto de Flamenco en Sevilla",
-          type: "music",
+          type: "musica",
           location: "Teatro Lope de Vega",
           adress: "Avenida de María Luisa, s/n",
           city: "Sevilla",
@@ -209,7 +209,7 @@ const eventDate = [
      },
      {
           name: "Carrera Popular de Valencia",
-          type: "sport",
+          type: "deporte",
           location: "Ciudad de las Artes y las Ciencias",
           adress: "Avenida del Professor López Piñero, 7",
           city: "Valencia",
@@ -222,12 +222,12 @@ const eventDate = [
      },
      {
           name: "Carnaval de Cádiz",
-          type: "party",
+          type: "fiesta",
           location: "Centro Histórico de Cádiz",
           adress: "Plaza de San Juan de Dios, s/n",
           city: "Cádiz",
           description: "Una de las celebraciones más divertidas y coloridas de España.",
-          startDate: "2025-03-10T18:00:00",
+          startDate: "2025-03-15T18:00:00",
           endDate: "2025-03-18T23:59:00",
           attendees: [],
           ticketsSold: [],
@@ -235,7 +235,7 @@ const eventDate = [
      },
      {
           name: "Curso de cocina gallega",
-          type: "gastronomy",
+          type: "gastronomía",
           location: "Centro Gastronómico de Santiago",
           adress: "Rúa de San Francisco, 12",
           city: "Santiago de Compostela",
@@ -248,7 +248,7 @@ const eventDate = [
      },
      {
           name: "Feria de Abril en Barcelona",
-          type: "others",
+          type: "otros",
           location: "Parc del Fòrum",
           adress: "Carrer de la Pau, 12",
           city: "Barcelona",
@@ -261,7 +261,7 @@ const eventDate = [
      },
      {
           name: "Concierto sinfónico en Valencia",
-          type: "music",
+          type: "musica",
           location: "Palau de les Arts Reina Sofía",
           adress: "Avenida del Professor López Piñero, 1",
           city: "Valencia",
@@ -274,7 +274,7 @@ const eventDate = [
      },
      {
           name: "Torneo de pádel en Málaga",
-          type: "sport",
+          type: "deporte",
           location: "Complejo Deportivo La Rosaleda",
           adress: "Paseo Martiricos, 2",
           city: "Málaga",
@@ -287,7 +287,7 @@ const eventDate = [
      },
      {
           name: "Fiesta de San Juan en Alicante",
-          type: "party",
+          type: "fiesta",
           location: "Playa del Postiguet",
           adress: "Avenida de Villajoyosa, s/n",
           city: "Alicante",
@@ -300,7 +300,7 @@ const eventDate = [
      },
      {
           name: "Taller de pintura al aire libre",
-          type: "training",
+          type: "formación",
           location: "Parque del Retiro",
           adress: "Plaza de la Independencia, 7",
           city: "Madrid",
@@ -313,7 +313,7 @@ const eventDate = [
      },
      {
           name: "Festival de cine de San Sebastián",
-          type: "art",
+          type: "arte",
           location: "Kursaal",
           adress: "Avenida de Zurriola, 1",
           city: "San Sebastián",
@@ -327,7 +327,7 @@ const eventDate = [
      },
      {
           name: "Festival de Jazz en Madrid",
-          type: "music",
+          type: "musica",
           location: "Teatro Real",
           adress: "Plaza de Isabel II, s/n",
           city: "Madrid",
@@ -340,7 +340,7 @@ const eventDate = [
      },
      {
           name: "Maratón de Barcelona",
-          type: "sport",
+          type: "deporte",
           location: "Avenida de la Reina María Cristina",
           adress: "Avenida de la Reina María Cristina, s/n",
           city: "Barcelona",
@@ -353,7 +353,7 @@ const eventDate = [
      },
      {
           name: "Fiesta Mayor de Gràcia",
-          type: "party",
+          type: "fiesta",
           location: "Barrio de Gràcia",
           adress: "Carrer Gran de Gràcia, 120",
           city: "Barcelona",
@@ -366,7 +366,7 @@ const eventDate = [
      },
      {
           name: "Curso de fotografía nocturna",
-          type: "training",
+          type: "formación",
           location: "Cabo de Gata",
           adress: "Parque Natural de Cabo de Gata-Níjar",
           city: "Almería",
@@ -379,7 +379,7 @@ const eventDate = [
      },
      {
           name: "Feria del Libro de Madrid",
-          type: "others",
+          type: "otros",
           location: "Parque del Retiro",
           adress: "Paseo de Fernán Núñez, s/n",
           city: "Madrid",
@@ -392,7 +392,7 @@ const eventDate = [
      },
      {
           name: "Concierto de Rock en Gijón",
-          type: "music",
+          type: "musica",
           location: "Plaza Mayor de Gijón",
           adress: "Plaza Mayor, s/n",
           city: "Gijón",
@@ -405,7 +405,7 @@ const eventDate = [
      },
      {
           name: "Campeonato de Surf en Fuerteventura",
-          type: "sport",
+          type: "deporte",
           location: "Playa de Sotavento",
           adress: "Costa Calma, s/n",
           city: "Fuerteventura",
@@ -418,7 +418,7 @@ const eventDate = [
      },
      {
           name: "Taller de cerámica en Toledo",
-          type: "training",
+          type: "formación",
           location: "Centro de Artesanía Toledana",
           adress: "Calle Trinidad, 18",
           city: "Toledo",
@@ -431,7 +431,7 @@ const eventDate = [
      },
      {
           name: "Semana Santa en Sevilla",
-          type: "others",
+          type: "otros",
           location: "Casco Antiguo",
           adress: "Calle Sierpes, s/n",
           city: "Sevilla",

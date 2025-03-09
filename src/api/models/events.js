@@ -4,15 +4,15 @@ const eventSchema = new mongoose.Schema({
 
      name: { type: String, required: true, trim: true },
      type: {
-          type: String, default: "others", enum: [
-               "music",
-               "sport",
-               "party",
-               "training",
-               "art",
-               "gastronomy",
-               "technology",
-               "others"
+          type: String, default: "otros", enum: [
+               "musica",
+               "deporte",
+               "fiesta",
+               "formación",
+               "arte",
+               "gastronomía",
+               "tecnología",
+               "otros"
           ]
      },
      location: { type: String, required: true, trim: true },
