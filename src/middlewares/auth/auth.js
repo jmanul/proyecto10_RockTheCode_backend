@@ -17,7 +17,7 @@ const isAuth = async (req, res, next) => {
                const refreshToken = req.cookies.refreshToken;
 
                if (!refreshToken) {
-                    return res.status(401).json({ error: 'No hay AccessToken ni RefreshToken' });
+                    return res.status(401).json({ error: 'No hay AccessToken ni RefreshToken',  message: 'inicia sesion o registrate si aún no tienes una cuenta' });
                }
 
                try {
@@ -57,7 +57,7 @@ const isAuth = async (req, res, next) => {
      } catch (error) {
 
           console.log("Error en isAuth:", error);
-          return res.status(401).json({ error: 'Token expirado o invalido' });
+          return res.status(401).json({message: 'inicia sesion o registrate si aún no tienes una cuenta'});
      }
 };
 
