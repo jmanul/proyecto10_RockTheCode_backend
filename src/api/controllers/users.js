@@ -6,6 +6,7 @@ const Event = require("../models/events");
 const Pass = require("../models/passes");
 const ticketGenerator = require('../../services/ticketGenerator');
 
+
 const getUsers = async (req, res, next) => {
 
      try {
@@ -33,21 +34,21 @@ const getUserById = async (req, res, next) => {
 
      try {
 
-          const { userId } = req.params;
+          const userId  = req.user._id;
           const user = await User.findById(userId).populate({
                path: 'eventsIds',
                select: 'name startDate'
           });
 
           if (!user) {
-               return res.status(404).json({ message: 'usuario no encontrado' });
+               return res.status(200).json({ message: 'inicia sesion o registrate si aún no tienes una cuenta', isAuth: false });
           }
 
-          return res.status(200).json(user);
+          return res.status(200).json({ message: `bienvenido ${user.userName}`, isAuth: true, user });
 
      } catch (error) {
 
-          return res.status(404).json({ error: error.message });
+          res.status(404).json({ error: error.message });
 
      }
 };
@@ -138,7 +139,7 @@ const putUser = async (req, res, next) => {
           }
 
           if (userName) {
-            
+
                const existingUserName = await User.findOne({
                     userName, _id: { $ne: user._id }
                });
@@ -150,7 +151,7 @@ const putUser = async (req, res, next) => {
                }
 
                updateData.userName = userName;
-       }
+          }
 
 
           if (email) {
@@ -207,7 +208,7 @@ const addPassFromUser = async (req, res, next) => {
           if (!pass) {
                return res.status(404).json({ message: 'entrada no encontrada' });
           }
-          
+
           let updatedEvent = {};
           let updatedUser = {};
           let updatedPass = {};
@@ -234,7 +235,7 @@ const addPassFromUser = async (req, res, next) => {
                     },
                     { new: true }
                );
-               
+
                updatedPass = await Pass.findByIdAndUpdate(
                     passId,
                     {
@@ -253,7 +254,7 @@ const addPassFromUser = async (req, res, next) => {
                     { new: true }
                );
           }
-          
+
           if (updatedPass.totalReservedPlacesPass >= updatedPass.maxCapacityPass) {
                await Pass.findByIdAndUpdate(
                     passId,
@@ -305,38 +306,38 @@ const removePassFromUser = async (req, res, next) => {
                { ticketStatus: 'cancelled' }
           );
 
-               const userUpdate = await User.findByIdAndUpdate(
-                    user._id,
-                    { $pull: { eventsIds: pass.eventId, passesIds: passId } },
-                    { new: true }
-               );
-
-               const eventUpdate = await Event.findByIdAndUpdate(
-                    pass.eventId,
-                    {
-                         $pull: { attendees: user._id },
-                         $inc: { totalReservedPlaces: -totalReservedPlacesToReturn }
-                    },
-                    { new: true }
+          const userUpdate = await User.findByIdAndUpdate(
+               user._id,
+               { $pull: { eventsIds: pass.eventId, passesIds: passId } },
+               { new: true }
           );
-          
-          const passUpdate = await Pass.findByIdAndUpdate(
-                    passId,
-                    {
-                         $pull: { attendeesPass: user._id },
-                         $inc: { totalReservedPlacesPass: -totalReservedPlacesToReturn}
-                    },
-                    { new: true }
-               );
-          
 
-               return res.status(200).json({
-                    message: 'El Evento fue eliminado',
-                    user: userUpdate,
-                    event: eventUpdate,
-                    pass: passUpdate,
-                    cancelledTickets
-               });
+          const eventUpdate = await Event.findByIdAndUpdate(
+               pass.eventId,
+               {
+                    $pull: { attendees: user._id },
+                    $inc: { totalReservedPlaces: -totalReservedPlacesToReturn }
+               },
+               { new: true }
+          );
+
+          const passUpdate = await Pass.findByIdAndUpdate(
+               passId,
+               {
+                    $pull: { attendeesPass: user._id },
+                    $inc: { totalReservedPlacesPass: -totalReservedPlacesToReturn }
+               },
+               { new: true }
+          );
+
+
+          return res.status(200).json({
+               message: 'El Evento fue eliminado',
+               user: userUpdate,
+               event: eventUpdate,
+               pass: passUpdate,
+               cancelledTickets
+          });
 
      } catch (error) {
           return res.status(404).json({ error: error.message });
@@ -357,7 +358,7 @@ const deleteUser = async (req, res, next) => {
           const activeTickets = await Ticket.find({
 
                userId: user._id,
-               ticketStatus : "unused"
+               ticketStatus: "unused"
 
           });
 

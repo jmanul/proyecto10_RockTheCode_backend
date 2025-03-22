@@ -1,7 +1,6 @@
 const Ticket = require("../models/tickets");
 const User = require("../models/users");
 const Event = require("../models/events");
-const Pass = require("../models/passes");
 const ticketGenerator = require('../../services/ticketGenerator');
 
 const getById = async (req, res, next) => {

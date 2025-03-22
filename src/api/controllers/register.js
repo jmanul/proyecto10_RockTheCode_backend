@@ -68,6 +68,7 @@ const login = async (req, res, next) => {
                     _id: user._id,
                     userName: user.userName,
                     roll: user.roll,
+                    avatar: user.avatar,
                     eventsIds: user.eventsIds,
                     passesIds: user.passesIds,
                     ticketsIds: user.ticketsIds

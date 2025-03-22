@@ -36,7 +36,7 @@ const isAuth = async (req, res, next) => {
 
                          generateCookie(res, 'accessToken', token, process.env.ACCESS_TOKEN_COOKIE_EXPIRATION);
 
-                         console.log(`Nuevo accessToken generado:`, token);
+                         // console.log(`Nuevo accessToken generado:`, token);
 
                     } catch (verifyError) {
 
@@ -69,7 +69,7 @@ const rollAuth = (...alloAuthRoles) => {
           const { roll } = req.user;
 
           if (!alloAuthRoles.includes(roll)) {
-               return res.status(403).json({ message: 'No tienes permiso para realizar esta acción' });
+               return res.status(401).json({ message: 'No tienes permiso para realizar esta acción' });
           }
 
           next();

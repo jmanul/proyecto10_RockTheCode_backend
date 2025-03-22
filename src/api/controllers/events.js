@@ -18,7 +18,7 @@ const getEvents = async (req, res, next) => {
                return res.status(404).json({ message: 'eventos no encontrados' });
           }
 
-          return res.status(200).json(events);
+          return res.status(200).json({ message: 'eventos encontrados', events: events });
 
      } catch (error) {
 
