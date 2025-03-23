@@ -40,11 +40,7 @@ const getUserById = async (req, res, next) => {
                select: 'name startDate'
           });
 
-          if (!user) {
-               return res.status(200).json({ message: 'inicia sesion o registrate si aún no tienes una cuenta', isAuth: false });
-          }
-
-          return res.status(200).json({ message: `bienvenido ${user.userName}`, isAuth: true, user });
+          return res.status(200).json({ message: `Bienvenido ${user.userName}`, isAuth: true, user });
 
      } catch (error) {
 

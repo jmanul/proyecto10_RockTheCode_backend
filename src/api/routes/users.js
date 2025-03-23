@@ -8,7 +8,7 @@ const { getUsers, getUserById, postUser, putRollUser,  putUser, addPassFromUser,
 
 const usersRouter = require('express').Router();
 
-usersRouter.get('/userId', isAuth, idAuth, getUserById);
+usersRouter.get('/user', isAuth, getUserById);
 usersRouter.get('/', isAuth, rollAuth('administrator'), getUsers);
 usersRouter.post('/', isAuth, rollAuth('administrator'), upload.single('avatar'), postUser);
 usersRouter.put('/roll/:userId', isAuth, rollAuth('administrator'), putRollUser);

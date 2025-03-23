@@ -446,7 +446,7 @@ Inicia sesión un usuario existente.
 ## **Endpoints de Usuarios**
 
 ### **Obtener Usuario por ID**
-**Endpoint:** `GET /api/v2/users/userId`
+**Endpoint:** `GET /api/v2/users/user`
 
 - **Autenticación:** Requerida.
 - **Autorización:** solo el usuario con mismo id o ser administrator.
@@ -545,7 +545,7 @@ Inicia sesión un usuario existente.
 
 | **Método** | **Endpoint**                            | **Descripción**                                               |
 | ---------- | --------------------------------------- | ------------------------------------------------------------- |
-| GET        | `/api/v2/users/userId`                 | Obtiene un usuario por su ID                                  |
+| GET        | `/api/v2/users/user`                 | Obtiene un usuario por su ID                                  |
 | GET        | `/api/v2/users`                         | Obtiene todos los usuarios                                    |
 | POST       | `/api/v2/users`                         | Crea un nuevo usuario                                         |
 | PUT        | `/api/v2/users/roll/:userId`            | Actualiza el rol de un usuario                                |
