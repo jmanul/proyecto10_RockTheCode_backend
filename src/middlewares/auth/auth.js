@@ -133,5 +133,25 @@ const idAuth = (req, res, next) => {
      }
 };
 
+const checkSesionStatus =  (req, res, next) =>{
+     
 
-module.exports = { idAuth, rollAuth, idCreated, isAuth };
+     let token = req.cookies.accessToken;
+
+     if (!token) {
+
+          const refreshToken = req.cookies.refreshToken;
+
+          if (!refreshToken) {
+
+               return res.status(201).json({ isAuth: 'false' });
+
+
+          };
+     };
+
+     return next();
+}
+
+
+module.exports = { idAuth, rollAuth, idCreated, isAuth, checkSesionStatus };
