@@ -39,10 +39,10 @@ const getEventById = async (req, res, next) => {
           });
 
           if (!event) {
-               return res.status(404).json({ message: 'evento no encontrado' });
+               return res.status(404).json({ message: 'evento no encontrado'});
           }
 
-          return res.status(200).json(event);
+          return res.status(200).json({ message: 'eventos encontrados', events: event });
 
      } catch (error) {
 
@@ -56,16 +56,41 @@ const getEventByStatus = async (req, res, next) => {
      try {
 
           const { eventStatus } = req.params;
-          const event = await Event.find({eventStatus}).populate({
+          const events = await Event.find({eventStatus}).populate({
                path: 'attendees',
                select: 'userName avatar'
           });
 
-          if (!event) {
-               return res.status(404).json({ message: 'evento no encontrado' });
+          if (!events) {
+               return res.status(404).json({ message: 'eventos no encontrados' });
           }
 
-          return res.status(200).json(event);
+          return res.status(200).json({ message: 'eventos encontrados', events });
+
+     } catch (error) {
+
+          return res.status(404).json({ error: error.message });
+
+     }
+};
+
+const getEventByType = async (req, res, next) => {
+
+     try {
+
+          const { slug } = req.params;
+
+          
+          const events = await Event.find({ slug }).populate({
+               path: 'attendees',
+               select: 'userName avatar'
+          });
+
+          if (!events) {
+               return res.status(404).json({ message: 'eventos no encontrados' });
+          }
+
+          return res.status(200).json({ message: 'eventos encontrados', events });
 
      } catch (error) {
 
@@ -201,6 +226,7 @@ module.exports = {
      getEvents,
      getEventById,
      getEventByStatus,
+     getEventByType,
      postEvent,
      putEvent,
      deleteEvent

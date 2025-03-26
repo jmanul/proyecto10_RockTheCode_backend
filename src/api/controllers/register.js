@@ -62,7 +62,7 @@ const login = async (req, res, next) => {
           await generateCookie(res, 'refreshToken', refreshToken, process.env.REFRESH_TOKEN_COOKIE_EXPIRATION);
 
           return res.status(200).json({
-               message: 'autenticación correcta',
+               message: `Bienvenido ${user.userName}`,
                accessToken,
                user: {
                     _id: user._id,

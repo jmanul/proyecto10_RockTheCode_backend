@@ -15,6 +15,10 @@ const eventSchema = new mongoose.Schema({
                "otros"
           ]
      },
+     slug: {
+          type: String, default: function () {
+               return this.type.normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")}},
      location: { type: String, required: true, trim: true },
      adress: { type: String, required: true, trim: true },
      city: { type: String, required: true, trim: true },

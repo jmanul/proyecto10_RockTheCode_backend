@@ -200,7 +200,8 @@ Inicia sesión un usuario existente.
 | ---------- | ------------------------------------ | -------------------------------------------------------------------------------- |
 | GET        | `/api/v2/events`                     | Obtiene todos los eventos                                                        |
 | GET        | `/api/v2/events/:eventId`            | Obtiene un evento por su Id                                                      |
-| GET        | `/api/v2/status/events/:eventStatus` | Obtiene un evento por su estado **(not-start, postponed, cancelled, finalized)** |
+| GET        | `/api/v2/events/status/:eventStatus` | Obtiene un evento por su estado **(not-start, postponed, cancelled, finalized)** |
+| GET        | `/api/v2/events/type/:slug` | Obtiene un evento por su tipo **(musica, deporte, fiesta, formación, arte, gastronomía, tecnología, otros)** |
 | POST       | `/api/v2/events`                     | Crea un nuevo evento                                                             |
 | PUT        | `/api/v2/events/:eventId`            | Actualiza un evento                                                              |
 | DELETE     | `/api/v2/events/:eventId`            | Elimina un evento                                                                |

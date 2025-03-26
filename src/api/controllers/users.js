@@ -40,7 +40,7 @@ const getUserById = async (req, res, next) => {
                select: 'name startDate'
           });
 
-          return res.status(200).json({ message: `Bienvenido ${user.userName}`, isAuth: true, user });
+          return res.status(200).json({ isAuth: true, user });
 
      } catch (error) {
 
