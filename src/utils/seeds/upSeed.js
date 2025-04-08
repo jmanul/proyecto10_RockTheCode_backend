@@ -10,38 +10,55 @@ const eventDate = require('../../data/events');
 
 
 const upSeed = async () => {
-
      try {
-
+         
           await mongoose.connect(process.env.DDBB_URL);
 
+          // Limpiar colecciones
           await Pass.deleteMany({});
-          console.log('entradas eliminadas');
+          console.log('Entradas eliminadas');
           await Event.deleteMany({});
-          console.log('eventos eliminados');
+          console.log('Eventos eliminados');
           await Ticket.deleteMany({});
-          console.log('tickets eliminados');
+          console.log('Tickets eliminados');
 
+          // resetear campos relacionados en usuarios
           const updatedUsers = await User.updateMany(
                { $or: [{ ticketsIds: { $exists: true } }, { eventsIds: { $exists: true } }, { passesIds: { $exists: true } }] },
                { $set: { ticketsIds: [], eventsIds: [], passesIds: [] } }
           );
           console.log(`Usuarios actualizados: ${updatedUsers.modifiedCount}`);
 
-          await Event.insertMany(eventDate);
-          console.log('eventos insertados');
+          // insertar eventos y obtener IDs generados
+          const insertedEvents = await Event.insertMany(eventDate);
+          console.log('Eventos insertados');
+          
+          const passesToInsert = [];
+          
+          // crear entradas asociadas a cada evento
+          for (const event of insertedEvents) {
+               const pass = {
+                    eventId: event._id, 
+                    maxCapacityPass: event.maxCapacity,
+                    startDatePass: event.startDate,
+                    endDatePass: event.endDate
+               };
+
+               console.log(`Entradas creadas para el evento: ${event.name}`);
+
+               passesToInsert.push(pass);
+
+          };
+
+          // insertar las entradas 
+          await Pass.insertMany(passesToInsert);
+        
 
           await mongoose.disconnect();
-          console.log("disconect");
-
+          console.log("Desconectado");
      } catch (error) {
-
-          console.log(error);
-
+          console.error(error);
      }
-}
-
-
-
+};
 
 upSeed();

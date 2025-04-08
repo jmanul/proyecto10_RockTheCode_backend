@@ -28,3 +28,4 @@ const passSchema = new mongoose.Schema({
 const Pass = mongoose.model('passes', passSchema, 'passes');
 
 module.exports = Pass;
+
