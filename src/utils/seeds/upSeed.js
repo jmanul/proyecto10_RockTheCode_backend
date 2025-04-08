@@ -51,8 +51,19 @@ const upSeed = async () => {
           };
 
           // insertar las entradas 
-          await Pass.insertMany(passesToInsert);
-        
+          const passesInsert = await Pass.insertMany(passesToInsert);
+          //añadir las entradas a sus eventos
+          for (const pass of passesInsert) {
+
+              const event = await Event.findByIdAndUpdate(
+                         pass.eventId,
+                         {
+                              $addToSet: { passesOfferedIds: pass._id }
+                         },
+                         { new: true }
+               )
+              console.log(`entrada ${pass.namePass} añadido a ${event.name}`)     
+          };
 
           await mongoose.disconnect();
           console.log("Desconectado");
