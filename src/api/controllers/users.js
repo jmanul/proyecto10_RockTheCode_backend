@@ -195,6 +195,12 @@ const addPassFromUser = async (req, res, next) => {
 
           const { reservedPlaces } = req.body;
 
+          if (reservedPlaces <= 0) {
+               
+               return res.status(404).json({ message: 'las entradas no pueden ser 0' });
+
+          }
+
           const user = await User.findById(req.user._id);
           if (!user) {
                return res.status(404).json({ message: 'usuario no encontrado' });
@@ -263,7 +269,8 @@ const addPassFromUser = async (req, res, next) => {
                message: 'Evento añadido correctamente, ticket generado',
                ticket: ticketsList,
                user: updatedUser,
-               event: updatedEvent
+               event: updatedEvent,
+               pass:updatedPass
           });
 
      } catch (error) {
