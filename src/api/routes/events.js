@@ -6,7 +6,7 @@ const { getEvents, getEventById, getEventByStatus, getEventByType, postEvent, pu
 
 
 const eventsRouter = require('express').Router();
-eventsRouter.get('/userEvents',isAuth, getEventByUser);
+eventsRouter.get('/userEventsCreate',isAuth, getEventByUser);
 eventsRouter.get('/:eventId', isAuth, getEventById);
 eventsRouter.get('/status/:eventStatus', isAuth, getEventByStatus);
 eventsRouter.get('/type/:slug', isAuth, getEventByType);

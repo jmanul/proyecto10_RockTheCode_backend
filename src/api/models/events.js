@@ -24,11 +24,19 @@ const eventSchema = new mongoose.Schema({
      city: { type: String, required: true, trim: true },
      description: { type: String, required: true, trim: true },
      startDate: {
-          type: Date, required: true, set: value => new Date(value), validate: {
-               validator: value => value >= new Date(),
-               message: 'la fecha de inicio no puede ser anterior a la actual'
+          type: Date,
+          required: true,
+          set: value => new Date(value),
+          validate: {
+               validator: value => {
+                    const now = new Date();
+                    now.setSeconds(0, 0); // ignora segundos y ms
+                    return value >= now;
+               },
+               message: 'La fecha de inicio no puede ser anterior a la actual',
           }
-     },
+     }
+ ,
      endDate: {
           type: Date, default: function () { return this.startDate; }, set: value => new Date(value), validate: {
                validator: function (value) {

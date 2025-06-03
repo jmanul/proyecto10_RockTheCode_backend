@@ -8,7 +8,7 @@ const Ticket = require("../models/tickets");
 const getEvents = async (req, res, next) => {
 
      try {
-
+          const user = req.user
           const events = await Event.find().populate({
                path: 'attendees',
                select: 'userName avatar'
@@ -18,7 +18,7 @@ const getEvents = async (req, res, next) => {
                return res.status(404).json({ message: 'eventos no encontrados' });
           }
 
-          return res.status(200).json({ message: 'eventos encontrados', events: events });
+          return res.status(200).json({ message: 'eventos encontrados', events: events, user: user });
 
      } catch (error) {
 
@@ -30,23 +30,22 @@ const getEvents = async (req, res, next) => {
 
 const getEventByUser = async (req, res, next) => {
 
-     console.log(req.user);
      
      try {
          
           const userId = req.user._id;
           const createdBy = userId
          
-          const event = await Event.find({ createdBy }).populate({
+          const events = await Event.find({ createdBy }).populate({
                path: 'attendees',
                select: 'userName avatar'
           });
 
-          if (!event) {
+          if (!events) {
                return res.status(404).json({ message: 'evento no encontrado' });
           }
 
-          return res.status(200).json({ message: 'eventos encontrados', events: event });
+          return res.status(200).json({ message: 'eventos encontrados', events: events});
 
      } catch (error) {
 
@@ -105,7 +104,7 @@ const getEventByStatus = async (req, res, next) => {
 const getEventByType = async (req, res, next) => {
 
      try {
-
+          const user = req.user
           const { slug } = req.params;
 
           
@@ -118,7 +117,7 @@ const getEventByType = async (req, res, next) => {
                return res.status(404).json({ message: 'eventos no encontrados' });
           }
 
-          return res.status(200).json({ message: 'eventos encontrados', events });
+          return res.status(200).json({ message: 'eventos encontrados', events, user });
 
      } catch (error) {
 
@@ -157,7 +156,7 @@ const postEvent = async (req, res, next) => {
 
           return res.status(201).json({
                message: 'evento creado correctamente',
-               user: newEvent
+               newEvent: newEvent
           });
 
 
