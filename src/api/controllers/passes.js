@@ -81,7 +81,9 @@ const postPass = async (req, res, next) => {
           await Event.findByIdAndUpdate(
                eventId,
                {
-                    $addToSet: { passesOfferedIds: newPass._id }
+                    $addToSet: { passesOfferedIds: newPass._id },
+                    $inc: { maxCapacity: newPass.maxCapacityPass },
+                    $set: {soldOut: false}
                },
                { new: true }
           );
