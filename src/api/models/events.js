@@ -58,9 +58,9 @@ const eventSchema = new mongoose.Schema({
                return `https://res.cloudinary.com/dn6utw1rl/image/upload/v1739241182/default/${this.type}.webp`;
           }
 },
-     createdBy: { type: mongoose.Types.ObjectId, ref: 'users', default:"67aa5f62e4d1301e1cccbb17", required: true },
+     createdBy: { type: mongoose.Types.ObjectId, ref: 'users', default:"67aa5f62e4d1301e1cccbb17", required: false },
      soldOut: { type: Boolean, default: false },
-     maxCapacity: { type: Number, required: true },
+     maxCapacity: { type: Number, required: false },
      totalReservedPlaces: { type: Number, default: 0 },
      attendees: [{ type: mongoose.Types.ObjectId, ref: 'users', required: false }],
      passesOfferedIds: [{ type: mongoose.Types.ObjectId, ref: 'passes', required: false }],

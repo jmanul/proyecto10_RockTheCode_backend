@@ -179,12 +179,7 @@ const putEvent = async (req, res, next) => {
 
           if (!event) {
                return res.status(404).json({ message: 'Evento no encontrado' });
-          }
-
-          if (req.body.startDate && new Date(req.body.startDate) <= new Date(event.startDate)) {
-               return res.status(400).json({ message: 'la nueva fecha de inicio debe ser posterior a la fecha actual del evento' });
-          }
-
+          } 
          
           const startDate = req.body.startDate ? new Date(req.body.startDate) : new Date(event.startDate);
           if (req.body.endDate && new Date(req.body.endDate) <= startDate) {
