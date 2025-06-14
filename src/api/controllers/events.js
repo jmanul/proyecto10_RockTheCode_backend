@@ -156,7 +156,7 @@ const postEvent = async (req, res, next) => {
 
           return res.status(201).json({
                message: 'evento creado correctamente',
-               newEvent: newEvent
+               event: newEvent
           });
 
 
@@ -200,7 +200,10 @@ const putEvent = async (req, res, next) => {
 
           const eventUpdate = await Event.findByIdAndUpdate(eventId, updateData, { new: true });
 
-          return res.status(200).json(eventUpdate);
+          return res.status(200).json({
+               message: 'evento actualizado correctamente',
+               event: eventUpdate
+          });
      } catch (error) {
           if (req.file) {
                await deleteCloudinaryImage(req.file.path);
