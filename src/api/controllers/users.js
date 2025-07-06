@@ -5,6 +5,7 @@ const User = require("../models/users");
 const Event = require("../models/events");
 const Pass = require("../models/passes");
 const ticketGenerator = require('../../services/ticketGenerator');
+const calculateFreePlaces = require('../../services/CalculateFreePlaces');
 
 
 const getUsers = async (req, res, next) => {
@@ -211,6 +212,15 @@ const addPassFromUser = async (req, res, next) => {
                return res.status(404).json({ message: 'entrada no encontrada' });
           }
 
+          const freePlaces = calculateFreePlaces(pass, reservedPlaces);
+
+
+          if (freePlaces < 0) {
+
+               return res.status(404).json({ message: 'no hay suficientes entradas' });
+
+          }
+
           let updatedEvent = {};
           let updatedUser = {};
           let updatedPass = {};
@@ -260,7 +270,7 @@ const addPassFromUser = async (req, res, next) => {
           if (updatedPass.totalReservedPlacesPass >= updatedPass.maxCapacityPass) {
                await Pass.findByIdAndUpdate(
                     passId,
-                    { soldOut: true },
+                    { soldOutPass: true },
                     { new: true }
                );
           }
