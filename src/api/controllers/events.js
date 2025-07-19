@@ -14,8 +14,10 @@ const getEvents = async (req, res, next) => {
                select: 'userName avatar'
           });
 
-          if (!events) {
-               return res.status(404).json({ message: 'eventos no encontrados' });
+         
+
+          if (!events || events.length <= 0) {
+               return res.status(200).json({ message: 'eventos no encontrados' });
           }
 
           return res.status(200).json({ message: 'eventos encontrados', events: events, user: user });
@@ -41,10 +43,10 @@ const getEventByUser = async (req, res, next) => {
                select: 'userName avatar'
           });
 
-          if (!events) {
-               return res.status(404).json({ message: 'evento no encontrado' });
+          if (!events || events.length <= 0) {
+               return res.status(200).json({ message: 'No hay eventos' });
           }
-
+          console.log(events);
           return res.status(200).json({ message: 'eventos encontrados', events: events});
 
      } catch (error) {
