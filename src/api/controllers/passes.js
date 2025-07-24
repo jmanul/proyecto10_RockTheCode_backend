@@ -134,7 +134,10 @@ const putPass = async (req, res, next) => {
 
           const passUpdate = await Pass.findByIdAndUpdate(passId, rest, { new: true });
 
-          return res.status(200).json(passUpdate);
+          return res.status(200).json({
+               message: 'entrada actualizada correctamente',
+               pass: passUpdate
+});
      } catch (error) {
 
           return res.status(500).json({ error: error.message });

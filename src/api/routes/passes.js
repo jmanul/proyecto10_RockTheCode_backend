@@ -12,7 +12,7 @@ const passesRouter = require('express').Router();
 passesRouter.get('/:passId', isAuth, getPassById);
 passesRouter.get('/event/:eventId', isAuth, getPassesByEvent);
 passesRouter.post('/event/:eventId', isAuth, idCreated, postPass);
-passesRouter.put('/:passId', isAuth, idCreated, putPass);
+passesRouter.put('/event/:eventId/pass/:passId', isAuth, idCreated, putPass);
 passesRouter.delete('/:passId', isAuth, idCreated, deletePass);
 
 
