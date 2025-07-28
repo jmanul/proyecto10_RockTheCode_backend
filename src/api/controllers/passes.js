@@ -108,23 +108,24 @@ const postPass = async (req, res, next) => {
 const putPass = async (req, res, next) => {
      try {
           const { passId } = req.params;
-          const { startDatePass, endDatePass, eventId, ...rest } = req.body; 
+          const { startDatePass, endDatePass, maxCapacityPass, ...rest } = req.body;
 
           const pass = await Pass.findById(passId);
-
           if (!pass) {
-               return res.status(404).json({ message: 'entrada no encontrada' });
+               return res.status(404).json({ message: 'Entrada no encontrada' });
           }
 
-          const event = await Event.findById(pass.eventId)
+          const oldMaxCapacityPass = pass.maxCapacityPass;
+          const event = await Event.findById(pass.eventId);
 
+          // Validar fechas si fueron modificadas
           if (startDatePass || endDatePass) {
                const newStartDate = startDatePass ? new Date(startDatePass) : pass.startDatePass;
                const newEndDate = endDatePass ? new Date(endDatePass) : pass.endDatePass;
 
                if (newStartDate < event.startDate || newEndDate > event.endDate) {
                     return res.status(400).json({
-                         message: 'las fechas deben estar dentro del rango del evento'
+                         message: 'Las fechas deben estar dentro del rango del evento'
                     });
                }
 
@@ -132,17 +133,48 @@ const putPass = async (req, res, next) => {
                rest.endDatePass = newEndDate;
           }
 
+          // Validar nueva capacidad
+          if (
+               maxCapacityPass !== undefined &&
+               maxCapacityPass < pass.totalReservedPlacesPass
+          ) {
+               return res.status(400).json({
+                    message: `No puedes reducir el aforo por debajo de las plazas ya reservadas (${pass.totalReservedPlacesPass})`
+               });
+          }
+
+          if (maxCapacityPass !== undefined) {
+               rest.maxCapacityPass = maxCapacityPass;
+          }
+
           const passUpdate = await Pass.findByIdAndUpdate(passId, rest, { new: true });
 
-          return res.status(200).json({
-               message: 'entrada actualizada correctamente',
-               pass: passUpdate
-});
-     } catch (error) {
+          // Actualizar aforo del evento si cambió la capacidad
+          if (
+               maxCapacityPass !== undefined &&
+               maxCapacityPass !== oldMaxCapacityPass
+          ) {
+               await Event.findByIdAndUpdate(
+                    pass.eventId,
+                    {
+                         $inc: {
+                              maxCapacity: passUpdate.maxCapacityPass - oldMaxCapacityPass
+                         }
+                    },
+                    { new: true }
+               );
+          }
 
+          return res.status(200).json({
+               message: 'Entrada actualizada correctamente',
+               pass: passUpdate
+          });
+
+     } catch (error) {
           return res.status(500).json({ error: error.message });
      }
 };
+
 
 const deletePass = async (req, res, next) => {
 
@@ -155,15 +187,26 @@ const deletePass = async (req, res, next) => {
                return res.status(404).json({ message: 'entrada no encontrada' });
           }
 
+          // Validar si se han vendido entradas
+          if (pass.totalReservedPlacesPass > 0) {
+
+               return res.status(400).json({
+                    message: `No puedes eliminar este abono ya se han reservado ${pass.totalReservedPlacesPass} plazas.`
+               });
+          }
+
           await Event.findByIdAndUpdate(
                pass.eventId,
                {
-                    $pull: { passesOfferedIds: passId }
+                    $pull: { passesOfferedIds: passId },
+                    $inc: {
+                         maxCapacity: -pass.maxCapacityPass
+                    }
                },
                { new: true }
           );
 
-          await pass.findByIdAndDelete(passId);
+          await Pass.findByIdAndDelete(passId);
 
           return res.status(200).json({
                message: 'la entrada fue eliminada',
