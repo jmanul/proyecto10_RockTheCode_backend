@@ -60,7 +60,7 @@ const eventSchema = new mongoose.Schema({
 },
      createdBy: { type: mongoose.Types.ObjectId, ref: 'users', default:"67aa5f62e4d1301e1cccbb17", required: false },
      soldOut: { type: Boolean, default: false },
-     maxCapacity: { type: Number, required: false },
+     maxCapacity: { type: Number, required: false, default: 0 },
      totalReservedPlaces: { type: Number, default: 0 },
      attendees: [{ type: mongoose.Types.ObjectId, ref: 'users', required: false }],
      passesOfferedIds: [{ type: mongoose.Types.ObjectId, ref: 'passes', required: false }],
