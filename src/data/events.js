@@ -67,7 +67,7 @@ const eventDate = [
      {
           name: "Charla tech",
           location: "Centro de Convenciones",
-          type: "tecnología",
+          type: "otros",
           adress: "Boulevard Principal 80",
           city: "Santiago",
           description: "Encuentra tu propósito con este evento inspirador.",
@@ -118,7 +118,7 @@ const eventDate = [
      },
      {
           name: "gaming competition",
-          type: "tecnología",
+          type:"tecnología",
           location: "Arena Virtual",
           adress: "Calle Gamer 42",
           city: "San José",
