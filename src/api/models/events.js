@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const eventSchema = new mongoose.Schema({
 
      name: { type: String, required: true, trim: true },
+     public: { type: Boolean, required: false, default: false },
      type: {
           type: String, default: "otros", enum: [
                "musica",

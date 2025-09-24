@@ -7,6 +7,7 @@ const passSchema = new mongoose.Schema({
 
      eventId: { type: mongoose.Types.ObjectId, ref: 'events', required: [true, 'el ID del evento es obligatorio'] },
      namePass: { type: String, required: true, default: "general" },
+     descriptionPass: { type: String, required: false, trim: true },
      reservedPlacesPass: { type: Number, default: 1 },
      passPrice: { type: Number, default: 0 },
      maxCapacityPass: { type: Number, required: true },
