@@ -4,6 +4,8 @@ const deleteCloudinaryImage = require('../../utils/cloudinary/deleteCloudinaryIm
 const User = require("../models/users");
 const Event = require("../models/events");
 const Ticket = require("../models/tickets");
+const { countries } = require('../../data/countries');
+const { buildFullAddress } = require('../../services/buildFullAddress');
 
 const getEvents = async (req, res, next) => {
 
@@ -192,8 +194,31 @@ const putEvent = async (req, res, next) => {
 
           if (req.body.startDate && new Date(req.body.startDate) > new Date(event.startDate)) {eventStatus = 'postponed';
           }
+          
+          const data = req.body;
+          let fullAddress = event.fullAddress;
 
-          const updateData = { eventStatus, ...req.body };
+          // Combinamos datos previos y nuevos
+          const mergedData = {
+               address: data.address ?? event.address,
+               location: data.location ?? event.location,
+               city: data.city ?? event.city,
+               postalCode: data.postalCode ?? event.postalCode,
+               country: data.country ?? event.country
+          };
+
+          // Construimos el fullAddress actualizado
+
+          let newFullAddress = buildFullAddress(mergedData);
+          
+          const updateData = { eventStatus,...req.body };
+
+          // Añadimos el fullAddress  si ha habido algun cambio
+
+          if (newFullAddress !== fullAddress) {
+
+               updateData.fullAddress = newFullAddress;
+           };
 
           if (req.file) {
                await deleteCloudinaryImage(event.image);
@@ -247,6 +272,20 @@ const deleteEvent = async (req, res, next) => {
      }
 };
 
+const eventCountries = async (req, res, next) => {
+
+     try {
+
+          return res.status(200).json(countries);
+
+     } catch (error) {
+
+          return res.status(404).json({ error: error.message });
+
+     }
+};
+
+
 
 module.exports = {
 
@@ -257,7 +296,8 @@ module.exports = {
      postEvent,
      putEvent,
      deleteEvent,
-     getEventByUser
+     getEventByUser,
+     eventCountries
 };
 
 

@@ -62,7 +62,7 @@ const upSeed = async () => {
                          },
                          { new: true }
                )
-              console.log(`entrada ${pass.namePass} añadido a ${event.name}`)     
+              console.log(`entrada ${pass.namePass} añadida a ${event.name}`)     
           };
 
           await mongoose.disconnect();

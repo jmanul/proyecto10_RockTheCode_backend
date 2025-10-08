@@ -127,7 +127,7 @@ Inicia sesión un usuario existente.
 		"name": "Carrera Nocturna 5K",
 		"type": "sport",
 		"location": "Parque Metropolitano",
-		"adress": "Calle Verde 50",
+		"address": "Calle Verde 50",
 		"city": "Bogotá",
 		"description": "Participa en esta emocionante carrera nocturna.",
 		"startDate": "2025-09-10T17:00:00.000Z",
