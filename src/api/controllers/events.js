@@ -4,8 +4,8 @@ const deleteCloudinaryImage = require('../../utils/cloudinary/deleteCloudinaryIm
 const User = require("../models/users");
 const Event = require("../models/events");
 const Ticket = require("../models/tickets");
-const { countries } = require('../../data/countries');
 const { buildFullAddress } = require('../../services/buildFullAddress');
+const { findCountryByName } = require('../../data/countries');
 
 const getEvents = async (req, res, next) => {
 
@@ -194,9 +194,25 @@ const putEvent = async (req, res, next) => {
 
           if (req.body.startDate && new Date(req.body.startDate) > new Date(event.startDate)) {eventStatus = 'postponed';
           }
+
+          const updateData = { eventStatus, ...req.body };
           
           const data = req.body;
           let fullAddress = event.fullAddress;
+          let countryName = data.country;
+
+          // Si el usuario ha enviado un país, creamos el objeto country
+
+          if (countryName) {
+               let countryObj = findCountryByName(countryName);
+               if (!countryObj) {
+                    return res.status(400).json({ error: `País no válido: ${countryName}` });
+               }
+
+               countryName = countryObj;
+          }
+
+         
 
           // Combinamos datos previos y nuevos
           const mergedData = {
@@ -204,21 +220,24 @@ const putEvent = async (req, res, next) => {
                location: data.location ?? event.location,
                city: data.city ?? event.city,
                postalCode: data.postalCode ?? event.postalCode,
-               country: data.country ?? event.country
+               country: countryName ?? event.country
           };
+
+          updateData.country = countryName
 
           // Construimos el fullAddress actualizado
 
           let newFullAddress = buildFullAddress(mergedData);
           
-          const updateData = { eventStatus,...req.body };
 
           // Añadimos el fullAddress  si ha habido algun cambio
 
           if (newFullAddress !== fullAddress) {
 
                updateData.fullAddress = newFullAddress;
-           };
+          };
+          
+          
 
           if (req.file) {
                await deleteCloudinaryImage(event.image);
@@ -272,21 +291,6 @@ const deleteEvent = async (req, res, next) => {
      }
 };
 
-const eventCountries = async (req, res, next) => {
-
-     try {
-
-          return res.status(200).json(countries);
-
-     } catch (error) {
-
-          return res.status(404).json({ error: error.message });
-
-     }
-};
-
-
-
 module.exports = {
 
      getEvents,
@@ -296,8 +300,7 @@ module.exports = {
      postEvent,
      putEvent,
      deleteEvent,
-     getEventByUser,
-     eventCountries
+     getEventByUser
 };
 
 

@@ -6,3 +6,17 @@ export const countries = [
       { name: "Francia", code: "FR" },
      // { name: "Portugal", code: "PT" },
 ];
+
+
+export function findCountryByName(countryName) {
+     if (!countryName) return null;
+
+     const normalized = countryName.trim().toLowerCase();
+
+     const matched = countries.find(
+          (c) => c.name.trim().toLowerCase() === normalized
+     );
+
+     return matched ? { name: matched.name, code: matched.code } : null;
+}
+

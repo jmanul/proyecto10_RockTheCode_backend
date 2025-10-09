@@ -29,13 +29,11 @@ const eventSchema = new mongoose.Schema({
      country: {
           name: {
                type: String,
-               enum: countries.map(c => c.name),
-               default: "España",
+               default: "España"
           },
           code: {
                type: String,
-               enum: countries.map(c => c.code),
-               default: "ES",
+               default: "ES"
           }
      },
 
