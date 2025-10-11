@@ -27,32 +27,12 @@ const eventSchema = new mongoose.Schema({
      postalCode: { type: String, required: true, trim: true },
      city: { type: String, required: true, trim: true },
      country: {
-          name: {
-               type: String,
-               default: "España"
-          },
-          code: {
-               type: String,
-               default: "ES"
-          }
-     },
+          name: { type: String, default: "España" },
+          code: { type: String, default: "ES" }
+     }
+,
 
-     fullAddress: {
-          type: String,
-          default: function () {
-               // Se construye automáticamente al crear
-               return [
-                    this.address,
-                    this.location,
-                    this.city,
-                    this.postalCode,
-                    this.country.code
-               ]
-                    .filter(Boolean)
-                    .map(p => String(p).trim())
-                    .join(', ');
-          }
-     },
+     fullAddress: { type: String, trim: true },
      description: { type: String, required: true, trim: true },
      startDate: {
           type: Date,

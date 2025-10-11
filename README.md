@@ -103,7 +103,9 @@ Inicia sesión un usuario existente.
   "type": "string",           // Opcional: Tipo de evento (valores: "music", "sport", "party", "training", "art", "gastronomy", "technology", "others"; por defecto: "others")
   "location": "string",       // Requerido: Ubicación general del evento
   "address": "string",        // Requerido: Dirección específica del evento
-  "city": "string",           // Requerido: Ciudad donde ocurre el evento
+  "city": "string",           // Requerido: Ciudad donde ocurre el evento 
+  "postalCode": "string",     // Requerido: Codigo postal donde ocurre el evento
+  "country": "string",        // Requerido: Pais donde ocurre el evento
   "description": "string",    // Requerido: Descripción detallada del evento
   "startDate": "date",        // Requerido: Fecha y hora de inicio del evento
   "endDate": "date",          // Requerido: Fecha y hora de fin del evento
@@ -123,28 +125,39 @@ Inicia sesión un usuario existente.
 
 ```json
 {
-		"_id": "67aac4571205d94c3489e7a9",
-		"name": "Carrera Nocturna 5K",
-		"type": "sport",
-		"location": "Parque Metropolitano",
-		"address": "Calle Verde 50",
-		"city": "Bogotá",
-		"description": "Participa en esta emocionante carrera nocturna.",
-		"startDate": "2025-09-10T17:00:00.000Z",
-		"endDate": "2025-09-10T19:00:00.000Z",
+	"message": "evento creado correctamente",
+	"event": {
+		"name": "mi evento",
+		"type": "deporte",
+		"location": "Playa de Sotavento",
+		"address": "Costa Calma, s/n",
+		"postalCode": "35626",
+		"city": "Fuerteventura",
+		"country": {
+			"name": "España",
+			"code": "ES"
+		},
+		"fullAddress": "Costa Calma, s/n, Playa de Sotavento, Fuerteventura, 35626, ES",
+		"description": "Los mejores surfistas del mundo se reúnen en las playas de Canarias.",
+		"startDate": "2026-08-05T07:00:00.000Z",
+		"endDate": "2026-08-07T16:00:00.000Z",
 		"eventStatus": "not-start",
+		"image": "https://res.cloudinary.com/dn6utw1rl/image/upload/v1739241182/default/deporte.webp",
 		"createdBy": "67aa5f62e4d1301e1cccbb17",
 		"soldOut": false,
-		"maxCapacity": 90,
+		"maxCapacity": 0,
 		"totalReservedPlaces": 0,
 		"attendees": [],
 		"passesOfferedIds": [],
 		"ticketsSold": [],
-		"image": "https://res.cloudinary.com/dn6utw1rl/image/upload/v1739241182/default/sport.webp",
-		"__v": 0,
-		"createdAt": "2025-02-11T03:30:31.629Z",
-		"updatedAt": "2025-02-11T03:30:31.629Z"
+		"isPrivated": false,
+		"_id": "68ea9a0e8d806dc1fc44b89f",
+		"slug": "deporte",
+		"createdAt": "2025-10-11T17:55:26.009Z",
+		"updatedAt": "2025-10-11T17:55:26.009Z",
+		"__v": 0
 	}
+}
 
 ```
 

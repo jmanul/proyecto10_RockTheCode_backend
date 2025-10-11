@@ -10,6 +10,8 @@ export const countries = [
 
 export function findCountryByName(countryName) {
      if (!countryName) return null;
+     console.log(countryName);
+     console.log(countryName.trim().toLowerCase());
 
      const normalized = countryName.trim().toLowerCase();
 

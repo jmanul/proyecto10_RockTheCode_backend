@@ -135,7 +135,7 @@ const postEvent = async (req, res, next) => {
 
      try {
          
-          const {name, startDate, ...rest } = req.body;
+          const {name, startDate, address, location,city, postalCode,country, ...rest } = req.body;
           let image;
           let createdBy = req.user._id
 
@@ -150,11 +150,39 @@ const postEvent = async (req, res, next) => {
                image = req.file.path;
           }
 
+          let countryObj = { name: "España", code: "ES" }; 
+
+          if (country) {
+               const found = findCountryByName(country);
+               if (found) countryObj = found;
+          }
+
+     console.log(countryObj);
+
+          // Construimos la dirección completa con los datos recibidos
+          const mergedData = {
+               address,
+               location,
+               city,
+               postalCode,
+               country: countryObj
+          };
+
+          console.log(mergedData);
+
+          const fullAddress = buildFullAddress(mergedData);
+
           const newEvent = await Event.create({
                name,
                startDate,
                image,
                createdBy,
+               address,
+               location,
+               city,
+               postalCode,
+               country: countryObj,
+               fullAddress,
                ...rest
           });
 
@@ -227,7 +255,7 @@ const putEvent = async (req, res, next) => {
 
           // Construimos el fullAddress actualizado
 
-          let newFullAddress = buildFullAddress(mergedData);
+          let newFullAddress =  buildFullAddress(mergedData);
           
 
           // Añadimos el fullAddress  si ha habido algun cambio
