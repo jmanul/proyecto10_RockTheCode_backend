@@ -7,7 +7,7 @@ export const countries = [
      // { name: "Portugal", code: "PT" },
 ];
 
-
+// busca el pais en el array de paises y devuelve un objeto con el pais y su codigo
 export function findCountryByName(countryName) {
      if (!countryName) return null;
      console.log(countryName);

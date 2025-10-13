@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { countries } = require('../../data/countries');
+const { toBoolean } = require('../../utils/toBoolean');
 
 const eventSchema = new mongoose.Schema({
 
@@ -76,7 +76,8 @@ const eventSchema = new mongoose.Schema({
      attendees: [{ type: mongoose.Types.ObjectId, ref: 'users', required: false }],
      passesOfferedIds: [{ type: mongoose.Types.ObjectId, ref: 'passes', required: false }],
      ticketsSold: [{ type: mongoose.Types.ObjectId, ref: 'tickets', required: false }],
-     isPrivated: { type: Boolean, default: false }
+     isPrivated: { type: Boolean, default: false, set: toBoolean }
+    
 
 },
      {
@@ -86,5 +87,7 @@ const eventSchema = new mongoose.Schema({
 
 
 const Event = mongoose.model('events', eventSchema, 'events');
+
+
 
 module.exports = Event;

@@ -6,6 +6,7 @@ const Event = require("../models/events");
 const Ticket = require("../models/tickets");
 const { buildFullAddress } = require('../../services/buildFullAddress');
 const { findCountryByName } = require('../../data/countries');
+const { toBoolean } = require('../../utils/toBoolean');
 
 const getEvents = async (req, res, next) => {
 
@@ -157,8 +158,6 @@ const postEvent = async (req, res, next) => {
                if (found) countryObj = found;
           }
 
-     console.log(countryObj);
-
           // Construimos la dirección completa con los datos recibidos
           const mergedData = {
                address,
@@ -168,8 +167,6 @@ const postEvent = async (req, res, next) => {
                country: countryObj
           };
 
-          console.log(mergedData);
-
           const fullAddress = buildFullAddress(mergedData);
 
           const newEvent = await Event.create({
@@ -177,11 +174,7 @@ const postEvent = async (req, res, next) => {
                startDate,
                image,
                createdBy,
-               address,
-               location,
-               city,
-               postalCode,
-               country: countryObj,
+               ...mergedData,
                fullAddress,
                ...rest
           });
@@ -223,9 +216,19 @@ const putEvent = async (req, res, next) => {
           if (req.body.startDate && new Date(req.body.startDate) > new Date(event.startDate)) {eventStatus = 'postponed';
           }
 
-          const updateData = { eventStatus, ...req.body };
-          
+          let updateData = { eventStatus, ...req.body };
+
+          // Si el checkbox vino en el body (marcado o desmarcado explícitamente)
+
+          if ('isPrivated' in req.body) {
+               updateData.isPrivated = toBoolean(req.body.isPrivated);
+          }
+
+          console.log(updateData.isPrivated);
+
           const data = req.body;
+
+
           let fullAddress = event.fullAddress;
           let countryName = data.country;
 
@@ -264,15 +267,15 @@ const putEvent = async (req, res, next) => {
 
                updateData.fullAddress = newFullAddress;
           };
-          
-          
 
           if (req.file) {
                await deleteCloudinaryImage(event.image);
                updateData.image = req.file.path;
           }
 
-          const eventUpdate = await Event.findByIdAndUpdate(eventId, updateData, { new: true });
+          const eventUpdate = await Event.findByIdAndUpdate(eventId, updateData, {
+               new: true
+});
 
           return res.status(200).json({
                message: 'evento actualizado correctamente',
