@@ -8,7 +8,7 @@ const { getCountries } = require("../controllers/countries");
 
 const countriesRouter = require('express').Router();
 
-countriesRouter.get('/', isAuth, getCountries);
+countriesRouter.get('/', getCountries);
 
 
 module.exports = countriesRouter;
