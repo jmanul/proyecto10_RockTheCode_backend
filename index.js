@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 const { conectDDBB } = require('./src/config/ddbb');
 //const { corsOptions } = require('./src/config/cors');
 const cloudinary = require('cloudinary').v2;
@@ -19,6 +20,35 @@ const countriesRouter = require('./src/api/routes/countries');
 //const  cleanUpdateOldData = require('./src/utils/cronJobs/cronJobs');
 
 const app = express();
+
+// Rate limiter estricto para autenticación y registro (prevenir fuerza bruta)
+const authLimiter = rateLimit({
+     windowMs: 15 * 60 * 1000, // 15 minutos
+     max: 15, // 15 intentos por ventana
+     message: 'Demasiados intentos de autenticación. Por favor, intenta de nuevo más tarde.',
+     standardHeaders: true,
+     legacyHeaders: false,
+     skipSuccessfulRequests: true, // No contar intentos exitosos
+});
+
+// Rate limiter para operaciones de escritura críticas (crear, actualizar, eliminar)
+const writeLimiter = rateLimit({
+     windowMs: 15 * 60 * 1000, // 15 minutos
+     max: 50, // 50 operaciones de escritura por ventana
+     message: 'Demasiadas operaciones. Por favor, intenta de nuevo más tarde.',
+     standardHeaders: true,
+     legacyHeaders: false,
+     skip: (req) => req.method === 'GET', // No limitar lecturas
+});
+
+// Rate limiter general más permisivo para operaciones comunes
+const generalLimiter = rateLimit({
+     windowMs: 15 * 60 * 1000, // 15 minutos
+     max: 200, // 200 peticiones por ventana
+     message: 'Demasiadas peticiones. Por favor, intenta de nuevo más tarde.',
+     standardHeaders: true,
+     legacyHeaders: false,
+});
 
 
 app.use(
@@ -63,13 +93,20 @@ cloudinary.config({
      api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-app.use('/api/v2/register', registerRouter);
-app.use('/api/v2/users', usersRouter);
-app.use('/api/v2/events', eventsRouter);
-app.use('/api/v2/tickets', ticketsRouter);
-app.use('/api/v2/passes', passesRouter);
+// Rutas con autenticación crítica (registro, login, recuperación de contraseña)
+app.use('/api/v2/register', authLimiter, registerRouter);
+app.use('/api/v2/users', authLimiter, usersRouter);
+
+// Rutas con operaciones de escritura (eventos, tickets, passes)
+app.use('/api/v2/events', writeLimiter, eventsRouter);
+app.use('/api/v2/tickets', writeLimiter, ticketsRouter);
+app.use('/api/v2/passes', writeLimiter, passesRouter);
+
+// Rutas de solo lectura con límite general
+app.use('/api/v2/countries', generalLimiter, countriesRouter);
+
+// Cron jobs sin rate limiting (protegido por token en el controlador)
 app.use('/api/v2/cron', cronRouter);
-app.use('/api/v2/countries', countriesRouter);
 
 
 
