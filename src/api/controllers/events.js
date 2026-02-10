@@ -7,23 +7,36 @@ const Ticket = require("../models/tickets");
 const { buildFullAddress } = require('../../services/buildFullAddress');
 const { findCountryByName } = require('../../data/countries');
 const { toBoolean } = require('../../utils/toBoolean');
+const { paginate } = require('../../utils/pagination/paginate');
 
 const getEvents = async (req, res, next) => {
 
      try {
-          const user = req.user
-          const events = await Event.find().populate({
-               path: 'attendees',
-               select: 'userName avatar'
+          const user = req.user;
+          const { page = 1, limit = 10 } = req.query;
+
+          const { data: events, pagination } = await paginate({
+               model: Event,
+               query: {},
+               populate: {
+                    path: 'attendees',
+                    select: 'userName avatar'
+               },
+               sort: { startDate: 1 }, // Ordenar por fecha de inicio
+               page: parseInt(page),
+               limit: parseInt(limit)
           });
 
-         
-
           if (!events || events.length <= 0) {
-               return res.status(200).json({ message: 'eventos no encontrados' });
+               return res.status(200).json({ message: 'eventos no encontrados', pagination });
           }
 
-          return res.status(200).json({ message: 'eventos encontrados', events: events, user: user });
+          return res.status(200).json({ 
+               message: 'eventos encontrados', 
+               events, 
+               user, 
+               pagination 
+          });
 
      } catch (error) {
 
