@@ -7,7 +7,7 @@ Esta API permite gestionar eventos, usuarios y tickets.
 ## Librerías Utilizadas
 
 - **bcrypt**: Para encriptar contraseñas de manera segura.
-- **bcrypt**: Para encriptar contraseñas de manera segura.
+
 - **cloudinary**: Para la gestión de imágenes en la nube.
 - **dotenv**: Para gestionar variables de entorno.
 - **express**: Framework web para manejar las rutas y middleware.
@@ -63,7 +63,7 @@ Inicia sesión un usuario existente.
 ---
 
 ### **Modifica el Password**
-**Endpoint:** `PUT /api/v2/register/logout`
+**Endpoint:** `PUT /api/v2/register/changePassword`
 
 - **Autenticación:** Requerida.
 - **Autorización:** solo el usuario con mismo id.
