@@ -25,8 +25,7 @@ const cookieOptions = () => ({
      httpOnly: true,
      secure: process.env.NODE_ENV === 'production',
      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-     path: '/',
-     ...(process.env.NODE_ENV === 'production' && { partitioned: true })
+     path: '/'
 });
 
 const generateCookie = async (res, nameToken, token, timeMaxAge) => {
