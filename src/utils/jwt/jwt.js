@@ -21,13 +21,18 @@ const generateToken = ( user, keySecret, expiration) => {
  
 };
 
+const cookieOptions = () => ({
+     httpOnly: true,
+     secure: process.env.NODE_ENV === 'production',
+     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+     path: '/',
+     ...(process.env.NODE_ENV === 'production' && { partitioned: true })
+});
+
 const generateCookie = async (res, nameToken, token, timeMaxAge) => {
       
      return res.cookie(nameToken, token, {
-
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+          ...cookieOptions(),
           maxAge: Number(timeMaxAge)
      });
   
@@ -74,11 +79,19 @@ const rotateUserSecret = async (userId) => {
      });
 };
 
+const clearAuthCookies = (res) => {
+     const opts = cookieOptions();
+     delete opts.maxAge;
+     res.clearCookie('accessToken', opts);
+     res.clearCookie('refreshToken', opts);
+};
+
 module.exports = {
 
      generateToken,
      verifyToken,
      generateCookie,
      invalidateUserTokens,
-     rotateUserSecret
+     rotateUserSecret,
+     clearAuthCookies
 }; 

@@ -439,8 +439,8 @@ const deleteUser = async (req, res, next) => {
                });
           }
 
-          res.clearCookie('accessToken');
-          res.clearCookie('refreshToken');
+          const { clearAuthCookies } = require('../../utils/jwt/jwt');
+          clearAuthCookies(res);
 
           await deleteCloudinaryImage(user.avatar);
 

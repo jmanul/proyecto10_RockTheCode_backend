@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const User = require("../models/users");
-const { generateToken, rotateUserSecret, generateCookie } = require("../../utils/jwt/jwt");
+const { generateToken, rotateUserSecret, generateCookie, clearAuthCookies } = require("../../utils/jwt/jwt");
 const { decrypt } = require('../../utils/crypto/crypto');
 
 
@@ -96,8 +96,7 @@ const logout = async (req, res, next) => {
           user.tokenVersion += 1; // Incrementar la versión del token para invalidar los existentes
           await user.save();
 
-          res.clearCookie('accessToken');
-          res.clearCookie('refreshToken');
+          clearAuthCookies(res);
 
           return res.status(200).json({ message: 'sesión cerrada' });
 
@@ -127,8 +126,7 @@ const changePassword = async (req, res, next) => {
           await rotateUserSecret(userId);
 
 
-          res.clearCookie('accessToken');
-          res.clearCookie('refreshToken');
+          clearAuthCookies(res);
 
           return res.status(200).json({ message: 'contraseña cambiada exitosamente' });
 
