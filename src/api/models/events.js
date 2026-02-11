@@ -76,7 +76,17 @@ const eventSchema = new mongoose.Schema({
      attendees: [{ type: mongoose.Types.ObjectId, ref: 'users', required: false }],
      passesOfferedIds: [{ type: mongoose.Types.ObjectId, ref: 'passes', required: false }],
      ticketsSold: [{ type: mongoose.Types.ObjectId, ref: 'tickets', required: false }],
-     isPrivated: { type: Boolean, default: false, set: toBoolean }
+     isPrivated: { type: Boolean, default: false, set: toBoolean },
+     // Sistema de invitaciones para eventos privados
+     invitations: [{
+          code: { type: String, required: true }, // Código único de invitación
+          maxUses: { type: Number, default: 1 }, // Máximo de usos por enlace
+          usedCount: { type: Number, default: 0 }, // Veces que se ha usado
+          usedBy: [{ type: mongoose.Types.ObjectId, ref: 'users' }], // Usuarios que han usado el código
+          expiresAt: { type: Date }, // Fecha de expiración opcional
+          createdAt: { type: Date, default: Date.now },
+          isActive: { type: Boolean, default: true }
+     }]
     
 
 },

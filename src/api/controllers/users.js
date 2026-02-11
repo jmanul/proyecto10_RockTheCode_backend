@@ -212,6 +212,53 @@ const addPassFromUser = async (req, res, next) => {
                return res.status(404).json({ message: 'entrada no encontrada' });
           }
 
+          // Validar si el pase es privado
+          if (pass.isPrivated) {
+               // Verificar que guestList existe y tiene elementos
+               if (!pass.guestList || pass.guestList.length === 0) {
+                    return res.status(403).json({ 
+                         message: 'Este pase privado no tiene lista de invitados configurada.' 
+                    });
+               }
+
+               // Buscar por userId O por userName (por si userId es null)
+               let guestEntry = pass.guestList.find(g => 
+                    g.userId && g.userId.toString() === user._id.toString()
+               );
+               
+               // Si no se encontró por userId, buscar por userName
+               if (!guestEntry) {
+                    guestEntry = pass.guestList.find(g => 
+                         g.userName === user.userName
+                    );
+                    
+                    // Si se encontró por userName pero userId es null, actualizarlo
+                    if (guestEntry && !guestEntry.userId) {
+                         await Pass.findOneAndUpdate(
+                              { _id: passId, 'guestList.userName': user.userName },
+                              { $set: { 'guestList.$.userId': user._id } }
+                         );
+                    }
+               }
+               
+               if (!guestEntry) {
+                    return res.status(403).json({ 
+                         message: 'No tienes acceso a este pase privado. Solo usuarios invitados pueden comprar.' 
+                    });
+               }
+
+               // Verificar límite de entradas por invitado
+               const ticketsObtained = guestEntry.ticketsObtained || 0;
+               const maxTickets = guestEntry.maxTickets || 1;
+               const remainingTickets = maxTickets - ticketsObtained;
+               
+               if (reservedPlaces > remainingTickets) {
+                    return res.status(400).json({ 
+                         message: `Solo puedes comprar ${remainingTickets} entrada(s) más. Ya has comprado ${ticketsObtained} de ${maxTickets} permitidas.` 
+                    });
+               }
+          }
+
           const freePlaces = calculateFreePlaces(pass, reservedPlaces);
 
 
@@ -255,6 +302,15 @@ const addPassFromUser = async (req, res, next) => {
                          $inc: { totalReservedPlacesPass: 1 },
 
                     },
+                    { new: true }
+               );
+          }
+
+          // Actualizar contador de entradas compradas en la lista de invitados (solo para pases privados)
+          if (pass.isPrivated) {
+               await Pass.findOneAndUpdate(
+                    { _id: passId, 'guestList.userId': user._id },
+                    { $inc: { 'guestList.$.ticketsObtained': reservedPlaces } },
                     { new: true }
                );
           }

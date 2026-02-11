@@ -1,4 +1,11 @@
-require('dotenv').config()
+// Cargar variables de entorno según el modo
+const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.development';
+require('dotenv').config({ path: envFile });
+
+// Si no existe el archivo específico, cargar el .env por defecto
+if (!process.env.DDBB_URL) {
+     require('dotenv').config();
+}
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
