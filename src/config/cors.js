@@ -2,14 +2,14 @@
 
 const allowedOrigins = process.env.NODE_ENV === 'production'
      ? [
-          process.env.FRONTEND_URL
+          process.env.FRONTEND_URL?.replace(/\/$/, '')
      ]
      : '*';
 
 const corsOptions = {
      origin: (origin, callback) => {
 
-          if (!origin || allowedOrigins === '*' || allowedOrigins.includes(origin)) {
+          if (!origin || allowedOrigins === '*' || allowedOrigins.includes(origin?.replace(/\/$/, ''))) {
                callback(null, true);
           } else {
                callback(new Error('No autorizado por CORS'));

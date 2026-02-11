@@ -27,6 +27,8 @@ const countriesRouter = require('./src/api/routes/countries');
 //const  cleanUpdateOldData = require('./src/utils/cronJobs/cronJobs');
 
 const app = express();
+app.set("trust proxy", 1); // Trust Vercel proxy
+
 
 // Rate limiter estricto para autenticación y registro (prevenir fuerza bruta)
 const authLimiter = rateLimit({
