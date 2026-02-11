@@ -70,7 +70,7 @@ app.use(
                     process.env.FRONTEND_URL?.replace(/\/$/, ''), // Sin barra final
                ].filter(Boolean); // Filtra valores undefined/null
 
-               if (ACCEPTED_ORIGINS.includes(origin)) {
+               if (ACCEPTED_ORIGINS.includes(origin) || origin.includes(".vercel.app")) {
 
                     return callback(null, true);
                }
