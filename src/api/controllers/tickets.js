@@ -28,33 +28,32 @@ const postTicket = async (req, res, next) => {
 
      try {
 
-          const { userId, eventId, reservedPlaces, ...rest } = req.body;
+          const { userId, passId, reservedPlaces, ...rest } = req.body;
         
+          const Pass = require("../models/passes");
+          const pass = await Pass.findById(passId);
 
-          const event = await Event.findById( eventId );
-
-          if (!event) {
-               return res.status(400).json({ message: 'El evento no existe' });
+          if (!pass) {
+               return res.status(400).json({ message: 'El pass no existe' });
           }
-          const user = await User.findById( userId );
+
+          const user = await User.findById(userId);
 
           if (!user) {
                return res.status(400).json({ message: 'El usuario no existe' });
-
-
           }
 
-          const ticket = await ticketGenerator(event, user, reservedPlaces);
+          const ticket = await ticketGenerator(pass, user, reservedPlaces);
 
           await User.findByIdAndUpdate(
-               user,
-               { $addToSet: { eventsIds: eventId, ticketsIds: ticket._id } },
+               userId,
+               { $addToSet: { ticketsIds: ticket._id } },
                { new: true });
 
-          await Event.findByIdAndUpdate(
-               event,
+          await Pass.findByIdAndUpdate(
+               passId,
                {
-                    $addToSet: { attendees: userId, ticketsSold: ticket._id },
+                    $addToSet: { ticketsSold: ticket._id },
                     $inc: { totalReservedPlaces: reservedPlaces }
                },
                { new: true }
@@ -62,13 +61,12 @@ const postTicket = async (req, res, next) => {
 
           return res.status(201).json({
                message: 'ticket creado correctamente',
-               user: ticket
+               ticket
           });
-
 
      } catch (error) {
 
-          return res.status(404).json({ error: error.message });
+          return res.status(500).json({ error: error.message });
      }
 
 };

@@ -19,9 +19,13 @@ const ticketGenerator = async (pass, user, reservedPlaces) => {
                ticketPrice: pass.price * reservedPlaces
           });
 
+          const apiBaseUrl = process.env.NODE_ENV === 'production' 
+               ? 'https://proyecto10-rock-the-code-api-event.vercel.app/api/v2'
+               : 'http://localhost:3000/api/v2';
+
           const qrData = {
 
-               ticketUrl: `http://localhost:3000/api/v1/tickets/${ticket._id}` 
+               ticketUrl: `${apiBaseUrl}/tickets/${ticket._id}` 
               
           };
 
