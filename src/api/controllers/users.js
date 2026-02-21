@@ -6,6 +6,7 @@ const Event = require("../models/events");
 const Pass = require("../models/passes");
 const ticketGenerator = require('../../services/ticketGenerator');
 const calculateFreePlaces = require('../../services/CalculateFreePlaces');
+const { clearAuthCookies } = require('../../utils/jwt/jwt');
 
 
 const getUsers = async (req, res, next) => {
@@ -439,7 +440,6 @@ const deleteUser = async (req, res, next) => {
                });
           }
 
-          const { clearAuthCookies } = require('../../utils/jwt/jwt');
           clearAuthCookies(res);
 
           await deleteCloudinaryImage(user.avatar);
