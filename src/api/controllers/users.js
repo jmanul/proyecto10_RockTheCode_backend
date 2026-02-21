@@ -40,13 +40,17 @@ const getUserById = async (req, res, next) => {
           const user = await User.findById(userId).populate({
                path: 'eventsIds',
                select: 'name startDate'
-          });
+          }).lean();
+
+          if (!user) {
+               return res.status(404).json({ error: 'Usuario no encontrado' });
+          }
 
           return res.status(200).json({ isAuth: true, user });
 
      } catch (error) {
-
-          res.status(404).json({ error: error.message });
+          console.error('Error en getUserById:', error.message);
+          res.status(500).json({ error: 'Error al obtener usuario', details: error.message });
 
      }
 };
